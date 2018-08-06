@@ -131,6 +131,9 @@
             <?php if($perfil == 1) { ?>
             <li><a href="<?php print $base_url ?>empleado"><i class="fa fa-male"></i> Empleados</a></li>
             <?php } ?> 
+            <?php if($perfil == 1) { ?>
+            <li><a href="<?php print $base_url ?>paises"><i class="fa glyphicon-tree-deciduous"></i> Paises</a></li>
+            <?php } ?> 
           </ul>
         </li>
         <?php } ?> 

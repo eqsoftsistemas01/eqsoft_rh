@@ -22,6 +22,9 @@ class Update_model extends CI_Model {
       $res = $this->existe_tabla('empleado');
       if ($res != true) $this->crea_tabla_empleado();
 
+      $res = $this->existe_tabla('paises');
+      if ($res != true) $this->crea_tabla_paises();
+
       $this->chequea_tabla_perfil();
 
 
@@ -89,7 +92,15 @@ class Update_model extends CI_Model {
                                     )");
 
     }
+public function crea_tabla_paises(){
+      $query = $this->db->query("CREATE TABLE paises (
+                                    id SERIAL,
+                                    nombre_pais varchar(255),
+                                    activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
 
+    }
     public function crea_tabla_empleado(){
       $query = $this->db->query("CREATE TABLE empleado (
                                     id_empleado SERIAL,
