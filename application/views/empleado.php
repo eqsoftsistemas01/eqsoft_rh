@@ -119,6 +119,7 @@
 
               var tipoident = $('#cmb_tipoident option:selected').val();      
               var perfil = $('#cmb_perfil option:selected').val();      
+              var departamento = $('#cmb_departamento option:selected').val();      
               var nombre = $("#txt_nombre").val();
               var activo = $("#chkactivo").val();
               var direccion = $("#txt_direccion").val();
@@ -131,7 +132,8 @@
                   url: base_url + "Empleado/guardar",
                   data: { id: id, ident: ident, tipoident: tipoident,
                           nombre: nombre, activo: activo, perfil: perfil,
-                          direccion: direccion, telefono: telefono, correo: correo
+                          direccion: direccion, telefono: telefono, 
+                          correo: correo, departamento: departamento
                         },
                   success: function(json) {
                     $.fancybox.close();

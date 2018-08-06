@@ -17,6 +17,7 @@ class Empleado extends CI_Controller {
         $this->auth_library->mssg_get();
         $this->load->Model("Empleado_model");
         $this->load->Model("usuario_model");
+        $this->load->Model("Departamento_model");
     }
 
     /* MÉTODO PREDETERMINADO DEL CONTROLADOR */
@@ -63,6 +64,8 @@ class Empleado extends CI_Controller {
         $id = $this->session->userdata("tmp_empleado_id");
         $tipoident = $this->Empleado_model->lst_tipoidentificacion();
         $perfil = $this->usuario_model->perfil_lst();
+        $departamento = $this->Departamento_model->sel_departamento();
+        $data["departamento"] = $departamento;
         $data["perfil"] = $perfil;
         $data["tipoident"] = $tipoident;
         $data["base_url"] = base_url();
@@ -77,15 +80,16 @@ class Empleado extends CI_Controller {
         $tipoident = $this->input->post('tipoident');
         $ident = $this->input->post('ident');
         $perfil = $this->input->post('perfil');
+        $departamento = $this->input->post('departamento');
         $direccion = $this->input->post('direccion');
         $telefono = $this->input->post('telefono');
         $correo = $this->input->post('correo');
         $activo = $this->input->post('activo');
         if($activo == 'on'){ $activo = 1; } else { $activo = 0; }
         if($id != 0){
-            $resu = $this->Empleado_model->upd_empleado($id, $nombre, $tipoident, $ident, $perfil, $direccion, $telefono, $correo, $activo);
+            $resu = $this->Empleado_model->upd_empleado($id, $nombre, $tipoident, $ident, $perfil, $direccion, $telefono, $correo, $activo, $departamento);
         } else {
-            $resu = $this->Empleado_model->add_empleado($nombre, $tipoident, $ident, $perfil, $direccion, $telefono, $correo, $activo);
+            $resu = $this->Empleado_model->add_empleado($nombre, $tipoident, $ident, $perfil, $direccion, $telefono, $correo, $activo, $departamento);
         }
         $arr['mens'] = $id;
         print json_encode($arr); 
@@ -94,6 +98,8 @@ class Empleado extends CI_Controller {
     public function add_empleado(){
         $tipoident = $this->Empleado_model->lst_tipoidentificacion();
         $perfil = $this->usuario_model->perfil_lst();
+        $departamento = $this->Departamento_model->sel_departamento();
+        $data["departamento"] = $departamento;
         $data["perfil"] = $perfil;
         $data["tipoident"] = $tipoident;
         $data["base_url"] = base_url();
