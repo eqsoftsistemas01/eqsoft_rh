@@ -6,11 +6,11 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '192.168.0.110',
+	'hostname' => 'localhost',
 	'port' => '5432',
 	'username' => 'postgres',
-	'password' => '123456',
-	'database' => 'eqsoft_rh',
+	'password' => '131800',
+	'database' => 'prodegelrrhh',
 	'dbdriver' => 'postgre',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
