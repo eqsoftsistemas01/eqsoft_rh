@@ -32,7 +32,7 @@ class Ciudad_model extends CI_Model {
       $query = $this->db->query(" UPDATE ciudad SET 
                                     nombre_ciudad = '$nombre', 
                                     activo = $activo
-                                   WHERE id_ciudad = $ciudad");
+                                   WHERE id = $ciudad");
     }
 
     public function add_ciudad($nombre, $activo){
@@ -41,16 +41,18 @@ class Ciudad_model extends CI_Model {
     }
 
     public function candel_ciudad($ciudad){
-      $query = $this->db->query("SELECT count(*) as cant FROM ciudad WHERE id_ciudad = $ciudad");
+      $query = $this->db->query("SELECT count(*) as cant FROM ciudad WHERE id = $ciudad");
       $result = $query->result();
 /*      if ($result[0]->cant == 0){
         $query = $this->db->query("SELECT count(*) as cant FROM caja_efectivo WHERE id_puntoemision = $puntoemision");
         $result = $query->result();
       }*/
-      if ($result[0]->cant == 0)
+/*      if ($result[0]->cant == 0)
         { return 1; }
       else
-        { return 0; }
+        { return 0; }*/
+
+        return 1;
     }
 
     public function del_ciudad($ciudad){
@@ -64,7 +66,7 @@ class Ciudad_model extends CI_Model {
 
     public function lst_ciudad($ciudad = 0){
       $query = $this->db->query("SELECT id, nombre_ciudad
-                                  FROM ciudad WHERE id_ciudad=$ciudad activo = 1
+                                  FROM ciudad WHERE id=$ciudad and activo = 1
                                   ORDER BY nombre_ciudad");
       $r = $query->result();
       return $r;

@@ -41,12 +41,12 @@ class Ciudad extends CI_Controller {
 
     public function upd_ciudad(){
         $id = $this->session->userdata("tmp_ciudad_id");
-        $empleados = $this->Departamento_model->lst_empleado();
+        $empleados = $this->Ciudad_model->lst_ciudad();
         $data["empleados"] = $empleados;
         $data["base_url"] = base_url();
-        $obj = $this->Departamento_model->sel_departamento_id($id);
+        $obj = $this->Ciudad_model->sel_ciudad_id($id);
         $data["obj"] = $obj;
-        $this->load->view("departamento_add", $data);
+        $this->load->view("ciudad_add", $data);
     }
 
     public function agregar(){
@@ -98,7 +98,7 @@ class Ciudad extends CI_Controller {
         foreach ($registro as $row) {
             $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar Ciudad\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad ciudad_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad ciudad_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
             $tabla.='{  "id":"' .$row->id. '",
-                        "nombre":"' .$row->nombre_departamento. '",
+                        "nombre":"' .$row->nombre_ciudad. '",
                         "ver":"'.$ver.'"
                     },';
         }
