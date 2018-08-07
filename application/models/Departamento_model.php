@@ -14,7 +14,7 @@ class Departamento_model extends CI_Model {
 
     public function sel_departamento(){
       $query = $this->db->query(" SELECT d.id, d.nombre_departamento, d.id_jefedepartamento, d.activo,
-                                         e.nombre_empleado
+                                         textcat(textcat(e.apellidos,text ' '),e.nombres) as nombre_empleado
                                   FROM departamento d
                                   LEFT JOIN empleado e on e.id_empleado = d.id_jefedepartamento
                                   ORDER BY d.nombre_departamento");

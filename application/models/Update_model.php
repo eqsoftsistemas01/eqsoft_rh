@@ -30,6 +30,85 @@ class Update_model extends CI_Model {
 
       $this->chequea_tabla_perfil();
 
+      $res = $this->existe_tabla('cargafamiliar');
+      if ($res != true) $this->crea_tabla_cargafamiliar();
+
+      $this->chequea_tabla_parentesco();
+      $this->chequea_tabla_estadocivil();
+      $this->chequea_tabla_tipovivienda();
+      $this->chequea_tabla_tipocuentabanco();
+
+      $res = $this->existe_columna_tabla('empleado','apellidos');
+      if ($res != true) $this->add_columna_tabla('empleado','apellidos', 'varchar(100)', "");
+      $res = $this->existe_columna_tabla('empleado','lugarexpedicion');
+      if ($res != true) $this->add_columna_tabla('empleado','lugarexpedicion', 'varchar(100)', "");
+      $res = $this->existe_columna_tabla('empleado','cedulamilitar');
+      if ($res != true) $this->add_columna_tabla('empleado','cedulamilitar', 'varchar(50)', "");
+      $res = $this->existe_columna_tabla('empleado','pasaporte');
+      if ($res != true) $this->add_columna_tabla('empleado','pasaporte', 'varchar(50)', "");
+      $res = $this->existe_columna_tabla('empleado','fecha_nacimiento');
+      if ($res != true) $this->add_columna_tabla('empleado','fecha_nacimiento', 'date', "");
+      $res = $this->existe_columna_tabla('empleado','sexo');
+      if ($res != true) $this->add_columna_tabla('empleado','sexo', 'char(1)', "");
+      $res = $this->existe_columna_tabla('empleado','id_estadocivil');
+      if ($res != true) $this->add_columna_tabla('empleado','id_estadocivil', 'int', "");
+      $res = $this->existe_columna_tabla('empleado','peso');
+      if ($res != true) $this->add_columna_tabla('empleado','peso', 'numeric(10,2)', "");
+      $res = $this->existe_columna_tabla('empleado','talla');
+      if ($res != true) $this->add_columna_tabla('empleado','talla', 'numeric(10,2)', "");
+      $res = $this->existe_columna_tabla('empleado','celular_empleado');
+      if ($res != true) $this->add_columna_tabla('empleado','celular_empleado', 'varchar(100)', "");
+      $res = $this->existe_columna_tabla('empleado','codigoreloj');
+      if ($res != true) $this->add_columna_tabla('empleado','codigoreloj', 'varchar(100)', "");
+      $res = $this->existe_columna_tabla('empleado','calleprincipal');
+      if ($res != true) $this->add_columna_tabla('empleado','calleprincipal', 'varchar(50)', "");
+      $res = $this->existe_columna_tabla('empleado','numerovivienda');
+      if ($res != true) $this->add_columna_tabla('empleado','numerovivienda', 'varchar(20)', "");
+      $res = $this->existe_columna_tabla('empleado','calletransversal');
+      if ($res != true) $this->add_columna_tabla('empleado','calletransversal', 'varchar(50)', "");
+      $res = $this->existe_columna_tabla('empleado','sector');
+      if ($res != true) $this->add_columna_tabla('empleado','sector', 'varchar(50)', "");
+      $res = $this->existe_columna_tabla('empleado','referenciavivienda');
+      if ($res != true) $this->add_columna_tabla('empleado','referenciavivienda', 'varchar(50)', "");
+      $res = $this->existe_columna_tabla('empleado','id_ciudad');
+      if ($res != true) $this->add_columna_tabla('empleado','id_ciudad', 'int', "");
+      $res = $this->existe_columna_tabla('empleado','id_tipovivienda');
+      if ($res != true) $this->add_columna_tabla('empleado','id_tipovivienda', 'int', "");
+      $res = $this->existe_columna_tabla('empleado','vivefamiliares');
+      if ($res != true) $this->add_columna_tabla('empleado','vivefamiliares', 'int', "");
+      $res = $this->existe_columna_tabla('empleado','id_banco');
+      if ($res != true) $this->add_columna_tabla('empleado','id_banco', 'int', "");
+      $res = $this->existe_columna_tabla('empleado','id_tipocuenta');
+      if ($res != true) $this->add_columna_tabla('empleado','id_tipocuenta', 'int', "");
+      $res = $this->existe_columna_tabla('empleado','numerocuenta');
+      if ($res != true) $this->add_columna_tabla('empleado','numerocuenta', 'varchar(50)', "");
+      $res = $this->existe_columna_tabla('empleado','nombrecontacto');
+      if ($res != true) $this->add_columna_tabla('empleado','nombrecontacto', 'varchar(100)', "");
+      $res = $this->existe_columna_tabla('empleado','direccioncontacto');
+      if ($res != true) $this->add_columna_tabla('empleado','direccioncontacto', 'varchar(100)', "");
+      $res = $this->existe_columna_tabla('empleado','id_parentescocontacto');
+      if ($res != true) $this->add_columna_tabla('empleado','id_parentescocontacto', 'int', "");
+      $res = $this->existe_columna_tabla('empleado','telefonocontacto');
+      if ($res != true) $this->add_columna_tabla('empleado','telefonocontacto', 'varchar(50)', "");
+      $res = $this->existe_columna_tabla('empleado','id_empresa');
+      if ($res != true) $this->add_columna_tabla('empleado','id_empresa', 'int', "");
+      $res = $this->existe_columna_tabla('empleado','id_tiposangre');
+      if ($res != true) $this->add_columna_tabla('empleado','id_tiposangre', 'int', "");
+      $res = $this->existe_columna_tabla('empleado','id_tipodiscapacidad');
+      if ($res != true) $this->add_columna_tabla('empleado','id_tipodiscapacidad', 'int', "");
+      $res = $this->existe_columna_tabla('empleado','p100discapacidad');
+      if ($res != true) $this->add_columna_tabla('empleado','p100discapacidad', 'numeric(10,2)', "");
+      $res = $this->existe_columna_tabla('empleado','id_contrato');
+      if ($res != true) $this->add_columna_tabla('empleado','id_contrato', 'int', "");
+      $res = $this->existe_columna_tabla('empleado','id_cargo');
+      if ($res != true) $this->add_columna_tabla('empleado','id_cargo', 'int', "");
+      $res = $this->existe_columna_tabla('empleado','fecha_ingreso');
+      if ($res != true) $this->add_columna_tabla('empleado','fecha_ingreso', 'date', "");
+      $res = $this->existe_columna_tabla('empleado','fecha_salida');
+      if ($res != true) $this->add_columna_tabla('empleado','fecha_salida', 'date', "");
+
+      $res = $this->existe_tabla('banco');
+      if ($res != true) $this->crea_tabla_banco();
 
       return 1;
     }
@@ -116,12 +195,11 @@ public function crea_tabla_paises(){
     public function crea_tabla_empleado(){
       $query = $this->db->query("CREATE TABLE empleado (
                                     id_empleado SERIAL,
-                                    nombre_empleado varchar(255),
+                                    nombres varchar(255),
                                     tipo_identificacion int,
                                     telf_empleado varchar(255),
                                     nro_ident varchar(255),
                                     correo_empleado varchar(255),
-                                    direccion_empleado varchar(255),
                                     foto_empleado bytea,
                                     perfil int,
                                     id_departamento int,
@@ -152,5 +230,118 @@ public function crea_tabla_paises(){
       }        
     }
 
+    public function crea_tabla_cargafamiliar(){
+      $query = $this->db->query("CREATE TABLE cargafamiliar (
+                                    id SERIAL,
+                                    id_empleado int,
+                                    nombre_familiar varchar(255),
+                                    nro_ident varchar(100),
+                                    tipo_parentesco int,
+                                    telf_familiar varchar(100),
+                                    fecha_nacimiento date,
+                                    sexo char(1),/*M-Masculino, F-Femenino*/
+                                    activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
+
+    }
+
+    public function chequea_tabla_parentesco(){
+      $res = $this->existe_tabla('parentesco');
+      if ($res == true) {
+            $query = $this->db->query("SELECT count(*) as cant FROM parentesco");
+            $r = $query->result();
+            $res = ($r[0]->cant != 7);
+      }
+      if ($res != true){
+            $this->db->query("DROP TABLE IF EXISTS parentesco;");
+
+            $this->db->query("CREATE TABLE parentesco (
+                                id int,
+                                parentesco varchar(255),
+                                PRIMARY KEY (id) 
+                                )");
+            $this->db->query("INSERT INTO parentesco (id, parentesco) VALUES(1, 'Hijo(a)')");
+            $this->db->query("INSERT INTO parentesco (id, parentesco) VALUES(2, 'Conyuge')");
+            $this->db->query("INSERT INTO parentesco (id, parentesco) VALUES(3, 'Madre')");
+            $this->db->query("INSERT INTO parentesco (id, parentesco) VALUES(4, 'Padre')");
+            $this->db->query("INSERT INTO parentesco (id, parentesco) VALUES(5, 'Hermano(a)')");
+            $this->db->query("INSERT INTO parentesco (id, parentesco) VALUES(6, 'Nieto(a)')");
+            $this->db->query("INSERT INTO parentesco (id, parentesco) VALUES(7, 'Abuelo(a)')");
+      }      
+    }
+
+    public function chequea_tabla_estadocivil(){
+      $res = $this->existe_tabla('estadocivil');
+      if ($res == true) {
+            $query = $this->db->query("SELECT count(*) as cant FROM estadocivil");
+            $r = $query->result();
+            $res = ($r[0]->cant != 5);
+      }
+      if ($res != true){
+            $this->db->query("DROP TABLE IF EXISTS estadocivil;");
+
+            $this->db->query("CREATE TABLE estadocivil (
+                                id int,
+                                estadocivil varchar(255),
+                                PRIMARY KEY (id) 
+                                )");
+            $this->db->query("INSERT INTO estadocivil (id, estadocivil) VALUES(1, 'Soltero(a)')");
+            $this->db->query("INSERT INTO estadocivil (id, estadocivil) VALUES(2, 'Casado(a)')");
+            $this->db->query("INSERT INTO estadocivil (id, estadocivil) VALUES(3, 'Viudo(a)')");
+            $this->db->query("INSERT INTO estadocivil (id, estadocivil) VALUES(4, 'Divorciado(a)')");
+            $this->db->query("INSERT INTO estadocivil (id, estadocivil) VALUES(5, 'Union Libre')");
+      }      
+    }
+
+    public function chequea_tabla_tipovivienda(){
+      $res = $this->existe_tabla('tipovivienda');
+      if ($res == true) {
+            $query = $this->db->query("SELECT count(*) as cant FROM tipovivienda");
+            $r = $query->result();
+            $res = ($r[0]->cant != 2);
+      }
+      if ($res != true){
+            $this->db->query("DROP TABLE IF EXISTS tipovivienda;");
+
+            $this->db->query("CREATE TABLE tipovivienda (
+                                id int,
+                                tipovivienda varchar(255),
+                                PRIMARY KEY (id) 
+                                )");
+            $this->db->query("INSERT INTO tipovivienda (id, tipovivienda) VALUES(1, 'Propia')");
+            $this->db->query("INSERT INTO tipovivienda (id, tipovivienda) VALUES(2, 'Arrendada')");
+      }      
+    }
+
+    public function chequea_tabla_tipocuentabanco(){
+      $res = $this->existe_tabla('tipocuentabanco');
+      if ($res == true) {
+            $query = $this->db->query("SELECT count(*) as cant FROM tipocuentabanco");
+            $r = $query->result();
+            $res = ($r[0]->cant != 2);
+      }
+      if ($res != true){
+            $this->db->query("DROP TABLE IF EXISTS tipocuentabanco;");
+
+            $this->db->query("CREATE TABLE tipocuentabanco (
+                                id int,
+                                tipocuentabanco varchar(255),
+                                PRIMARY KEY (id) 
+                                )");
+            $this->db->query("INSERT INTO tipocuentabanco (id, tipocuentabanco) VALUES(1, 'Corriente')");
+            $this->db->query("INSERT INTO tipocuentabanco (id, tipocuentabanco) VALUES(2, 'Ahorro')");
+      }      
+    }
+
+    public function crea_tabla_banco(){
+      $query = $this->db->query("CREATE TABLE banco (
+                                    id SERIAL,
+                                    nombre_banco varchar(255),
+                                    activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
+
+    }
 
 }

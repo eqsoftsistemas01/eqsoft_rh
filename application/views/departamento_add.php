@@ -4,6 +4,7 @@
     }   
 </style>
 <script type="text/javascript">
+    $("#formRET").validationEngine();
 
 </script>
 <div id = "contenido_ret" class="col-md-6">
@@ -11,7 +12,7 @@
         <div class="box-header with-border">
           <h3 class="box-title"></i> Datos del Departamento</h3>
         </div>
-        <form id="formdpto" name="formdpto" method='POST' action="#" onSubmit='return false' >
+        <form id="formRET" name="formRET" method='POST' action="#" onSubmit='return false' >
             <div class="box-body">
                 <div class="row">
                     <?php /* CAMPO HIDDEN CON EL ID  (EN CASO DE MODIFICACIÓN DEL REGISTRO) */ 
@@ -31,7 +32,9 @@
                       <label for="lb_res">Nombre del Jefe</label>
                       <select id="cmb_empleado" name="cmb_empleado" class="form-control">
                       <?php 
-                        if(@$empleados != NULL){ ?>
+                        $jefe = NULL;
+                        if ($obj) { $jefe  = $obj->id_jefedepartamento; }
+                        if((@$jefe != NULL) && (@$jefe != 0)){ ?>
                         <?php } else { ?>
                         <option  value="" selected="TRUE">Seleccione Jefe del Departamento...</option>
                         <?php } 
@@ -39,14 +42,14 @@
                             foreach ($empleados as $emp):
                                 if(@$emp->id_empleado != NULL){
                                     if($obj->id_jefedepartamento == $emp->id_empleado){ ?>
-                                         <option value="<?php  print $emp->id_empleado; ?>" selected="TRUE"> <?php  print $suc->nombre_empleado; ?> </option>
+                                         <option value="<?php  print $emp->id_empleado; ?>" selected="TRUE"> <?php  print $emp->nombre_empleado; ?> </option>
                                         <?php
                                     }else{ ?>
-                                        <option value="<?php  print $emp->id_empleado; ?>" > <?php  print $suc->nombre_empleado; ?> </option>
+                                        <option value="<?php  print $emp->id_empleado; ?>" > <?php  print $emp->nombre_empleado; ?> </option>
                                         <?php
                                     }
                                 }else{ ?>
-                                    <option value="<?php  print $emp->id_empleado; ?>" > <?php  print $suc->nombre_empleado; ?> </option>
+                                    <option value="<?php  print $emp->id_empleado; ?>" > <?php  print $emp->nombre_empleado; ?> </option>
                                     <?php
                                     }   ?>
                                 <?php

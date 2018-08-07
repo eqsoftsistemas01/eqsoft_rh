@@ -41,7 +41,7 @@ class Departamento extends CI_Controller {
 
     public function upd_departamento(){
         $id = $this->session->userdata("tmp_dpto_id");
-        $empleados = $this->Departamento_model->lst_empleado();
+        $empleados = $this->Departamento_model->lst_empleado($id);
         $data["empleados"] = $empleados;
         $data["base_url"] = base_url();
         $obj = $this->Departamento_model->sel_departamento_id($id);

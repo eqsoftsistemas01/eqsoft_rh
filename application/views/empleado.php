@@ -32,10 +32,10 @@
                     },
         'ajax': "Empleado/listadoEmpleados",
         'columns': [
+            {"data": "apellido"},
             {"data": "nombre"},
             {"data": "identificacion"},   
             {"data": "departamento"},   
-            {"data": "direccion"},   
             {"data": "telefono"},   
             {"data": "correo"},   
             {"data": "ver"}                            
@@ -44,6 +44,19 @@
 
 
     $(document).on('click', '.ret_ver', function(){
+      id = $(this).attr('id');
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "<?php echo base_url('Empleado/tmp_empleado');?>",
+        data: {id: id},
+        success: function(json) {
+          location.replace("<?php print $base_url;?>Empleado/upd_empleado");
+        }
+      });
+    });  
+
+    $(document).on('click', '.ret_ver00', function(){
       id = $(this).attr('id');
       $.ajax({
         type: "POST",
@@ -69,6 +82,10 @@
     });  
 
     $(document).on('click', '.ret_add', function(){
+      location.replace("<?php print $base_url;?>Empleado/add_empleado");
+    });  
+
+    $(document).on('click', '.ret_add00', function(){
       $.fancybox.open({
         type: "ajax",
         width: 550,
@@ -195,10 +212,10 @@
                               <table id="TableObj" class="table table-bordered table-striped table-responsive">
                                 <thead>
                                   <tr >
-                                    <th>Nombre</th>
+                                    <th>Apellidos</th>
+                                    <th>Nombres</th>
                                     <th>Identificacion</th>
                                     <th>Departamento</th>
-                                    <th>Direccion</th>
                                     <th>Telefono</th>
                                     <th>Correo</th>
                                     <th>Accion</th>

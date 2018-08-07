@@ -18,8 +18,6 @@
 
   $(document).ready(function () {
 
-    $("#formdpto").validationEngine();
-
     $('#TableObj').dataTable({
       "language":{  "lengthMenu":"Mostrar _MENU_ registros por página.",
                     "zeroRecords": "Lo sentimos. No se encontraron registros.",
