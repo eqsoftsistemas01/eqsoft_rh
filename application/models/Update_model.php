@@ -25,6 +25,9 @@ class Update_model extends CI_Model {
       $res = $this->existe_tabla('paises');
       if ($res != true) $this->crea_tabla_paises();
 
+      $res = $this->existe_tabla('ciudad');
+      if ($res != true) $this->crea_tabla_ciudad();
+
       $this->chequea_tabla_perfil();
 
 
@@ -96,6 +99,15 @@ public function crea_tabla_paises(){
       $query = $this->db->query("CREATE TABLE paises (
                                     id SERIAL,
                                     nombre_pais varchar(255),
+                                    activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
+
+    }
+    public function crea_tabla_ciudad(){
+      $query = $this->db->query("CREATE TABLE ciudad (
+                                    id SERIAL,
+                                    nombre_ciudad varchar(255),
                                     activo int,
                                     PRIMARY KEY (id) 
                                     )");

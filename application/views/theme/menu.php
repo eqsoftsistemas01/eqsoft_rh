@@ -129,10 +129,13 @@
             <li><a href="<?php print $base_url ?>cargos"><i class="fa fa-balance-scale"></i> Cargos</a></li>
             <?php } ?>            
             <?php if($perfil == 1) { ?>
-            <li><a href="<?php print $base_url ?>empleado"><i class="fa fa-male"></i> Empleados</a></li>
+            <li><a href="<?php print $base_url ?>empleado"><i class="fa fa-id-card"></i> Empleados</a></li>
             <?php } ?> 
             <?php if($perfil == 1) { ?>
-            <li><a href="<?php print $base_url ?>paises"><i class="fa glyphicon-tree-deciduous"></i> Paises</a></li>
+            <li><a href="<?php print $base_url ?>paises"><i class="fa fa-universal-access"></i> Paises</a></li>
+            <?php } ?> 
+            <?php if($perfil == 1) { ?>
+            <li><a href="<?php print $base_url ?>ciudad"><i class="fa fa-list-alt"></i> Ciudades</a></li>
             <?php } ?> 
           </ul>
         </li>
