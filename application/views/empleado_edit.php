@@ -29,7 +29,94 @@ date_default_timezone_set("America/Guayaquil");
 
     $("#frm_emp").validationEngine();
 
+    $('#TableCargaFamiliar').dataTable({
+      "language":{  "lengthMenu":"Mostrar _MENU_ registros por página.",
+                    "zeroRecords": "Lo sentimos. No se encontraron registros.",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "No hay registros aún.",
+                    "infoFiltered": "(filtrados de un total de _MAX_ registros)",
+                    "search" : "Búsqueda",
+                    "LoadingRecords": "Cargando ...",
+                    "Processing": "Procesando...",
+                    "SearchPlaceholder": "Comience a teclear...",
+                    "paginate": { "previous": "Anterior", "next": "Siguiente", }
+                    },
+        'ajax': "listadoCargaFamiliar",
+        'columns': [
+            {"data": "apellido"},
+            {"data": "nombre"},
+            {"data": "identificacion"},   
+            {"data": "parentesco"},   
+            {"data": "telefono"},   
+            {"data": "fechanac"},   
+            {"data": "sexo"},   
+            {"data": "ver"}                            
+        ]
+    });
 
+  });
+
+  $(document).on('click', '.add_carga', function(){
+    $.fancybox.open({
+      type: "ajax",
+      width: 550,
+      height: 550,
+      ajax: {
+         dataType: "html",
+         type: "POST"
+      },
+      href: "<?php echo base_url('Empleado/add_cargafamiliar');?>"
+    });
+  });
+
+  $(document).on('click', '.carga_ver', function(){
+      id = $(this).attr('id');
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "<?php echo base_url('Empleado/tmp_carga');?>",
+        data: {id: id},
+        success: function(json) {
+          $.fancybox.open({
+            type: "ajax",
+            width: 550,
+            height: 550,
+            ajax: {
+               dataType: "html",
+               type: "POST"
+            },
+            href: "<?php echo base_url('Empleado/edit_cargafamiliar');?>"
+          });
+        }
+      });
+
+
+  });
+
+  $(document).on('click','.btnguardarcarga', function() {
+      id = $('#txt_id_fam').val();
+      apellidos = $('#txt_apellidos_fam').val();
+      nombres = $('#txt_nombres_fam').val();
+      activo = $('#chkactivo_fam').val();
+      if(activo == 'on'){ activo = 1; } else { activo = 0; }
+      ident = $('#txt_ident_fam').val();
+      parentesco = $('#cmb_parentesco_fam').val();
+      telefono = $('#txt_telefono_fam').val();
+      fechanac = $('#fechanac_fam').val();
+      fechafall = $('#fechafall_fam').val();
+      sexo = $('#cmb_sexo_fam').val();
+
+      $.ajax({
+        url: base_url + "Empleado/guardar_carga",
+        data: { id: id, apellidos: apellidos, nombres: nombres, activo: activo, ident: ident, sexo: sexo,
+                parentesco: parentesco, telefono: telefono, fechanac: fechanac, fechafall: fechafall },
+        type: 'POST',
+        dataType: 'json',
+        success: function(json) {
+          $.fancybox.close();
+          $('#TableCargaFamiliar').DataTable().ajax.reload();
+        }
+      });
   });
 
 </script>
@@ -413,6 +500,42 @@ date_default_timezone_set("America/Guayaquil");
                     </div>  <!-- tabadicional --> 
 
                     <div class="tab-pane" id="tabcargafamiliar">
+
+                      <div class="box box-danger">
+                      
+                        <div class="box-header with-border">
+
+                          <div class="pull-right">
+                              <button type="button" class="btn btn-info btn-grad add_carga">
+                                  <i class="fa fa-plus-square"></i> Añadir
+                              </button>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-xs-12">
+                                <div class="box-body table-responsive">
+                                  <table id="TableCargaFamiliar" class="table table-bordered table-striped table-responsive">
+                                    <thead>
+                                      <tr >
+                                        <th>Apellidos</th>
+                                        <th>Nombres</th>
+                                        <th>Identificacion</th>
+                                        <th>Parentesco</th>
+                                        <th>Telefono</th>
+                                        <th>Fecha Nac.</th>
+                                        <th>Sexo</th>
+                                        <th>Accion</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                  </table>
+                                </div>
+                            </div>
+                          </div>                      
+
+                        </div>
+                      </div>    
                     </div>  <!-- tabcargafamiliar --> 
 
 
@@ -422,7 +545,7 @@ date_default_timezone_set("America/Guayaquil");
 
               <div  align="center" class="box-footer">
                   <div class="form-actions ">
-                      <button type="submit" class="btn btn-success btn-grad btn-lg no-margin-bottom">
+                      <button type="submit" class="btn btn-success btn-grad no-margin-bottom">
                           <i class="fa fa-save "></i> Guardar
                       </button>
                   </div>

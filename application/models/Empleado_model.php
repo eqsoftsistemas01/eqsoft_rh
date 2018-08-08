@@ -34,7 +34,6 @@ class Empleado_model extends CI_Model {
         return $result;
     }
 
-
     public function upd_empleado($idempleado, $nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, $celular, $correo, 
                                  $activo, $departamento, $lugarexpedicion, $cedulamilitar, $pasaporte, $fecha_nacimiento, 
                                  $sexo, $estadocivil, $peso, $talla, $codigoreloj, $calleprincipal, $numerovivienda,
@@ -64,7 +63,7 @@ class Empleado_model extends CI_Model {
       if ((!$cargo) || (trim($cargo) == '')) { $cargo = 'NULL'; }
 
       $this->db->query(" UPDATE empleado SET 
-                            apellidos = '$nombre',
+                            apellidos = '$apellido',
                             nombres = '$nombre',
                             tipo_identificacion = $tipoident,
                             nro_ident = '$identificacion',
@@ -105,6 +104,18 @@ class Empleado_model extends CI_Model {
                             id_contrato = $contrato, 
                             id_cargo = $cargo
                            WHERE id_empleado = $idempleado");
+
+      $usua = $this->session->userdata('usua');
+      $idusu = $usua->id_usu;
+      $this->db->query("DELETE FROM cargafamiliar WHERE id_empleado = $idempleado"); 
+      $this->db->query("INSERT INTO cargafamiliar (id_empleado, apellidos_familiar, nombres_familiar, nro_ident, 
+                                                     tipo_parentesco, telf_familiar, activo, sexo, fecha_nacimiento, fecha_fallece)
+                          SELECT $idempleado, apellidos_familiar, nombres_familiar, nro_ident, 
+                                 tipo_parentesco, telf_familiar, activo, sexo, fecha_nacimiento, fecha_fallece
+                            FROM cargafamiliar_tmp t
+                            INNER JOIN empleado_tmp e on e.id = t.id_empleadotmp
+                            WHERE e.id_usuario = $idusu");
+
     }
 
     public function add_empleado($nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, $celular, $correo, 
@@ -151,6 +162,20 @@ class Empleado_model extends CI_Model {
                                    $banco, $tipocuenta, '$numerocuenta', '$nombrecontacto', '$direccioncontacto', 
                                    $parentescocontacto, '$telefonocontacto', $empresa, $tiposangre, $tipodiscapacidad, 
                                    $p100discapacidad, $contrato, $cargo);");
+        $query = $this->db->query("SELECT max(id_empleado) as maxid FROM empleado");
+        $resultado = $query->result();
+        $newid = $resultado[0]->maxid;
+
+        $usua = $this->session->userdata('usua');
+        $idusu = $usua->id_usu;
+        $this->db->query("INSERT INTO cargafamiliar (id_empleado, apellidos_familiar, nombres_familiar, nro_ident, 
+                                                     tipo_parentesco, telf_familiar, activo, sexo, fecha_nacimiento, fecha_fallece)
+                            SELECT $newid, apellidos_familiar, nombres_familiar, nro_ident, 
+                                   tipo_parentesco, telf_familiar, activo, sexo, fecha_nacimiento, fecha_fallece
+                              FROM cargafamiliar_tmp t
+                              INNER JOIN empleado_tmp e on e.id = t.id_empleadotmp
+                              WHERE e.id_usuario = $idusu");
+
     }
 
     public function del_empleado($idempleado){
@@ -216,6 +241,97 @@ class Empleado_model extends CI_Model {
                                     SELECT 'F' as id, 'Femenino' as sexo;");
         $result = $query->result();
         return $result;
+    }
+
+    public function get_empleadotmp($usuario, $idempleado = 0) {
+        $this->db->query("DELETE FROM cargafamiliar_tmp WHERE NOT id_empleadotmp IN 
+                            (SELECT DISTINCT id_empleado FROM empleado_tmp);");
+        $this->db->query("DELETE FROM cargafamiliar_tmp WHERE id_empleadotmp IN 
+                            (SELECT id_empleado FROM empleado_tmp WHERE id_usuario = $usuario AND id_empleado = $idempleado);");
+        $this->db->query("DELETE FROM empleado_tmp WHERE id_usuario = $usuario AND id_empleado = $idempleado;");
+
+        $this->db->query("INSERT INTO empleado_tmp (id_empleado, id_usuario) Values($idempleado, $usuario);");
+        $query = $this->db->query("SELECT max(id) as newid FROM empleado_tmp;");
+        $result = $query->result();
+        $newtmpid =  $result[0]->newid;
+
+        $usua = $this->session->userdata('usua');
+        $idusu = $usua->id_usu;
+        $this->db->query("INSERT INTO cargafamiliar_tmp (id_empleadotmp, apellidos_familiar, nombres_familiar, nro_ident, 
+                                                       tipo_parentesco, telf_familiar, activo, sexo, fecha_nacimiento, fecha_fallece)
+                            SELECT $newtmpid, apellidos_familiar, nombres_familiar, nro_ident, 
+                                   tipo_parentesco, telf_familiar, activo, sexo, fecha_nacimiento, fecha_fallece
+                              FROM cargafamiliar t
+                              WHERE id_empleado = $idempleado");
+
+        return $newtmpid;
+    }
+
+    public function del_empleadotmp($idempleadotmp) {
+        $this->db->query("DELETE FROM cargafamiliar_tmp WHERE id_empleadotmp = $idempleadotmp;");
+        $this->db->query("DELETE FROM empleado_tmp WHERE id = $idempleadotmp;");
+    }
+
+    public function sel_cargafamiliar_tmpid($idempleado){
+      $query = $this->db->query("SELECT t.id, t.apellidos_familiar, t.nombres_familiar, t.nro_ident, t.tipo_parentesco, 
+                                        t.telf_familiar, t.fecha_nacimiento, t.fecha_fallece, t.sexo, t.activo, p.parentesco,
+                                        case t.sexo WHEN 'M' then 'Masculino' else 'Femenino' end as sexonombre
+                                    FROM cargafamiliar_tmp t 
+                                    LEFT JOIN parentesco p on p.id = t.tipo_parentesco
+                                    WHERE id_empleadotmp = $idempleado");
+      $result = $query->result();
+      return $result;
+    }
+
+    public function sel_cargafamiliar_id($id){
+      $query = $this->db->query("SELECT id, apellidos_familiar, nombres_familiar, nro_ident, tipo_parentesco, 
+                                        telf_familiar, fecha_nacimiento, fecha_fallece, sexo, activo
+                                    FROM cargafamiliar_tmp 
+                                    WHERE id = $id");
+      $result = $query->result();
+      return $result[0];
+    }
+
+    /* SELECCIONAR EL Empleado POR IDENTIF */
+    public function existeIdentificacionCarga($idempleado, $identificacion){
+      $query = $this->db->query("SELECT count(*) as cant FROM cargafamiliar WHERE nro_ident = '$identificacion'");
+      $resultado = $query->result();
+      $res = $resultado[0]->cant;
+      if ($res == 0){
+        $query = $this->db->query("SELECT count(*) as cant FROM cargafamiliar_tmp 
+                                     WHERE nro_ident = '$identificacion' AND id_empleadotmp = $idempleado");
+        $resultado = $query->result();
+        $res = $resultado[0]->cant;        
+      }
+      return $res;
+    }
+
+    public function add_cargafamiliar_tmp($empleado, $apellidos, $nombres, $ident, $parentesco, $telf, $fechanac, $fechafall, $activo, $sexo){
+      if ((!$parentesco) || (trim($parentesco) == '')) { $parentesco = 'NULL'; }
+      if (!$fechanac) { $fechanac = ''; } 
+      if (!$fechafall) { $fechafall = ''; } 
+      $this->db->query("INSERT INTO cargafamiliar_tmp (id_empleadotmp, apellidos_familiar, nombres_familiar, nro_ident, 
+                                                       tipo_parentesco, telf_familiar, activo, sexo, fecha_nacimiento, fecha_fallece)
+                          SELECT $empleado, '$apellidos', '$nombres', '$ident', $parentesco, '$telf', $activo, '$sexo',
+                                 case when ('$fechanac' != '') then to_date('$fechanac', 'YYYY-MM-DD') else NULL end,
+                                 case when ('$fechafall' != '') then to_date('$fechafall', 'YYYY-MM-DD') else NULL end");
+    }
+
+    public function upd_cargafamiliar_tmp($id, $apellidos, $nombres, $ident, $parentesco, $telf, $fechanac, $fechafall, $activo, $sexo){
+      if ((!$parentesco) || (trim($parentesco) == '')) { $parentesco = 'NULL'; }
+      if (!$fechanac) { $fechanac = ''; } 
+      if (!$fechafall) { $fechafall = ''; } 
+      $this->db->query("UPDATE cargafamiliar_tmp SET
+                            apellidos_familiar = '$apellidos', 
+                            nombres_familiar = '$nombres', 
+                            nro_ident = '$ident', 
+                            tipo_parentesco = $parentesco, 
+                            telf_familiar = '$telf', 
+                            fecha_nacimiento = case when ('$fechanac' != '') then to_date('$fechanac', 'YYYY-MM-DD') else NULL end, 
+                            fecha_fallece = case when ('$fechafall' != '') then to_date('$fechafall', 'YYYY-MM-DD') else NULL end,  
+                            activo = $activo,
+                            sexo = '$sexo'
+                          WHERE id = $id");
     }
 
 }

@@ -40,6 +40,18 @@ class Empleado extends CI_Controller {
         print json_encode($arr);
     }
 
+    function carga_empleadotmp($idempleado) {
+        $idusu = $this->session->userdata("sess_id");
+        $id = $this->Empleado_model->get_empleadotmp($idusu, $idempleado);
+        $this->session->unset_userdata("tmp_empleado_idtmp"); 
+        $this->session->set_userdata("tmp_empleado_idtmp", NULL);
+        if ($id != NULL) {
+            $this->session->set_userdata("tmp_empleado_idtmp", $id);
+        } else {
+            $this->session->set_userdata("tmp_empleado_idtmp", NULL);
+        }
+    }
+
     public function listadoEmpleados() {
         $registro = $this->Empleado_model->lst_empleado();
         $tabla = "";
@@ -61,6 +73,7 @@ class Empleado extends CI_Controller {
 
     public function upd_empleado(){
         $id = $this->session->userdata("tmp_empleado_id");
+        $this->carga_empleadotmp($id);
         $tipoident = $this->Empleado_model->lst_tipoidentificacion();
         $perfil = $this->usuario_model->perfil_lst();
         $departamento = $this->Departamento_model->sel_departamento();
@@ -155,6 +168,7 @@ class Empleado extends CI_Controller {
     }
 
     public function add_empleado(){
+        $this->carga_empleadotmp(0);
         $tipoident = $this->Empleado_model->lst_tipoidentificacion();
         $perfil = $this->usuario_model->perfil_lst();
         $departamento = $this->Departamento_model->sel_departamento();
@@ -195,6 +209,112 @@ class Empleado extends CI_Controller {
         $arr['resu'] = $resu;
         print json_encode($arr);
 
+    }
+
+     /* Verificar Identificador  */
+    public function existeIdentificacionCarga(){
+        $id = $this->input->post('id');
+        $identificacion = $this->input->post('identificacion');
+        $resu = $this->Empleado_model->existeIdentificacionCarga($id, $identificacion);
+        $arr['resu'] = $resu;
+        print json_encode($arr);
+
+    }
+
+    public function listadoCargaFamiliar() {
+        $id = $this->session->userdata("tmp_empleado_idtmp");
+        $registro = $this->Empleado_model->sel_cargafamiliar_tmpid($id);
+        $tabla = "";
+        foreach ($registro as $row) {
+            $fec = "";
+            if ($row->fecha_nacimiento){
+                $fec = str_replace('-', '/', $row->fecha_nacimiento); $fec = date("d/m/Y", strtotime($fec));
+            } 
+            $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad carga_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad carga_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
+            $tabla.='{  "id":"' .$row->id. '",
+                        "apellido":"' .$row->apellidos_familiar. '",
+                        "nombre":"' .$row->nombres_familiar. '",
+                        "identificacion":"' .$row->nro_ident. '",
+                        "parentesco":"' .$row->parentesco. '",
+                        "telefono":"' .$row->telf_familiar. '",
+                        "fechanac":"' .$fec. '",
+                        "sexo":"' .$row->sexonombre. '",
+                        "ver":"'.$ver.'"
+                    },';
+        }
+        $tabla = substr($tabla, 0, strlen($tabla) - 1);
+        echo '{"data":[' . $tabla . ']}';
+    }
+
+    public function add_cargafamiliar(){
+        $parentesco = $this->Empleado_model->lst_parentesco();
+        $data["parentesco"] = $parentesco;
+        $sexo = $this->Empleado_model->lst_sexo();
+        $data["sexo"] = $sexo;
+
+        $data["base_url"] = base_url();
+        $this->load->view("empleadocarga_add", $data);
+    } 
+
+    public function tmp_carga() {
+        $this->session->unset_userdata("tmp_carga_id"); 
+        $id = $this->input->post("id");
+        $this->session->set_userdata("tmp_carga_id", NULL);
+        if ($id != NULL) {
+            $this->session->set_userdata("tmp_carga_id", $id);
+        } else {
+            $this->session->set_userdata("tmp_carga_id", NULL);
+        }
+        $arr['resu'] = 1;
+        print json_encode($arr);
+    }
+
+    public function edit_cargafamiliar(){
+        $id = $this->session->userdata("tmp_carga_id");
+        $parentesco = $this->Empleado_model->lst_parentesco();
+        $data["parentesco"] = $parentesco;
+        $sexo = $this->Empleado_model->lst_sexo();
+        $data["sexo"] = $sexo;
+        $obj = $this->Empleado_model->sel_cargafamiliar_id($id);
+        $data["obj"] = $obj;
+
+        $data["base_url"] = base_url();
+        $this->load->view("empleadocarga_add", $data);
+    } 
+
+    public function guardar_carga(){
+        $empleadotmp = $this->session->userdata("tmp_empleado_idtmp");
+        $id = $this->input->post('id'); 
+        $apellidos = $this->input->post('apellidos'); 
+        $nombres = $this->input->post('nombres'); 
+        $activo = $this->input->post('activo'); 
+        $ident = $this->input->post('ident'); 
+        $parentesco = $this->input->post('parentesco'); 
+        $telf = $this->input->post('telefono'); 
+        $sexo = $this->input->post('sexo'); 
+        $fec = $this->input->post('fechanac'); 
+        if ((!$fec) || (trim($fec) == '')) 
+            { $fechanac = ''; }
+        else {
+            $fechanac = str_replace('/', '-', $fec); 
+            $fechanac = date("Y-m-d", strtotime($fechanac));
+        }
+        $fec = $this->input->post('fechafall'); 
+        if ((!$fec) || (trim($fec) == '')) 
+            { $fechafall = ''; }
+        else {
+            $fechafall = str_replace('/', '-', $fec); 
+            $fechafall = date("Y-m-d", strtotime($fechafall));
+        }
+
+        if ($id == 0){
+            $resu = $this->Empleado_model->add_cargafamiliar_tmp($empleadotmp, $apellidos, $nombres, $ident, $parentesco, $telf, $fechanac, $fechafall, $activo, $sexo);
+        }
+        else {
+            $resu = $this->Empleado_model->upd_cargafamiliar_tmp($id, $apellidos, $nombres, $ident, $parentesco, $telf, $fechanac, $fechafall, $activo, $sexo);
+        }
+        $arr['mens'] = $id;
+        print json_encode($arr); 
     }
 
 }

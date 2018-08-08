@@ -197,7 +197,7 @@
                       <h3 class="box-title"></i> Datos de Empleados</h3>
                       <div class="pull-right"> 
 
-                          <button type="button" class="btn btn-danger btn-grad ret_add" >
+                          <button type="button" class="btn btn-info btn-grad ret_add" >
                             <i class="fa fa-plus-square"></i> Añadir
                           </button>   
 

@@ -33,6 +33,12 @@ class Update_model extends CI_Model {
       $res = $this->existe_tabla('cargafamiliar');
       if ($res != true) $this->crea_tabla_cargafamiliar();
 
+      $res = $this->existe_tabla('empleado_tmp');
+      if ($res != true) $this->crea_tabla_empleado_tmp();
+
+      $res = $this->existe_tabla('cargafamiliar_tmp');
+      if ($res != true) $this->crea_tabla_cargafamiliar_tmp();
+
       $this->chequea_tabla_parentesco();
       $this->chequea_tabla_estadocivil();
       $this->chequea_tabla_tipovivienda();
@@ -231,18 +237,48 @@ public function crea_tabla_paises(){
     }
 
     public function crea_tabla_cargafamiliar(){
-      $query = $this->db->query("CREATE TABLE cargafamiliar (
-                                    id SERIAL,
-                                    id_empleado int,
-                                    nombre_familiar varchar(255),
-                                    nro_ident varchar(100),
-                                    tipo_parentesco int,
-                                    telf_familiar varchar(100),
-                                    fecha_nacimiento date,
-                                    sexo char(1),/*M-Masculino, F-Femenino*/
-                                    activo int,
-                                    PRIMARY KEY (id) 
-                                    )");
+      $this->db->query("CREATE TABLE cargafamiliar (
+                          id SERIAL,
+                          id_empleado int,
+                          nombres_familiar varchar(255),
+                          apellidos_familiar varchar(255),
+                          nro_ident varchar(100),
+                          tipo_parentesco int,
+                          telf_familiar varchar(100),
+                          fecha_nacimiento date,
+                          fecha_fallece date,
+                          sexo char(1),/*M-Masculino, F-Femenino*/
+                          activo int,
+                          PRIMARY KEY (id) 
+                          )");
+
+    }
+
+    public function crea_tabla_empleado_tmp(){
+      $this->db->query("CREATE TABLE empleado_tmp (
+                          id SERIAL,
+                          id_empleado int,
+                          id_usuario int,
+                          PRIMARY KEY (id) 
+                          )");
+
+    }
+
+    public function crea_tabla_cargafamiliar_tmp(){
+      $this->db->query("CREATE TABLE cargafamiliar_tmp (
+                          id SERIAL,
+                          id_empleadotmp int,
+                          nombres_familiar varchar(255),
+                          apellidos_familiar varchar(255),
+                          nro_ident varchar(100),
+                          tipo_parentesco int,
+                          telf_familiar varchar(100),
+                          fecha_nacimiento date,
+                          fecha_fallece date,
+                          sexo char(1),/*M-Masculino, F-Femenino*/
+                          activo int,
+                          PRIMARY KEY (id) 
+                          )");
 
     }
 
