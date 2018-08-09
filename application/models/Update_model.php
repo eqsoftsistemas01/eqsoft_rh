@@ -129,6 +129,12 @@ class Update_model extends CI_Model {
       $res = $this->existe_tabla('empresa');
       if ($res != true) $this->crea_tabla_empresa();
 
+      $res = $this->existe_tabla('provincia');
+      if ($res != true) $this->crea_tabla_provincia();
+
+      $res = $this->existe_columna_tabla('ciudad','id_provincia');
+      if ($res != true) $this->add_columna_tabla('ciudad','id_provincia', 'int', "");
+
       return 1;
     }
 
@@ -193,10 +199,20 @@ class Update_model extends CI_Model {
                                     )");
 
     }
-public function crea_tabla_paises(){
+    public function crea_tabla_paises(){
       $query = $this->db->query("CREATE TABLE paises (
                                     id SERIAL,
                                     nombre_pais varchar(255),
+                                    activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
+
+    }
+    public function crea_tabla_provincia(){
+      $query = $this->db->query("CREATE TABLE provincia (
+                                    id SERIAL,
+                                    nombre_provincia varchar(255),
+                                    id_pais int,
                                     activo int,
                                     PRIMARY KEY (id) 
                                     )");
@@ -206,6 +222,7 @@ public function crea_tabla_paises(){
       $query = $this->db->query("CREATE TABLE ciudad (
                                     id SERIAL,
                                     nombre_ciudad varchar(255),
+                                    id_provincia int,
                                     activo int,
                                     PRIMARY KEY (id) 
                                     )");

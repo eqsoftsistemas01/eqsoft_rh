@@ -113,7 +113,7 @@ date_default_timezone_set("America/Guayaquil");
           <div class="box-header with-border">
             <h3 class="box-title"></i> Datos del Banco</h3>
             <div class="pull-right"> 
-            <button type="button" class="btn btn-danger btn-grad add_ban" > <i class="fa fa-plus-square"></i> Añadir </button>   
+            <button type="button" class="btn btn-info btn-grad add_ban" > <i class="fa fa-plus-square"></i> Añadir </button>   
           </div>
         </div>
         <div class="box-body">

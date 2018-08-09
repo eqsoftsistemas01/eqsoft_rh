@@ -1,52 +1,52 @@
 <?php
 
 /*------------------------------------------------
-  ARCHIVO: Puntoemision.php
-  DESCRIPCION: Contiene los métodos relacionados con ciudad.
+  ARCHIVO: Provincia.php
+  DESCRIPCION: Contiene los métodos relacionados con provincia.
   FECHA DE CREACIÓN: 19/03/2018
   ------------------------------------------------ */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class Ciudad extends CI_Controller {
+class Provincia extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->auth_library->sess_validate(true);
         $this->auth_library->mssg_get();
-        $this->load->Model("Ciudad_model");
+        $this->load->Model("Provincia_model");
     }
 
     /* MÉTODO PREDETERMINADO DEL CONTROLADOR */
     public function index() {
         $idusu = $this->session->userdata("sess_id");
         $data["base_url"] = base_url();
-        $data["content"] = "ciudad";
+        $data["content"] = "provincia";
         $this->load->view("layout", $data);
     }
 
-    public function tmp_ciudad() {
-        $this->session->unset_userdata("tmp_ciudad_id"); 
+    public function tmp_provincia() {
+        $this->session->unset_userdata("tmp_provincia_id"); 
         $id = $this->input->post("id");
-        $this->session->set_userdata("tmp_ciudad_id", NULL);
+        $this->session->set_userdata("tmp_provincia_id", NULL);
         if ($id != NULL) {
-            $this->session->set_userdata("tmp_ciudad_id", $id);
+            $this->session->set_userdata("tmp_provincia_id", $id);
         } else {
-            $this->session->set_userdata("tmp_ciudad_id", NULL);
+            $this->session->set_userdata("tmp_provincia_id", NULL);
         }
         $arr['resu'] = 1;
         print json_encode($arr);
     }
 
-    public function upd_ciudad(){
-        $id = $this->session->userdata("tmp_ciudad_id");
-        $provincia = $this->Ciudad_model->lst_provincia();
-        $data["provincia"] = $provincia;
+    public function upd_provincia(){
+        $id = $this->session->userdata("tmp_provincia_id");
+        $pais = $this->Provincia_model->lst_pais();
+        $data["pais"] = $pais;
         $data["base_url"] = base_url();
-        $obj = $this->Ciudad_model->sel_ciudad_id($id);
+        $obj = $this->Provincia_model->sel_provincia_id($id);
         $data["obj"] = $obj;
-        $this->load->view("ciudad_add", $data);
+        $this->load->view("provincia_add", $data);
     }
 
     public function agregar(){
@@ -58,49 +58,49 @@ class Ciudad extends CI_Controller {
 */
         $id = $this->input->post('id'); 
         $nombre = $this->input->post('nombre'); 
-        $provincia = $this->input->post('provincia'); 
+        $pais = $this->input->post('pais'); 
        
         $activo = $this->input->post('activo');
 
         if($id != 0){
-            $resu = $this->Ciudad_model->upd_ciudad($id, $nombre, $provincia, $activo);
+            $resu = $this->Provincia_model->upd_provincia($id, $nombre, $pais, $activo);
         } else {
-            $resu = $this->Ciudad_model->add_ciudad($nombre, $provincia, $activo);
+            $resu = $this->Provincia_model->add_provincia($nombre, $pais, $activo);
         }
         $arr['mens'] = $id;
         print json_encode($arr); 
     }
 
-    public function add_ciudad(){
-        $provincia = $this->Ciudad_model->lst_provincia();
-        $data["provincia"] = $provincia;
+    public function add_provincia(){
+        $pais = $this->Provincia_model->lst_pais();
+        $data["pais"] = $pais;
         $data["base_url"] = base_url();
-        $this->load->view("ciudad_add", $data);
+        $this->load->view("provincia_add", $data);
     } 
 
     public function puede_eliminar(){
         $id = $this->input->post('id'); 
-        $resu = $this->Ciudad_model->candel_ciudad($id);
+        $resu = $this->Provincia_model->candel_provincia($id);
         $arr['mens'] = $resu;
         print json_encode($arr); 
     }
 
-    public function del_ciudad(){
+    public function del_provincia(){
         $id = $this->input->post('id'); 
-        $resu = $this->Ciudad_model->del_ciudad($id);
+        $resu = $this->Provincia_model->del_provincia($id);
         $arr['mens'] = $resu;
         print json_encode($arr); 
     }
 
 
-    public function listadoCiudades() {
-        $registro = $this->Ciudad_model->sel_ciudad();
+    public function listadoProvincias() {
+        $registro = $this->Provincia_model->sel_provincia();
         $tabla = "";
         foreach ($registro as $row) {
-            $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar Ciudad\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad ciudad_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad ciudad_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
+            $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar Provincia\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad prov_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad prov_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
             $tabla.='{  "id":"' .$row->id. '",
-                        "nombre":"' .$row->nombre_ciudad. '",
-                        "provincia":"' .$row->nombre_provincia. '",
+                        "nombre":"' .$row->nombre_provincia. '",
+                        "pais":"' .$row->nombre_pais. '",
                         "ver":"'.$ver.'"
                     },';
         }

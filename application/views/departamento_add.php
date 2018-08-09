@@ -60,7 +60,7 @@
                     </div>
 
                     <div class="form-group col-md-6">
-                        <input id="chkactivo" name="chkactivo" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->activo == 1){ print " checked";} } else {print " checked";} ?> style="margin-top:31px; margin-right:0px; margin-left:0px;" > <strong>Activo</strong>
+                        <input id="chkactivodpto" name="chkactivodpto" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->activo == 1){ print " checked";} }  ?> style="margin-top:31px; margin-right:0px; margin-left:0px;" > <strong>Activo</strong>
                     </div>
 
                     </div>

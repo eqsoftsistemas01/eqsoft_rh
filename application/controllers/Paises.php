@@ -75,14 +75,14 @@ class Paises extends CI_Controller {
 
     public function puede_eliminar(){
         $id = $this->input->post('id'); 
-        $resu = $this->Departamento_model->candel_departamento($id);
+        $resu = $this->Paises_model->candel_pais($id);
         $arr['mens'] = $resu;
         print json_encode($arr); 
     }
 
-    public function del_departamento(){
+    public function del_pais(){
         $id = $this->input->post('id'); 
-        $resu = $this->Departamento_model->del_departamento($id);
+        $resu = $this->Paises_model->del_pais($id);
         $arr['mens'] = $resu;
         print json_encode($arr); 
     }

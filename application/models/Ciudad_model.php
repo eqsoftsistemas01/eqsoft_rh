@@ -13,31 +13,35 @@ class Ciudad_model extends CI_Model {
     }
 
     public function sel_ciudad(){
-      $query = $this->db->query(" SELECT c.id, c.nombre_ciudad, c.activo
+      $query = $this->db->query(" SELECT c.id, c.nombre_ciudad, c.id_provincia, c.activo, p.nombre_provincia
                                   FROM ciudad c
+                                  LEFT JOIN provincia p on p.id = c.id_provincia
                                   ORDER BY c.nombre_ciudad");
       $result = $query->result();
       return $result;
     }
 
     public function sel_ciudad_id($ciudad){
-      $query = $this->db->query("SELECT id, nombre_ciudad, activo
+      $query = $this->db->query("SELECT id, nombre_ciudad, id_provincia, activo
                                    FROM ciudad WHERE id = $ciudad");
       $result = $query->result();
       return $result[0];
     }
 
-    public function upd_ciudad($ciudad, $nombre, $activo){
+    public function upd_ciudad($ciudad, $nombre, $provincia, $activo){
+      if ((!$provincia) || (trim($provincia) == '')) { $provincia = 'NULL'; }
      
       $query = $this->db->query(" UPDATE ciudad SET 
                                     nombre_ciudad = '$nombre', 
+                                    id_provincia = $provincia,
                                     activo = $activo
                                    WHERE id = $ciudad");
     }
 
-    public function add_ciudad($nombre, $activo){
-      $query = $this->db->query("INSERT INTO ciudad (nombre_ciudad, activo)
-                                   VALUES('$nombre', $activo);");
+    public function add_ciudad($nombre, $provincia, $activo){
+      if ((!$provincia) || (trim($provincia) == '')) { $provincia = 'NULL'; }
+      $query = $this->db->query("INSERT INTO ciudad (nombre_ciudad, id_provincia, activo)
+                                   VALUES('$nombre', $provincia, $activo);");
     }
 
     public function candel_ciudad($ciudad){
@@ -64,10 +68,10 @@ class Ciudad_model extends CI_Model {
       }
     }
 
-    public function lst_ciudad($ciudad = 0){
-      $query = $this->db->query("SELECT id, nombre_ciudad
-                                  FROM ciudad WHERE id=$ciudad and activo = 1
-                                  ORDER BY nombre_ciudad");
+    public function lst_provincia(){
+      $query = $this->db->query("SELECT id, nombre_provincia
+                                  FROM provincia WHERE activo = 1
+                                  ORDER BY nombre_provincia");
       $r = $query->result();
       return $r;
     }

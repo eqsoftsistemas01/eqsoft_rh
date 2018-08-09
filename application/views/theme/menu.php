@@ -126,16 +126,19 @@
             <li><a href="<?php print $base_url ?>departamento"><i class="fa fa-sort-amount-asc"></i> Departamentos</a></li>
             <?php } ?> 
             <?php if($perfil == 1) { ?>
-            <li><a href="<?php print $base_url ?>cargos"><i class="fa fa-balance-scale"></i> Cargos</a></li>
+            <li><a href="<?php print $base_url ?>cargo"><i class="fa fa-balance-scale"></i> Cargos</a></li>
             <?php } ?>            
             <?php if($perfil == 1) { ?>
             <li><a href="<?php print $base_url ?>empleado"><i class="fa fa-id-card"></i> Empleados</a></li>
             <?php } ?> 
             <?php if($perfil == 1) { ?>
-            <li><a href="<?php print $base_url ?>paises"><i class="fa fa-universal-access"></i> Paises</a></li>
+            <li><a href="<?php print $base_url ?>ciudad"><i class="fa fa-list-alt"></i> Ciudades</a></li>
             <?php } ?> 
             <?php if($perfil == 1) { ?>
-            <li><a href="<?php print $base_url ?>ciudad"><i class="fa fa-list-alt"></i> Ciudades</a></li>
+            <li><a href="<?php print $base_url ?>provincia"><i class="fa fa-universal-access"></i> Provincias</a></li>
+            <?php } ?> 
+            <?php if($perfil == 1) { ?>
+            <li><a href="<?php print $base_url ?>paises"><i class="fa fa-universal-access"></i> Paises</a></li>
             <?php } ?> 
             <?php if($perfil == 1) { ?>
             <li><a href="<?php print $base_url ?>banco"><i class="fa fa-home"></i> Bancos</a></li>

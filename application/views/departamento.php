@@ -48,8 +48,9 @@
       }
       jefe = $("#cmb_empleado").val();
       if (jefe == '') { jefe = 0; }
-      activo = $("#chkactivo").val();
-      if(activo == 'on'){ activo = 1; } else { activo = 0; }
+      if($("#chkactivodpto").is(":checked")){ activo = 1; } 
+        else{ activo = 0; } 
+
       $.ajax({
         type: "POST",
         dataType: "json",
@@ -78,10 +79,7 @@
               dataType: "html",
               type: "POST"
             },
-            href: "<?php echo base_url('Departamento/upd_departamento');?>",
-            afterClose: function(){
-              $('#TableObj').DataTable().ajax.reload();
-            }
+            href: "<?php echo base_url('Departamento/upd_departamento');?>"
           });
         }
       });
@@ -159,7 +157,7 @@
                       <h3 class="box-title"></i> Datos de Departamentos</h3>
                       <div class="pull-right"> 
 
-                          <button type="button" class="btn btn-danger btn-grad dpto_add" >
+                          <button type="button" class="btn btn-info btn-grad dpto_add" >
                             <i class="fa fa-plus-square"></i> Añadir
                           </button>   
 

@@ -1,11 +1,11 @@
 <?php
 /* ------------------------------------------------
-  ARCHIVO: departamento.php
-  DESCRIPCION: Contiene la vista principal del módulo de departamento.
+  ARCHIVO: cargo.php
+  DESCRIPCION: Contiene la vista principal del módulo de cargo.
  * 
   ------------------------------------------------ */
 // Setear el título HTML de la página
-  print "<script>document.title = 'ProdegelRRHH - Listado de Ciudades'</script>";
+  print "<script>document.title = 'EQsoftRH - Listado de Cargos'</script>";
   date_default_timezone_set("America/Guayaquil");
 
 ?>
@@ -18,7 +18,7 @@
 
   $(document).ready(function () {
 
-    $("#formciudad").validationEngine();
+    $("#formdpto").validationEngine();
 
     $('#TableObj').dataTable({
       "language":{  "lengthMenu":"Mostrar _MENU_ registros por página.",
@@ -32,15 +32,14 @@
                     "SearchPlaceholder": "Comience a teclear...",
                     "paginate": { "previous": "Anterior", "next": "Siguiente", }
                     },
-        'ajax': "Ciudad/listadoCiudades",
+        'ajax': "Cargo/listadoCargos",
         'columns': [
             {"data": "nombre"},
-            {"data": "provincia"},
             {"data": "ver"}                            
         ]
     });
 
-    $(document).on('click', '.btnguardarciudad', function(){
+    $(document).on('click', '.btnguardarcargo', function(){
       id = $("#txt_id").val();
       if (id == '') { id = 0; }
       nombre = $("#txt_nombre").val();
@@ -48,15 +47,15 @@
         alert("Ingrese el nombre");
         return false;
       }
-      provincia = $("#cmb_provincia").val();
+      
       if($("#chkactivo").is(":checked")){ activo = 1; } 
         else{ activo = 0; } 
 
       $.ajax({
         type: "POST",
         dataType: "json",
-        url: "<?php echo base_url('Ciudad/agregar');?>",
-        data: {id: id, nombre: nombre, provincia: provincia, activo: activo},
+        url: "<?php echo base_url('Cargo/agregar');?>",
+        data: {id: id, nombre: nombre, activo: activo},
         success: function(json) {
           $.fancybox.close();
           $('#TableObj').DataTable().ajax.reload();
@@ -64,12 +63,12 @@
       });
     });
 
-    $(document).on('click', '.ciudad_ver', function(){
+    $(document).on('click', '.cargo_ver', function(){
       id = $(this).attr('id');
       $.ajax({
         type: "POST",
         dataType: "json",
-        url: "<?php echo base_url('Ciudad/tmp_ciudad');?>",
+        url: "<?php echo base_url('Cargo/tmp_cargo');?>",
         data: {id: id},
         success: function(json) {
           $.fancybox.open({
@@ -80,13 +79,13 @@
               dataType: "html",
               type: "POST"
             },
-            href: "<?php echo base_url('Ciudad/upd_ciudad');?>"
+            href: "<?php echo base_url('Cargo/upd_cargo');?>"
           });
         }
       });
     });  
 
-    $(document).on('click', '.ciudad_add', function(){
+    $(document).on('click', '.cargo_add', function(){
       $.fancybox.open({
         type: "ajax",
         width: 550,
@@ -95,15 +94,15 @@
            dataType: "html",
            type: "POST"
         },
-        href: "<?php echo base_url('Ciudad/add_ciudad');?>"
+        href: "<?php echo base_url('Cargo/add_cargo');?>"
       });
     });
 
-    $(document).on('click','.ciudad_del', function() {
+    $(document).on('click','.cargo_del', function() {
       id = $(this).attr('id');
         if (conf_del()) {
           $.ajax({
-            url: base_url + "Ciudad/del_ciudad",
+            url: base_url + "Cargo/del_cargo",
             data: { id: id },
             type: 'POST',
             dataType: 'json',
@@ -111,7 +110,7 @@
               if (json.mens == 1){
                 $('#TableObj').DataTable().ajax.reload();
               } else {
-                alert("No se pudo eliminar la ciudad. Existe informacion asociada.");
+                alert("No se pudo eliminar el cargo. Existe informacion asociada.");
                 return false;                
               }  
             }
@@ -121,7 +120,7 @@
 
 
     function conf_del() {
-        return  confirm("¿Confirma que desea eliminar esta ciudad?");
+        return  confirm("¿Confirma que desea eliminar este cargo?");
     }
 
 
@@ -136,11 +135,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <i class="fa fa-registered"></i> Lista de Cuidades
+        <i class="fa fa-registered"></i> Lista de Cargos
       </h1>
       <ol class="breadcrumb">
         <li><a href="<?php print $base_url ?>inicio"><i class="fa fa-dashboard"></i> Inicio</a></li>
-        <li class="active"><a href="<?php print $base_url ?>ciudad">Ciudades</a></li>
+        <li class="active"><a href="<?php print $base_url ?>cargo">Cargos</a></li>
         
       </ol>
     </section>
@@ -152,10 +151,10 @@
             <div class="col-md-12">
                 <div class="box box-danger">
                     <div class="box-header with-border">
-                      <h3 class="box-title"></i> Datos de Cuidades</h3>
+                      <h3 class="box-title"></i> Datos de Cargos</h3>
                       <div class="pull-right"> 
 
-                          <button type="button" class="btn btn-info btn-grad ciudad_add" >
+                          <button type="button" class="btn btn-info btn-grad cargo_add" >
                             <i class="fa fa-plus-square"></i> Añadir
                           </button>   
 
@@ -170,8 +169,7 @@
                               <table id="TableObj" class="table table-bordered table-striped table-responsive">
                                 <thead>
                                   <tr >
-                                    <th>Nombre de Ciudad</th>
-                                    <th>Nombre de Provincia</th>
+                                    <th>Nombre de cargo</th>
                                     <th>Accion</th>
                                   </tr>
                                 </thead>

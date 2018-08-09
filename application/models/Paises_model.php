@@ -41,8 +41,8 @@ class Paises_model extends CI_Model {
                                    VALUES('$nombre', $activo);");
     }
 
-    public function candel_departamento($departamento){
-      $query = $this->db->query("SELECT count(*) as cant FROM empleado WHERE id_departamento = $pais");
+    public function candel_pais($pais){
+      $query = $this->db->query("SELECT count(*) as cant FROM provincia WHERE id_pais = $pais");
       $result = $query->result();
 /*      if ($result[0]->cant == 0){
         $query = $this->db->query("SELECT count(*) as cant FROM caja_efectivo WHERE id_puntoemision = $puntoemision");
@@ -54,21 +54,14 @@ class Paises_model extends CI_Model {
         { return 0; }
     }
 
-    public function del_departamento($departamento){
-      if ($this->candel_departamento($departamento) == 1){
-        $query = $this->db->query("DELETE FROM departamento WHERE id = $departamento");
+    public function del_pais($pais){
+      if ($this->candel_pais($pais) == 1){
+        $query = $this->db->query("DELETE FROM paises WHERE id = $pais");
         return 1;
       } else {
         return 0;
       }
     }
 
-    public function lst_empleado($departamento = 0){
-      $query = $this->db->query("SELECT id_empleado, nombre_empleado
-                                  FROM empleado WHERE id_departamento=$departamento AND perfil = 2 AND activo = 1
-                                  ORDER BY nombre_empleado");
-      $r = $query->result();
-      return $r;
-    }
 
 }

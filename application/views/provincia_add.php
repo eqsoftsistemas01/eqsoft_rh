@@ -9,7 +9,7 @@
 <div id = "contenido_ret" class="col-md-6">
     <div class="box box-danger">
         <div class="box-header with-border">
-          <h3 class="box-title"></i> Datos de Ciudad</h3>
+          <h3 class="box-title"></i> Datos de Provincia</h3>
         </div>
         <form id="formdpto" name="formdpto" method='POST' action="#" onSubmit='return false' >
             <div class="box-body">
@@ -22,30 +22,30 @@
                     <?php } ?>  
 
                     <div class="form-group col-md-12">
-                        <label for="lb_cat">Nombre de Ciudad</label>
-                        <input type="text" class="form-control validate[required]" name="txt_nombre" id="txt_nombre" placeholder="Nombre de Ciudad" value="<?php if(@$obj != NULL){ print @$obj->nombre_ciudad; }?>" >
+                        <label for="lb_cat">Nombre de Provincia</label>
+                        <input type="text" class="form-control validate[required]" name="txt_nombre" id="txt_nombre" placeholder="Nombre de Provincia" value="<?php if(@$obj != NULL){ print @$obj->nombre_provincia; }?>" >
                     </div>
 
                     <div class="form-group col-md-12">
-                      <label for="lb_res">Provincia</label>
-                      <select id="cmb_provincia" name="cmb_provincia" class="form-control">
+                      <label for="lb_res">Pais</label>
+                      <select id="cmb_pais" name="cmb_pais" class="form-control">
                       <?php 
-                        if(@$provincia != NULL){ ?>
+                        if(@$pais != NULL){ ?>
                         <?php } else { ?>
                         <option  value="" selected="TRUE">Seleccione...</option>
                         <?php } 
-                          if (count($provincia) > 0) {
-                            foreach ($provincia as $tipo):
-                                if(@$obj->id_provincia != NULL){
-                                    if($obj->id_provincia == $tipo->id){ ?>
-                                         <option value="<?php  print $tipo->id; ?>" selected="TRUE"> <?php  print $tipo->nombre_provincia; ?> </option>
+                          if (count($pais) > 0) {
+                            foreach ($pais as $tipo):
+                                if(@$obj->id_pais != NULL){
+                                    if($obj->id_pais == $tipo->id){ ?>
+                                         <option value="<?php  print $tipo->id; ?>" selected="TRUE"> <?php  print $tipo->nombre_pais; ?> </option>
                                         <?php
                                     }else{ ?>
-                                        <option value="<?php  print $tipo->id; ?>" > <?php  print $tipo->nombre_provincia; ?> </option>
+                                        <option value="<?php  print $tipo->id; ?>" > <?php  print $tipo->nombre_pais; ?> </option>
                                         <?php
                                     }
                                 }else{ ?>
-                                    <option value="<?php  print $tipo->id; ?>" > <?php  print $tipo->nombre_provincia; ?> </option>
+                                    <option value="<?php  print $tipo->id; ?>" > <?php  print $tipo->nombre_pais; ?> </option>
                                     <?php
                                     }   ?>
                                 <?php
@@ -66,7 +66,7 @@
             </div>
             <div  align="center" class="box-footer">
                 <div class="form-actions ">
-                    <button type="submit" class="btn btn-danger btn-grad no-margin-bottom btnguardarciudad">
+                    <button type="submit" class="btn btn-danger btn-grad no-margin-bottom btnguardarprov">
                     <i class="fa fa-save "></i> Guardar
                 </button>
                 </div>

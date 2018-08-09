@@ -35,7 +35,7 @@ class Departamento_model extends CI_Model {
                                     nombre_departamento = '$nombre', 
                                     id_jefedepartamento = $idjefe,
                                     activo = $activo
-                                   WHERE id_departamento = $departamento");
+                                   WHERE id = $departamento");
     }
 
     public function add_departamento($nombre, $idjefe, $activo){
@@ -44,7 +44,7 @@ class Departamento_model extends CI_Model {
     }
 
     public function candel_departamento($departamento){
-      $query = $this->db->query("SELECT count(*) as cant FROM empleado WHERE id_departamento = $departamento");
+      $query = $this->db->query("SELECT count(*) as cant FROM empleado WHERE id = $departamento");
       $result = $query->result();
 /*      if ($result[0]->cant == 0){
         $query = $this->db->query("SELECT count(*) as cant FROM caja_efectivo WHERE id_puntoemision = $puntoemision");
@@ -66,7 +66,7 @@ class Departamento_model extends CI_Model {
     }
 
     public function lst_empleado($departamento = 0){
-      $query = $this->db->query("SELECT id_empleado, nombre_empleado
+      $query = $this->db->query("SELECT id_empleado, textcat(textcat(apellidos,text ' '),nombres) as nombre_empleado
                                   FROM empleado WHERE id_departamento=$departamento AND perfil = 2 AND activo = 1
                                   ORDER BY nombre_empleado");
       $r = $query->result();

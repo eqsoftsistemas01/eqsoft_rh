@@ -1,11 +1,11 @@
 <?php
 /* ------------------------------------------------
-  ARCHIVO: departamento.php
-  DESCRIPCION: Contiene la vista principal del módulo de departamento.
+  ARCHIVO: paises.php
+  DESCRIPCION: Contiene la vista principal del módulo de paises.
  * 
   ------------------------------------------------ */
 // Setear el título HTML de la página
-  print "<script>document.title = 'EQsoftRH - Listado de Departamentos'</script>";
+  print "<script>document.title = 'EQsoftRH - Listado de Paises'</script>";
   date_default_timezone_set("America/Guayaquil");
 
 ?>
@@ -48,9 +48,9 @@
         return false;
       }
       
-      activo = $("#chkactivo").val();
-      if (activo == 'on'){ activo = 1; } else { activo = 0; }
-      alert(activo);
+      if($("#chkactivo").is(":checked")){ activo = 1; } 
+        else{ activo = 0; } 
+
       $.ajax({
         type: "POST",
         dataType: "json",
@@ -79,10 +79,7 @@
               dataType: "html",
               type: "POST"
             },
-            href: "<?php echo base_url('Paises/upd_pais');?>",
-            afterClose: function(){
-              $('#TableObj').DataTable().ajax.reload();
-            }
+            href: "<?php echo base_url('Paises/upd_pais');?>"
           });
         }
       });
@@ -97,18 +94,15 @@
            dataType: "html",
            type: "POST"
         },
-        href: "<?php echo base_url('Paises/add_pais');?>",
-        afterClose: function(){
-          $('#TableObj').DataTable().ajax.reload();
-        } 
+        href: "<?php echo base_url('Paises/add_pais');?>"
       });
     });
 
-    $(document).on('click','.dpto_del', function() {
+    $(document).on('click','.pais_del', function() {
       id = $(this).attr('id');
         if (conf_del()) {
           $.ajax({
-            url: base_url + "Departamento/del_departamento",
+            url: base_url + "Paises/del_pais",
             data: { id: id },
             type: 'POST',
             dataType: 'json',
@@ -116,7 +110,7 @@
               if (json.mens == 1){
                 $('#TableObj').DataTable().ajax.reload();
               } else {
-                alert("No se pudo eliminar el departamento. Existe informacion asociada.");
+                alert("No se pudo eliminar el pais. Existe informacion asociada.");
                 return false;                
               }  
             }
@@ -126,7 +120,7 @@
 
 
     function conf_del() {
-        return  confirm("¿Confirma que desea eliminar este departamento?");
+        return  confirm("¿Confirma que desea eliminar este pais?");
     }
 
 
@@ -145,7 +139,7 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="<?php print $base_url ?>inicio"><i class="fa fa-dashboard"></i> Inicio</a></li>
-        <li class="active"><a href="<?php print $base_url ?>departamento">Paises</a></li>
+        <li class="active"><a href="<?php print $base_url ?>paises">Paises</a></li>
         
       </ol>
     </section>
@@ -160,7 +154,7 @@
                       <h3 class="box-title"></i> Datos de Paises</h3>
                       <div class="pull-right"> 
 
-                          <button type="button" class="btn btn-danger btn-grad pais_add" >
+                          <button type="button" class="btn btn-info btn-grad pais_add" >
                             <i class="fa fa-plus-square"></i> Añadir
                           </button>   
 
