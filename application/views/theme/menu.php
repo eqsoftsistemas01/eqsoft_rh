@@ -143,6 +143,9 @@
             <?php if($perfil == 1) { ?>
             <li><a href="<?php print $base_url ?>banco"><i class="fa fa-home"></i> Bancos</a></li>
             <?php } ?> 
+            <?php if($perfil == 1) { ?>
+            <li><a href="<?php print $base_url ?>empresa"><i class="fa fa-home"></i> Empresas</a></li>
+            <?php } ?> 
           </ul>
         </li>
         <?php } ?> 

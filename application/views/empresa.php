@@ -1,137 +1,203 @@
 <?php
 /* ------------------------------------------------
-  ARCHIVO: sucursal.php
-  DESCRIPCION: Contiene la vista principal del módulo de Sucursal.
-  FECHA DE CREACIÓN: 13/07/2017
+  ARCHIVO: empresa.php
+  DESCRIPCION: Contiene la vista principal del módulo de empresa.
  * 
   ------------------------------------------------ */
 // Setear el título HTML de la página
-print "<script>document.title = 'EQsoft - Empresa'</script>";
-date_default_timezone_set("America/Guayaquil");
+  print "<script>document.title = 'EQsoftRH - Listado de Empresas'</script>";
+  date_default_timezone_set("America/Guayaquil");
+
 ?>
+
+<style type="text/css">
+
+</style>
 
 <script type='text/javascript' language='javascript'>
 
-    $(document).ready(function () {
+  $(document).ready(function () {
 
-      $('#dataTableEmp').dataTable({
-        "language":{  'url': base_url + 'public/json/language.spanish.json' },
-        'ajax': "Empresa/listadoDataEmp",
+    $("#formdpto").validationEngine();
+
+    $('#TableObj').dataTable({
+      "language":{  "lengthMenu":"Mostrar _MENU_ registros por página.",
+                    "zeroRecords": "Lo sentimos. No se encontraron registros.",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "No hay registros aún.",
+                    "infoFiltered": "(filtrados de un total de _MAX_ registros)",
+                    "search" : "Búsqueda",
+                    "LoadingRecords": "Cargando ...",
+                    "Processing": "Procesando...",
+                    "SearchPlaceholder": "Comience a teclear...",
+                    "paginate": { "previous": "Anterior", "next": "Siguiente", }
+                    },
+        'ajax': "Empresa/listadoEmpresas",
         'columns': [
-          {"data": "id"},
-          {"data": "codigo"},
-          {"data": "nombre"},
-          {"data": "ruc"},    
-          {"data": "razon"},                                                                       
-          {"data": "ver"}
+            {"data": "nombre"},
+            {"data": "ruc"},
+            {"data": "representante"},
+            {"data": "ver"}                            
         ]
+    });
+
+    $(document).on('click', '.btnguardarempresa', function(){
+      id = $("#txt_id").val();
+      if (id == '') { id = 0; }
+      nombre = $("#txt_nombre").val();
+      if (nombre == '') {
+        alert("Ingrese el nombre");
+        return false;
+      }
+      ruc = $("#txt_ruc").val();
+      rep = $("#txt_representante").val();
+      
+      if($("#chkactivo").is(":checked")){ activo = 1; } 
+        else{ activo = 0; } 
+
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "<?php echo base_url('Empresa/agregar');?>",
+        data: {id: id, nombre: nombre, ruc: ruc, rep: rep, activo: activo},
+        success: function(json) {
+          $.fancybox.close();
+          $('#TableObj').DataTable().ajax.reload();
+        }  
       });
+    });
 
-      $(document).on('click', '.emp_editar', function(){
-          id = $(this).attr('id');
+    $(document).on('click', '.empresa_ver', function(){
+      id = $(this).attr('id');
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "<?php echo base_url('Empresa/tmp_empresa');?>",
+        data: {id: id},
+        success: function(json) {
+          $.fancybox.open({
+            type: "ajax",
+            width: 550,
+            height: 550,
+            ajax: {
+              dataType: "html",
+              type: "POST"
+            },
+            href: "<?php echo base_url('Empresa/upd_empresa');?>"
+          });
+        }
+      });
+    });  
+
+    $(document).on('click', '.empresa_add', function(){
+      $.fancybox.open({
+        type: "ajax",
+        width: 550,
+        height: 550,
+        ajax: {
+           dataType: "html",
+           type: "POST"
+        },
+        href: "<?php echo base_url('Empresa/add_empresa');?>"
+      });
+    });
+
+    $(document).on('click','.empresa_del', function() {
+      id = $(this).attr('id');
+        if (conf_del()) {
           $.ajax({
-             type: "POST",
-             dataType: "json",
-             url: "<?php print $base_url;?>empresa/tmp_emp",
-             data: {id: id},
-             success: function(json) {
-                if (parseInt(json.resu) == 1) {
-                   location.replace("<?php print $base_url;?>Empresa/emp_editar");
-                } else {
-                   alert("Error de conexión");
-                }
-             }
-          }); 
-      })
+            url: base_url + "Empresa/del_empresa",
+            data: { id: id },
+            type: 'POST',
+            dataType: 'json',
+            success: function(json) {
+              if (json.mens == 1){
+                $('#TableObj').DataTable().ajax.reload();
+              } else {
+                alert("No se pudo eliminar la empresa. Existe informacion asociada.");
+                return false;                
+              }  
+            }
+          });
+      }
+    });
 
-      $(document).on('click', '.emp_del', function(){
-          id = $(this).attr('id');
-          if (confirm("Desea eliminar la empresa seleccionada")){
-            $.ajax({
-             type: "POST",
-             dataType: "json",
-             url: "<?php echo base_url('Empresa/existe_info_emp');?>",
-             data: {id: id},
-             success: function(json) {
-                if (json.mens == 0){
-                  $.ajax({
-                   type: "POST",
-                   dataType: "json",
-                   url: "<?php echo base_url('Empresa/eliminar');?>",
-                   data: {id: id},
-                   success: function(json) {
-                      location.replace("<?php print $base_url;?>empresa");
-                   }
-                  });
-                }
-                else  
-                  alert("No es posible eliminar la empresa. Existe informacion asociada.");
-             }
-            });
-          }
-      })
+
+    function conf_del() {
+        return  confirm("¿Confirma que desea eliminar esta empresa?");
+    }
 
 
 
+  }); 
 
-});
-
-
-
-
-
- 
-
-    
 
 </script>
+
+<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        <i class="fa fa-registered"></i> Lista de Empresas
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="<?php print $base_url ?>inicio"><i class="fa fa-dashboard"></i> Inicio</a></li>
+        <li class="active"><a href="<?php print $base_url ?>empresa">Empresas</a></li>
+        
+      </ol>
+    </section>
 
-  <section class="content-header">
-    <h1><i class="fa fa-fort-awesome"></i> Empresa</h1>
-    <ol class="breadcrumb">
-      <li><a href="<?php print $base_url ?>inicio"><i class="fa fa-dashboard"></i> Inicio</a></li>
-      <li class="active"><a href="<?php print $base_url ?>empresa">Empresa</a></li>
-    </ol>
-  </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                      <h3 class="box-title"></i> Datos de Empresas</h3>
+                      <div class="pull-right"> 
 
-  <section class="content">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="box box-danger">
-          <div class="box-header with-border">
-            <h3 class="box-title"></i> Listado de las Empresas</h3>
-            <div class="pull-right"> 
-              <a class="btn btn-primary btn-grad" href="<?php print $base_url;?>empresa/emp_add" data-original-title="" title=""><i class="fa fa-plus-square"></i> Añadir </a>
-            </div>
-          </div>
-          <div class="box-body">
-            <div class="row">
-              <div class="col-xs-12">
-                <div class="box-body">
-                  <table id="dataTableEmp" class="table table-bordered table-striped">
-                    <thead>
-                      <tr >
-                        <th>Id</th>  
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>R.U.C.</th>
-                        <th>Razón</th>
-                        <th>Acción</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                  </table>
+                          <button type="button" class="btn btn-info btn-grad empresa_add" >
+                            <i class="fa fa-plus-square"></i> Añadir
+                          </button>   
+
+                       
+                    </div>
+                    </div>
+                    <div class="box-body">
+
+                      <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box-body table-responsive">
+                              <table id="TableObj" class="table table-bordered table-striped table-responsive">
+                                <thead>
+                                  <tr >
+                                    <th>Nombre de empresa</th>
+                                    <th>RUC de empresa</th>
+                                    <th>Representante</th>
+                                    <th>Accion</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                              </table>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div  align="center" class="box-footer">
+                        
+                    </div>
                 </div>
-              </div>
+              <!-- /.box -->
             </div>
-          </div>
-          <div  align="center" class="box-footer">
-          </div>
+
+
         </div>
-      </div>
-    </div>
-  </section>
-  
+    </section>
+    <!-- /.content -->
 </div>
+  <!-- /.content-wrapper -->
+
