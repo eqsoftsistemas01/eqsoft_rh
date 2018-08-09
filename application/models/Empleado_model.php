@@ -35,7 +35,7 @@ class Empleado_model extends CI_Model {
     }
 
     public function upd_empleado($idempleado, $nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, $celular, $correo, 
-                                 $activo, $departamento, $lugarexpedicion, $cedulamilitar, $pasaporte, $fecha_nacimiento, 
+                                 $activo, $departamento, $lugarexpedicion, $cedulamilitar, $pasaporte, $fechanac, 
                                  $sexo, $estadocivil, $peso, $talla, $codigoreloj, $calleprincipal, $numerovivienda,
                                  $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, $vivefamiliares, 
                                  $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
@@ -44,12 +44,7 @@ class Empleado_model extends CI_Model {
 
       if ((!$perfil) || (trim($perfil) == '')) { $perfil = 'NULL'; }
       if ((!$departamento) || (trim($departamento) == '')) { $departamento = 'NULL'; }
-      if ((!$fecha_nacimiento) || (trim($fecha_nacimiento) == '')) { 
-        $fecha_nacimiento = 'NULL'; 
-      }
-      else {
-        $fecha_nacimiento = '$fecha_nacimiento'; 
-      }
+      if (!$fechanac) { $fechanac = ''; } 
       if ((!$estadocivil) || (trim($estadocivil) == '')) { $estadocivil = 'NULL'; }
       if ((!$ciudad) || (trim($ciudad) == '')) { $ciudad = 'NULL'; }
       if ((!$tipovivienda) || (trim($tipovivienda) == '')) { $tipovivienda = 'NULL'; }
@@ -59,6 +54,7 @@ class Empleado_model extends CI_Model {
       if ((!$empresa) || (trim($empresa) == '')) { $empresa = 'NULL'; }
       if ((!$tiposangre) || (trim($tiposangre) == '')) { $tiposangre = 'NULL'; }
       if ((!$tipodiscapacidad) || (trim($tipodiscapacidad) == '')) { $tipodiscapacidad = 'NULL'; }
+      if ((!$p100discapacidad) || (trim($p100discapacidad) == '')) { $p100discapacidad = 0; }
       if ((!$contrato) || (trim($contrato) == '')) { $contrato = 'NULL'; }
       if ((!$cargo) || (trim($cargo) == '')) { $cargo = 'NULL'; }
 
@@ -76,7 +72,7 @@ class Empleado_model extends CI_Model {
                             lugarexpedicion = '$lugarexpedicion', 
                             cedulamilitar = '$cedulamilitar', 
                             pasaporte = '$pasaporte', 
-                            fecha_nacimiento = $fecha_nacimiento, 
+                            fecha_nacimiento = case when ('$fechanac' != '') then to_date('$fechanac', 'YYYY-MM-DD') else NULL end, 
                             sexo = '$sexo', 
                             id_estadocivil = $estadocivil, 
                             peso = $peso, 
@@ -243,6 +239,24 @@ class Empleado_model extends CI_Model {
         return $result;
     }
 
+    public function lst_tiposangre() {
+        $query = $this->db->query("SELECT id, tiposangre FROM tiposangre;");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function lst_tipodiscapacidad() {
+        $query = $this->db->query("SELECT id, tipodiscapacidad FROM tipodiscapacidad;");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function lst_ciudad() {
+        $query = $this->db->query("SELECT id, nombre_ciudad FROM ciudad WHERE activo = 1;");
+        $result = $query->result();
+        return $result;
+    }
+
     public function get_empleadotmp($usuario, $idempleado = 0) {
         $this->db->query("DELETE FROM cargafamiliar_tmp WHERE NOT id_empleadotmp IN 
                             (SELECT DISTINCT id_empleado FROM empleado_tmp);");
@@ -332,6 +346,19 @@ class Empleado_model extends CI_Model {
                             activo = $activo,
                             sexo = '$sexo'
                           WHERE id = $id");
+    }
+
+    public function lst_cargo() {
+        $query = $this->db->query("SELECT id, nombre_cargo FROM cargo WHERE activo = 1;");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function lst_empresa() {
+        $query = $this->db->query("SELECT id, nombre_empresa, ruc_empresa, representante_empresa FROM empresa 
+                                     WHERE activo = 1;");
+        $result = $query->result();
+        return $result;
     }
 
 }

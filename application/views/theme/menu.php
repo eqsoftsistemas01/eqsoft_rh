@@ -137,6 +137,9 @@
             <?php if($perfil == 1) { ?>
             <li><a href="<?php print $base_url ?>ciudad"><i class="fa fa-list-alt"></i> Ciudades</a></li>
             <?php } ?> 
+            <?php if($perfil == 1) { ?>
+            <li><a href="<?php print $base_url ?>banco"><i class="fa fa-home"></i> Bancos</a></li>
+            <?php } ?> 
           </ul>
         </li>
         <?php } ?> 

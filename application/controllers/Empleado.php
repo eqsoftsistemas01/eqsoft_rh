@@ -95,6 +95,17 @@ class Empleado extends CI_Controller {
         $data["banco"] = $banco;
         $sexo = $this->Empleado_model->lst_sexo();
         $data["sexo"] = $sexo;
+        $tiposangre = $this->Empleado_model->lst_tiposangre();
+        $data["tiposangre"] = $tiposangre;
+        $tipodiscapacidad = $this->Empleado_model->lst_tipodiscapacidad();
+        $data["tipodiscapacidad"] = $tipodiscapacidad;
+        $ciudad = $this->Empleado_model->lst_ciudad();
+        $data["ciudad"] = $ciudad;
+        $cargo = $this->Empleado_model->lst_cargo();
+        $data["cargo"] = $cargo;
+        $empresa = $this->Empleado_model->lst_empresa();
+        $data["empresa"] = $empresa;
+
         $data["content"] = "empleado_edit";
         $this->load->view("layout", $data);
 //        $this->load->view("empleado_add", $data);
@@ -131,22 +142,31 @@ class Empleado extends CI_Controller {
         $pasaporte = $this->input->post('txt_pasaporte');
         $sexo = $this->input->post('cmb_sexo');
 
-        $fecha_nacimiento = '';
-        $estadocivil = '';
-        $peso = '0';
-        $talla = '0';
-        $codigoreloj = '';
-        $ciudad = '';
-        $tipovivienda = ''; 
-        $vivefamiliares = '0';
-        $empresa = '';
-        $tiposangre = '';
-        $tipodiscapacidad = ''; 
-        $p100discapacidad = '0';
+        $tipovivienda = $this->input->post('cmb_tipovivienda');
+        $tiposangre = $this->input->post('cmb_tiposangre');
+        $tipodiscapacidad = $this->input->post('cmb_tipodiscapacidad'); 
+        $p100discapacidad = $this->input->post('txt_p100discapacidad');
+        $estadocivil = $this->input->post('cmb_estadocivil'); 
+        $fec = $this->input->post('fechanac');
+        if ((!$fec) || (trim($fec) == '')) 
+            { $fecha_nacimiento = ''; }
+        else {
+            $fecha_nacimiento = str_replace('/', '-', $fec); 
+            $fecha_nacimiento = date("Y-m-d", strtotime($fecha_nacimiento));
+        }
+        $peso = $this->input->post('txt_peso');
+        $talla = $this->input->post('txt_talla');
+        $vivefamiliares = $this->input->post('chkvivefamiliar');
+        $codigoreloj = $this->input->post('txt_codigoreloj');
+        $ciudad = $this->input->post('cmb_ciudad'); 
+        $cargo = $this->input->post('cmb_cargo'); 
+        $empresa = $this->input->post('cmb_empresa'); 
+
         $contrato = '';
-        $cargo = '';
 
         if($activo == 'on'){ $activo = 1; } else { $activo = 0; }
+        if($vivefamiliares == 'on'){ $vivefamiliares = 1; } else { $vivefamiliares = 0; }
+
         if($id != 0){
             $resu = $this->Empleado_model->upd_empleado($id, $nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, 
                                  $celular, $correo, $activo, $departamento, $lugarexpedicion, $cedulamilitar, $pasaporte, 
@@ -187,6 +207,16 @@ class Empleado extends CI_Controller {
         $data["banco"] = $banco;
         $sexo = $this->Empleado_model->lst_sexo();
         $data["sexo"] = $sexo;
+        $tiposangre = $this->Empleado_model->lst_tiposangre();
+        $data["tiposangre"] = $tiposangre;
+        $tipodiscapacidad = $this->Empleado_model->lst_tipodiscapacidad();
+        $data["tipodiscapacidad"] = $tipodiscapacidad;
+        $ciudad = $this->Empleado_model->lst_ciudad();
+        $data["ciudad"] = $ciudad;
+        $cargo = $this->Empleado_model->lst_cargo();
+        $data["cargo"] = $cargo;
+        $empresa = $this->Empleado_model->lst_empresa();
+        $data["empresa"] = $empresa;
 
         $data["base_url"] = base_url();
         $data["content"] = "empleado_edit";

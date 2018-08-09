@@ -27,10 +27,10 @@ class Banco extends CI_Controller {
       $registro = $this->Banco_model->bancolst();
       $tabla = "";
       foreach ($registro as $row) {
-        $ver = '<div class=\"text-center \"> <a href=\"#\" title=\"Editar Banco\" id=\"'.$row->id_banco.'\" class=\"btn btn-success btn-xs btn-grad edi_ban\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar Banco\" id=\"'.$row->id_banco.'\" class=\"btn btn-danger btn-xs btn-grad del_ban\"><i class=\"fa fa-ban\" aria-hidden=\"true\"></i></a>';
-        $tabla.='{"id":"' . $row->id_banco . '",
+        $ver = '<div class=\"text-center \"> <a href=\"#\" title=\"Editar Banco\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad edi_ban\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar Banco\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad del_ban\"><i class=\"fa fa-ban\" aria-hidden=\"true\"></i></a>';
+        $tabla.='{"id":"' . $row->id . '",
                   "tipo":"' . $row->tipo . '",
-                  "nombre":"' . $row->nombre . '",
+                  "nombre":"' . $row->nombre_banco . '",
                   "ver":"'.$ver.'"},';
         }
         $tabla = substr($tabla, 0, strlen($tabla) - 1);

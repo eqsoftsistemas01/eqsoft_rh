@@ -5,7 +5,7 @@
 </style>
 <script type="text/javascript">
     $( document ).ready(function() {
-        $("#formID").validationEngine();
+        $("#formbank").validationEngine();
     });    
 </script>
 <div id = "contenido_ban" class="col-md-6">
@@ -13,12 +13,12 @@
         <div class="box-header with-border">
           <h3 class="box-title"></i> Datos del Banco</h3>
         </div>
-        <form id="formID" name="formID" method='POST' action="" onSubmit='return false' >
+        <form id="formbank" name="formbank" method='POST' action="#" onSubmit='return false' >
         <div class="box-body">
             <div class="row">
                 <?php 
                     if(@$ban != NULL){ ?>
-                        <input type="hidden" id="txt_idban" name="txt_idban" value="<?php if($ban != NULL){ print $ban->id_banco; }?>" >    
+                        <input type="hidden" id="txt_idban" name="txt_idban" value="<?php if($ban != NULL){ print $ban->id; }?>" >    
                     <?php } else { ?>
                         <input type="hidden" id="txt_idban" name="txt_idban" value="0">    
                 <?php } ?>  
@@ -31,8 +31,8 @@
                         <?php }  
                                   if (count($tpban) > 0) {
                                     foreach ($tpban as $tb):
-                                        if(@$ban->id_tipo != NULL){
-                                            if($tb->id == $ban->id_tipo){ ?>
+                                        if(@$ban->tipo != NULL){
+                                            if($tb->id == $ban->tipo){ ?>
                                                 <option  value="<?php  print $tb->id; ?>" selected="TRUE"><?php  print $tb->nombre ?></option> 
                                                 <?php
                                             }else{ ?>
@@ -52,7 +52,7 @@
                 </div>                
                 <div class="form-group col-md-12">
                     <label for="lb_cat">Nombre del Banco</label>
-                    <input type="text" class="form-control validate[required]" name="txt_ban" id="txt_ban" placeholder="Nombre del Banco" value="<?php if(@$ban != NULL){ print @$ban->nombre; }?>" >
+                    <input type="text" class="form-control validate[required]" name="txt_ban" id="txt_ban" placeholder="Nombre del Banco" value="<?php if(@$ban != NULL){ print @$ban->nombre_banco; }?>" >
                 </div>
 
             </div>

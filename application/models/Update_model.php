@@ -43,6 +43,8 @@ class Update_model extends CI_Model {
       $this->chequea_tabla_estadocivil();
       $this->chequea_tabla_tipovivienda();
       $this->chequea_tabla_tipocuentabanco();
+      $this->chequea_tabla_tiposangre();
+      $this->chequea_tabla_tipodiscapacidad();
 
       $res = $this->existe_columna_tabla('empleado','apellidos');
       if ($res != true) $this->add_columna_tabla('empleado','apellidos', 'varchar(100)', "");
@@ -113,8 +115,19 @@ class Update_model extends CI_Model {
       $res = $this->existe_columna_tabla('empleado','fecha_salida');
       if ($res != true) $this->add_columna_tabla('empleado','fecha_salida', 'date', "");
 
+      $res = $this->existe_tabla('tipobanco');
+      if ($res != true) $this->crea_tabla_tipobanco();
       $res = $this->existe_tabla('banco');
       if ($res != true) $this->crea_tabla_banco();
+
+      $res = $this->existe_columna_tabla('banco','tipo');
+      if ($res != true) $this->add_columna_tabla('banco','tipo', 'int', "update banco set tipo=1");
+
+      $res = $this->existe_tabla('cargo');
+      if ($res != true) $this->crea_tabla_cargo();
+
+      $res = $this->existe_tabla('empresa');
+      if ($res != true) $this->crea_tabla_empresa();
 
       return 1;
     }
@@ -371,13 +384,138 @@ public function crea_tabla_paises(){
     }
 
     public function crea_tabla_banco(){
-      $query = $this->db->query("CREATE TABLE banco (
+      $this->db->query("CREATE TABLE banco (
                                     id SERIAL,
                                     nombre_banco varchar(255),
+                                    tipo int,
                                     activo int,
                                     PRIMARY KEY (id) 
                                     )");
+    }
 
+    public function crea_tabla_tipobanco(){
+      $this->db->query("CREATE TABLE tipobanco (
+                                    id int,
+                                    nombre varchar(255),
+                                    PRIMARY KEY (id) 
+                                    )");
+      $this->db->query("INSERT INTO tipobanco (id, nombre) VALUES(1, 'Banco')");
+      $this->db->query("INSERT INTO tipobanco (id, nombre) VALUES(2, 'Cooperativa de Ahorro y Credito')");
+    }
+
+    public function chequea_tabla_tiposangre(){
+      $res = $this->existe_tabla('tiposangre');
+      if ($res == true) {
+            $query = $this->db->query("SELECT count(*) as cant FROM tiposangre");
+            $r = $query->result();
+            $res = ($r[0]->cant != 8);
+      }
+      if ($res != true){
+            $this->db->query("DROP TABLE IF EXISTS tiposangre;");
+
+            $this->db->query("CREATE TABLE tiposangre (
+                                id int,
+                                tiposangre varchar(255),
+                                PRIMARY KEY (id) 
+                                )");
+            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(1, 'A negativo')");
+            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(2, 'A positivo')");
+            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(3, 'B negativo')");
+            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(4, 'B positivo')");
+            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(5, 'AB negativo')");
+            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(6, 'AB positivo')");
+            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(7, 'O negativo')");
+            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(8, 'O positivo')");
+      }      
+    }
+
+    public function chequea_tabla_tipodiscapacidad(){
+      $res = $this->existe_tabla('tipodiscapacidad');
+      if ($res == true) {
+            $query = $this->db->query("SELECT count(*) as cant FROM tipodiscapacidad");
+            $r = $query->result();
+            $res = ($r[0]->cant != 6);
+      }
+      if ($res != true){
+            $this->db->query("DROP TABLE IF EXISTS tipodiscapacidad;");
+
+            $this->db->query("CREATE TABLE tipodiscapacidad (
+                                id int,
+                                tipodiscapacidad varchar(255),
+                                PRIMARY KEY (id) 
+                                )");
+            $this->db->query("INSERT INTO tipodiscapacidad (id, tipodiscapacidad) VALUES(1, 'Auditiva')");
+            $this->db->query("INSERT INTO tipodiscapacidad (id, tipodiscapacidad) VALUES(2, 'Física')");
+            $this->db->query("INSERT INTO tipodiscapacidad (id, tipodiscapacidad) VALUES(3, 'Intelectual')");
+            $this->db->query("INSERT INTO tipodiscapacidad (id, tipodiscapacidad) VALUES(4, 'Lenguaje')");
+            $this->db->query("INSERT INTO tipodiscapacidad (id, tipodiscapacidad) VALUES(5, 'Psicosocial')");
+            $this->db->query("INSERT INTO tipodiscapacidad (id, tipodiscapacidad) VALUES(6, 'Visual')");
+      }      
+    }
+
+    public function crea_tabla_cargo(){
+      $this->db->query("CREATE TABLE cargo (
+                                    id SERIAL,
+                                    nombre_cargo varchar(255),
+                                    activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
+    }
+
+    public function crea_tabla_empresa(){
+      $this->db->query("CREATE TABLE empresa (
+                                    id SERIAL,
+                                    nombre_empresa varchar(255),
+                                    ruc_empresa varchar(255),
+                                    representante_empresa varchar(255),
+                                    activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
+    }
+
+    public function crea_tabla_rubro(){
+      $this->db->query("CREATE TABLE rubro (
+                                    id SERIAL,
+                                    nombre_rubro varchar(255),
+                                    tipo_rubro int,
+                                    activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
+    }
+
+    public function crea_tabla_rubro_empleado(){
+      $this->db->query("CREATE TABLE rubro_empleado (
+                                    id SERIAL,
+                                    id_rubro int,
+                                    id_empleado int,
+                                    valor_neto numeric(10,2),
+                                    activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
+    }
+
+    public function crea_tabla_roldepagos(){
+      $this->db->query("CREATE TABLE roldepagos (
+                                    id SERIAL,
+                                    descripcion_rol varchar(255),
+                                    fechaini_rol date,
+                                    fechafin_rol date,
+                                    estado_rol int,
+                                    /*
+                                    asistencia??????  
+                                    */
+                                    PRIMARY KEY (id) 
+                                    )");
+    }
+
+    public function crea_tabla_roldepagos_det(){
+      $this->db->query("CREATE TABLE roldepagos_det (
+                                    id SERIAL,
+                                    id_rol int,
+                                    id_empleado int,
+                                    valor_neto numeric(10,2),
+                                    PRIMARY KEY (id) 
+                                    )");
     }
 
 }
