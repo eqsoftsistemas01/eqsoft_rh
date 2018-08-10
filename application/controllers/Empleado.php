@@ -105,6 +105,8 @@ class Empleado extends CI_Controller {
         $data["cargo"] = $cargo;
         $empresa = $this->Empleado_model->lst_empresa();
         $data["empresa"] = $empresa;
+        $tipocontrato = $this->Empleado_model->lst_tipocontrato();
+        $data["tipocontrato"] = $tipocontrato;
 
         $data["content"] = "empleado_edit";
         $this->load->view("layout", $data);
@@ -162,7 +164,23 @@ class Empleado extends CI_Controller {
         $cargo = $this->input->post('cmb_cargo'); 
         $empresa = $this->input->post('cmb_empresa'); 
 
-        $contrato = '';
+        $contrato = $this->input->post('txt_idcontrato');
+        $tipocontrato = $this->input->post('cmb_tipocontrato'); 
+        $sueldo = $this->input->post('txt_sueldo');
+        $fec = $this->input->post('fechaingreso');
+        if ((!$fec) || (trim($fec) == '')) 
+            { $fechaingreso = ''; }
+        else {
+            $fechaingreso = str_replace('/', '-', $fec); 
+            $fechaingreso = date("Y-m-d", strtotime($fechaingreso));
+        }
+        $fec = $this->input->post('fechasalida');
+        if ((!$fec) || (trim($fec) == '')) 
+            { $fechasalida = ''; }
+        else {
+            $fechasalida = str_replace('/', '-', $fec); 
+            $fechasalida = date("Y-m-d", strtotime($fechasalida));
+        }
 
         if($activo == 'on'){ $activo = 1; } else { $activo = 0; }
         if($vivefamiliares == 'on'){ $vivefamiliares = 1; } else { $vivefamiliares = 0; }
@@ -174,7 +192,7 @@ class Empleado extends CI_Controller {
                                  $numerovivienda, $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, 
                                  $vivefamiliares, $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
                                  $parentescocontacto, $telefonocontacto, $empresa, $tiposangre, $tipodiscapacidad, 
-                                 $p100discapacidad, $contrato, $cargo);
+                                 $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo);
         } else {
             $resu = $this->Empleado_model->add_empleado($nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, 
                                  $celular, $correo, $activo, $departamento, $lugarexpedicion, $cedulamilitar, $pasaporte, 
@@ -182,7 +200,7 @@ class Empleado extends CI_Controller {
                                  $numerovivienda, $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, 
                                  $vivefamiliares, $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
                                  $parentescocontacto, $telefonocontacto, $empresa, $tiposangre, $tipodiscapacidad, 
-                                 $p100discapacidad, $contrato, $cargo);
+                                 $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo);
         }
         print "<script> window.location.href = '" . base_url() . "empleado'; </script>";
     }
@@ -217,6 +235,8 @@ class Empleado extends CI_Controller {
         $data["cargo"] = $cargo;
         $empresa = $this->Empleado_model->lst_empresa();
         $data["empresa"] = $empresa;
+        $tipocontrato = $this->Empleado_model->lst_tipocontrato();
+        $data["tipocontrato"] = $tipocontrato;
 
         $data["base_url"] = base_url();
         $data["content"] = "empleado_edit";

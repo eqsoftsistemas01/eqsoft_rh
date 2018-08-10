@@ -39,6 +39,25 @@ date_default_timezone_set("America/Guayaquil");
         $(this).datepicker('hide');
     });
 
+    $('#fechaingreso').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd/mm/yy', 
+        firstDay: 1
+      });
+    $('#fechaingreso').on('changeDate', function(ev){
+        $(this).datepicker('hide');
+    });
+
+    $('#fechasalida').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd/mm/yy', 
+        firstDay: 1
+      });
+    $('#fechasalida').on('changeDate', function(ev){
+        $(this).datepicker('hide');
+    });
 
     $('#TableCargaFamiliar').dataTable({
       "language":{  "lengthMenu":"Mostrar _MENU_ registros por página.",
@@ -65,87 +84,107 @@ date_default_timezone_set("America/Guayaquil");
         ]
     });
 
-  });
-
-  $(document).on('click', '.add_carga', function(){
-    $.fancybox.open({
-      type: "ajax",
-      width: 550,
-      height: 550,
-      ajax: {
-         dataType: "html",
-         type: "POST"
-      },
-      href: "<?php echo base_url('Empleado/add_cargafamiliar');?>"
+    $(document).on('click', '.add_carga', function(){
+      $.fancybox.open({
+        type: "ajax",
+        width: 550,
+        height: 550,
+        ajax: {
+           dataType: "html",
+           type: "POST"
+        },
+        href: "<?php echo base_url('Empleado/add_cargafamiliar');?>"
+      });
     });
-  });
 
-  $(document).on('click', '.carga_ver', function(){
-      id = $(this).attr('id');
-      $.ajax({
-        type: "POST",
-        dataType: "json",
-        url: "<?php echo base_url('Empleado/tmp_carga');?>",
-        data: {id: id},
-        success: function(json) {
-          $.fancybox.open({
-            type: "ajax",
-            width: 550,
-            height: 550,
-            ajax: {
-               dataType: "html",
-               type: "POST"
-            },
-            href: "<?php echo base_url('Empleado/edit_cargafamiliar');?>"
-          });
+    $(document).on('click', '.carga_ver', function(){
+        id = $(this).attr('id');
+        $.ajax({
+          type: "POST",
+          dataType: "json",
+          url: "<?php echo base_url('Empleado/tmp_carga');?>",
+          data: {id: id},
+          success: function(json) {
+            $.fancybox.open({
+              type: "ajax",
+              width: 550,
+              height: 550,
+              ajax: {
+                 dataType: "html",
+                 type: "POST"
+              },
+              href: "<?php echo base_url('Empleado/edit_cargafamiliar');?>"
+            });
+          }
+        });
+
+
+    });
+
+    $(document).on('click','.btnguardarcarga', function() {
+        id = $('#txt_id_fam').val();
+        apellidos = $('#txt_apellidos_fam').val();
+        nombres = $('#txt_nombres_fam').val();
+        activo = $('#chkactivo_fam').val();
+        if(activo == 'on'){ activo = 1; } else { activo = 0; }
+        ident = $('#txt_ident_fam').val();
+        parentesco = $('#cmb_parentesco_fam').val();
+        telefono = $('#txt_telefono_fam').val();
+        fechanac = $('#fechanac_fam').val();
+        fechafall = $('#fechafall_fam').val();
+        sexo = $('#cmb_sexo_fam').val();
+
+        $.ajax({
+          url: base_url + "Empleado/guardar_carga",
+          data: { id: id, apellidos: apellidos, nombres: nombres, activo: activo, ident: ident, sexo: sexo,
+                  parentesco: parentesco, telefono: telefono, fechanac: fechanac, fechafall: fechafall },
+          type: 'POST',
+          dataType: 'json',
+          success: function(json) {
+            $.fancybox.close();
+            $('#TableCargaFamiliar').DataTable().ajax.reload();
+          }
+        });
+    });
+
+    $(document).on('change','#cmb_tipodiscapacidad', function(){
+        actualiza_p100discapacidad();
+    });   
+
+    function actualiza_p100discapacidad(){
+        var estado = $('#cmb_tipodiscapacidad').val();
+        if (!estado) { estado = 0; }
+        estado = estado * 1;
+        if (estado > 0) {
+          $("#txt_p100discapacidad").attr("disabled", false);
+        } else {
+          $("#txt_p100discapacidad").attr("disabled", true);
+          $("#txt_p100discapacidad").val("0");
         }
-      });
+    }  
 
+    $(document).on('click', '.btnaddcontrato', function(){
+      $(".seccioncontrato").show();
+      $("#txt_idcontrato").val('0');
+      $(".btnaddcontrato").hide();
+    });
+
+    function actualiza_estado_fechasalida(){
+        if($("#chkfechasalida").is(":checked")){ 
+          $('#fechasalida').attr('disabled',false); 
+        } 
+        else{ 
+          $('#fechasalida').attr('disabled',true); 
+        }  
+    }      
+
+    $(document).on('click', '#chkfechasalida', function(){
+      actualiza_estado_fechasalida();
+    });
+
+    actualiza_estado_fechasalida();
 
   });
-
-  $(document).on('click','.btnguardarcarga', function() {
-      id = $('#txt_id_fam').val();
-      apellidos = $('#txt_apellidos_fam').val();
-      nombres = $('#txt_nombres_fam').val();
-      activo = $('#chkactivo_fam').val();
-      if(activo == 'on'){ activo = 1; } else { activo = 0; }
-      ident = $('#txt_ident_fam').val();
-      parentesco = $('#cmb_parentesco_fam').val();
-      telefono = $('#txt_telefono_fam').val();
-      fechanac = $('#fechanac_fam').val();
-      fechafall = $('#fechafall_fam').val();
-      sexo = $('#cmb_sexo_fam').val();
-
-      $.ajax({
-        url: base_url + "Empleado/guardar_carga",
-        data: { id: id, apellidos: apellidos, nombres: nombres, activo: activo, ident: ident, sexo: sexo,
-                parentesco: parentesco, telefono: telefono, fechanac: fechanac, fechafall: fechafall },
-        type: 'POST',
-        dataType: 'json',
-        success: function(json) {
-          $.fancybox.close();
-          $('#TableCargaFamiliar').DataTable().ajax.reload();
-        }
-      });
-  });
-
-  $(document).on('change','#cmb_tipodiscapacidad', function(){
-      actualiza_p100discapacidad();
-  });   
-
-  function actualiza_p100discapacidad(){
-      var estado = $('#cmb_tipodiscapacidad').val();
-      if (!estado) { estado = 0; }
-      estado = estado * 1;
-      if (estado > 0) {
-        $("#txt_p100discapacidad").attr("disabled", false);
-      } else {
-        $("#txt_p100discapacidad").attr("disabled", true);
-        $("#txt_p100discapacidad").val("0");
-      }
-  }  
-
 
 </script>
 
@@ -512,250 +551,327 @@ date_default_timezone_set("America/Guayaquil");
                       
                         <div class="box-header with-border">
 
-                          <spam>
-                            <strong>Datos de Contacto</strong>  
-                          </spam>
-                          <hr class="linea">
+                          <div class="form-group col-md-12">
 
-                          <div class="form-group col-md-4">
-                              <label for="lb_cat">Nombres y Apellidos</label>
-                              <input type="text" class="form-control " name="txt_nombrecontacto" id="txt_nombrecontacto" placeholder="Nombres y Apellidos" value="<?php if(@$obj != NULL){ print @$obj->nombrecontacto; }?>" >
-                          </div>
+                            <input type="hidden" id="txt_idcontrato" name="txt_idcontrato" value="<?php if(@$obj != NULL) { if($obj->id_contrato != NULL) { print $obj->id_empleado; } } ?>" >    
 
-                          <div style="" class="form-group col-md-2">
-                            <label for="lb_res">Parentesco</label>
-                            <select class="form-control" id="cmb_parentesco" name="cmb_parentesco">
-                                <?php 
-                                  if(@$parentesco != NULL){ ?>
-                                    <option  value="0" selected="TRUE">Seleccione...</option>
-                                <?php }  
-                                          if (count($parentesco) > 0) {
-                                            foreach ($parentesco as $pe):
-                                                if(@$obj->id_parentescocontacto != NULL){
-                                                    if($pe->id == $obj->id_parentescocontacto){ ?>
-                                                        <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->parentesco ?></option> 
-                                                        <?php
-                                                    }else{ ?>
-                                                        <option value="<?php  print $pe->id; ?>"> <?php  print $pe->parentesco ?> </option>
-                                                        <?php
-                                                    }
-                                                }else{ ?>
-                                                    <option value="<?php  print $pe->id; ?>"> <?php  print $pe->parentesco ?> </option>
-                                                    <?php
-                                                    }   ?>
-                                                <?php
+                            <spam>
+                              <strong>Contrato</strong>  
 
-                                            endforeach;
-                                          }
-                                          ?>
-                            </select>
-                          </div>
+                            <div class="form-actions pull-right">
+                                <button type="button" class="btn btn-info btn-grad btn-xs no-margin-bottom btnaddcontrato" title="Añadir Contrato">
+                                    <i class="fa fa-plus-square "></i> Añadir
+                                </button>
+                            </div>
 
-                          <div class="form-group col-md-4">
-                              <label for="lb_cat">Direccion</label>
-                              <input type="text" class="form-control " name="txt_direccioncontacto" id="txt_direccioncontacto" placeholder="Direccion" value="<?php if(@$obj != NULL){ print @$obj->direccioncontacto; }?>" >
-                          </div>
+                            </spam>
 
-                          <div class="form-group col-md-2">
-                              <label for="lb_cat">Telefonos</label>
-                              <input type="text" class="form-control " name="txt_telefonocontacto" id="txt_telefonocontacto" placeholder="Telefonos" value="<?php if(@$obj != NULL){ print @$obj->telefonocontacto; }?>" >
-                          </div>
+                            <hr class="linea">
 
-                          <spam>
-                            <strong>Datos Bancarios</strong>  
-                          </spam>
-                          <hr class="linea">
+                            <div class="seccioncontrato" <?php if(@$obj->id_tipocontrato != NULL) { print 'style="display:block"';} else { print 'style="display:none"'; } ?> >
 
-                          <div style="" class="form-group col-md-4">
-                            <label for="lb_res">Banco</label>
-                            <select class="form-control" id="cmb_banco" name="cmb_banco">
-                                <?php 
-                                  if(@$banco != NULL){ ?>
-                                    <option  value="0" selected="TRUE">Seleccione...</option>
-                                <?php }  
-                                          if (count($banco) > 0) {
-                                            foreach ($banco as $pe):
-                                                if(@$obj->id_banco != NULL){
-                                                    if($pe->id == $obj->id_banco){ ?>
-                                                        <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->nombre_banco ?></option> 
-                                                        <?php
-                                                    }else{ ?>
-                                                        <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_banco ?> </option>
-                                                        <?php
-                                                    }
-                                                }else{ ?>
-                                                    <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_banco ?> </option>
-                                                    <?php
-                                                    }   ?>
-                                                <?php
+                            <div class="form-group col-md-2">
+                                <label for="lb_cat">Fecha Ingreso</label>
+                                <input type="text" class="form-control  validate[required]" name="fechaingreso" id="fechaingreso" placeholder="Fecha Ingreso" value="<?php if(@$obj != NULL){ if(@$obj->fecha_ingreso != NULL){ @$fec = str_replace('-', '/', @$obj->fecha_ingreso); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; }} ?>" >
+                            </div>                       
 
-                                            endforeach;
-                                          }
-                                          ?>
-                            </select>
-                          </div>
+                            <div class="form-group col-md-2">
+                              <div class="form-group col-md-12 text-center" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;margin-bottom: 3px;">
+                                <input id="chkfechasalida" name="chkfechasalida" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->fecha_salida == 1){ print " checked";} } ?> > <strong>Fecha Salida</strong>
+                              </div>  
+                                <input type="text" class="form-control " name="fechasalida" id="fechasalida" placeholder="Fecha Salida" value="<?php if(@$obj != NULL){ if(@$obj->fecha_salida != NULL){ @$fec = str_replace('-', '/', @$obj->fecha_salida); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; }} ?>" >
+                            </div>                       
 
-                          <div style="" class="form-group col-md-4">
-                            <label for="lb_res">Tipo Cuenta</label>
-                            <select class="form-control" id="cmb_tipocuenta" name="cmb_tipocuenta">
-                                <?php 
-                                  if(@$tipocuenta != NULL){ ?>
-                                    <option  value="0" selected="TRUE">Seleccione...</option>
-                                <?php }  
-                                          if (count($tipocuenta) > 0) {
-                                            foreach ($tipocuenta as $pe):
-                                                if(@$obj->id_tipocuenta != NULL){
-                                                    if($pe->id == $obj->id_tipocuenta){ ?>
-                                                        <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->tipocuentabanco ?></option> 
-                                                        <?php
-                                                    }else{ ?>
-                                                        <option value="<?php  print $pe->id; ?>"> <?php  print $pe->tipocuentabanco ?> </option>
-                                                        <?php
-                                                    }
-                                                }else{ ?>
-                                                    <option value="<?php  print $pe->id; ?>"> <?php  print $pe->tipocuentabanco ?> </option>
-                                                    <?php
-                                                    }   ?>
-                                                <?php
+                            <div style="" class="form-group col-md-3">
+                              <label for="lb_res">Tipo Contrato</label>
+                              <select class="form-control  validate[required]" id="cmb_tipocontrato" name="cmb_tipocontrato">
+                                  <?php 
+                                    if(@$tipocontrato != NULL){ ?>
+                                      <option  value="0" selected="TRUE">Seleccione...</option>
+                                  <?php }  
+                                            if (count($tipocontrato) > 0) {
+                                              foreach ($tipocontrato as $pe):
+                                                  if(@$obj->id_tipocontrato != NULL){
+                                                      if($pe->id == $obj->id_tipocontrato){ ?>
+                                                          <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->tipocontrato ?></option> 
+                                                          <?php
+                                                      }else{ ?>
+                                                          <option value="<?php  print $pe->id; ?>"> <?php  print $pe->tipocontrato ?> </option>
+                                                          <?php
+                                                      }
+                                                  }else{ ?>
+                                                      <option value="<?php  print $pe->id; ?>"> <?php  print $pe->tipocontrato ?> </option>
+                                                      <?php
+                                                      }   ?>
+                                                  <?php
 
-                                            endforeach;
-                                          }
-                                          ?>
-                            </select>
-                          </div>
+                                              endforeach;
+                                            }
+                                            ?>
+                              </select>
+                            </div>
 
-                          <div class="form-group col-md-4">
-                              <label for="lb_cat">Numero Cuenta</label>
-                              <input type="text" class="form-control " name="txt_numerocuenta" id="txt_numerocuenta" placeholder="Numero Cuenta" value="<?php if(@$obj != NULL){ print @$obj->numerocuenta; }?>" >
-                          </div>
+                            <div style="" class="form-group col-md-3">
+                              <label for="lb_res">Cargo</label>
+                              <select class="form-control  validate[required]" id="cmb_cargo" name="cmb_cargo">
+                                  <?php 
+                                    if(@$cargo != NULL){ ?>
+                                      <option  value="0" selected="TRUE">Seleccione...</option>
+                                  <?php }  
+                                            if (count($cargo) > 0) {
+                                              foreach ($cargo as $pe):
+                                                  if(@$obj->id_cargo != NULL){
+                                                      if($pe->id == $obj->id_cargo){ ?>
+                                                          <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->nombre_cargo ?></option> 
+                                                          <?php
+                                                      }else{ ?>
+                                                          <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_cargo ?> </option>
+                                                          <?php
+                                                      }
+                                                  }else{ ?>
+                                                      <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_cargo ?> </option>
+                                                      <?php
+                                                      }   ?>
+                                                  <?php
 
-                          <spam>
-                            <strong>Otros</strong>  
-                          </spam>
-                          <hr class="linea">
+                                              endforeach;
+                                            }
+                                            ?>
+                              </select>
+                            </div>
 
-                          <div style="" class="form-group col-md-3">
-                            <label for="lb_res">Perfil de Usuario</label>
-                            <select class="form-control validate[required]" id="cmb_perfil" name="cmb_perfil">
-                                <?php 
-                                  if(@$perfil != NULL){ ?>
-                                    <option  value="0" selected="TRUE">Seleccione...</option>
-                                <?php }  
-                                          if (count($perfil) > 0) {
-                                            foreach ($perfil as $pe):
-                                                if(@$obj->perfil != NULL){
-                                                    if($pe->id_perfil == $obj->perfil){ ?>
-                                                        <option  value="<?php  print $pe->id_perfil; ?>" selected="TRUE"><?php print $pe->nom_perfil ?></option> 
-                                                        <?php
-                                                    }else{ ?>
-                                                        <option value="<?php  print $pe->id_perfil; ?>"> <?php  print $pe->nom_perfil ?> </option>
-                                                        <?php
-                                                    }
-                                                }else{ ?>
-                                                    <option value="<?php  print $pe->id_perfil; ?>"> <?php  print $pe->nom_perfil ?> </option>
-                                                    <?php
-                                                    }   ?>
-                                                <?php
+                            <div class="form-group col-md-2">
+                                <label for="lb_cat">Sueldo</label>
+                                <input type="text" class="form-control  validate[required]" name="txt_sueldo" id="txt_sueldo" placeholder="Sueldo" value="<?php if(@$obj != NULL){ print @$obj->sueldo; }?>" >
+                            </div>
 
-                                            endforeach;
-                                          }
-                                          ?>
-                            </select>
-                          </div>
+                            </div>
 
-                          <div style="" class="form-group col-md-3">
-                            <label for="lb_res">Cargo</label>
-                            <select class="form-control" id="cmb_cargo" name="cmb_cargo">
-                                <?php 
-                                  if(@$cargo != NULL){ ?>
-                                    <option  value="0" selected="TRUE">Seleccione...</option>
-                                <?php }  
-                                          if (count($cargo) > 0) {
-                                            foreach ($cargo as $pe):
-                                                if(@$obj->id_cargo != NULL){
-                                                    if($pe->id == $obj->id_cargo){ ?>
-                                                        <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->nombre_cargo ?></option> 
-                                                        <?php
-                                                    }else{ ?>
-                                                        <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_cargo ?> </option>
-                                                        <?php
-                                                    }
-                                                }else{ ?>
-                                                    <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_cargo ?> </option>
-                                                    <?php
-                                                    }   ?>
-                                                <?php
+                          </div>  
 
-                                            endforeach;
-                                          }
-                                          ?>
-                            </select>
-                          </div>
+                          <div class="form-group col-md-12">
 
-                          <div style="" class="form-group col-md-3">
-                            <label for="lb_res">Departamento</label>
-                            <select class="form-control" id="cmb_departamento" name="cmb_departamento">
-                                <?php 
-                                  if(@$departamento != NULL){ ?>
-                                    <option  value="0" selected="TRUE">Seleccione...</option>
-                                <?php }  
-                                          if (count($departamento) > 0) {
-                                            foreach ($departamento as $pe):
-                                                if(@$obj->id_departamento != NULL){
-                                                    if($pe->id == $obj->id_departamento){ ?>
-                                                        <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->nombre_departamento ?></option> 
-                                                        <?php
-                                                    }else{ ?>
-                                                        <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_departamento ?> </option>
-                                                        <?php
-                                                    }
-                                                }else{ ?>
-                                                    <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_departamento ?> </option>
-                                                    <?php
-                                                    }   ?>
-                                                <?php
+                            <spam>
+                              <strong>Datos de Contacto</strong>  
+                            </spam>
+                            <hr class="linea">
 
-                                            endforeach;
-                                          }
-                                          ?>
-                            </select>
-                          </div>
+                            <div class="form-group col-md-4">
+                                <label for="lb_cat">Nombres y Apellidos</label>
+                                <input type="text" class="form-control " name="txt_nombrecontacto" id="txt_nombrecontacto" placeholder="Nombres y Apellidos" value="<?php if(@$obj != NULL){ print @$obj->nombrecontacto; }?>" >
+                            </div>
 
-                          <div style="" class="form-group col-md-3">
-                            <label for="lb_res">Empresa</label>
-                            <select class="form-control" id="cmb_empresa" name="cmb_empresa">
-                                <?php 
-                                  if(@$empresa != NULL){ ?>
-                                    <option  value="0" selected="TRUE">Seleccione...</option>
-                                <?php }  
-                                          if (count($empresa) > 0) {
-                                            foreach ($empresa as $pe):
-                                                if(@$obj->id_empresa != NULL){
-                                                    if($pe->id == $obj->id_empresa){ ?>
-                                                        <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->nombre_empresa ?></option> 
-                                                        <?php
-                                                    }else{ ?>
-                                                        <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_empresa ?> </option>
-                                                        <?php
-                                                    }
-                                                }else{ ?>
-                                                    <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_empresa ?> </option>
-                                                    <?php
-                                                    }   ?>
-                                                <?php
+                            <div style="" class="form-group col-md-2">
+                              <label for="lb_res">Parentesco</label>
+                              <select class="form-control" id="cmb_parentesco" name="cmb_parentesco">
+                                  <?php 
+                                    if(@$parentesco != NULL){ ?>
+                                      <option  value="0" selected="TRUE">Seleccione...</option>
+                                  <?php }  
+                                            if (count($parentesco) > 0) {
+                                              foreach ($parentesco as $pe):
+                                                  if(@$obj->id_parentescocontacto != NULL){
+                                                      if($pe->id == $obj->id_parentescocontacto){ ?>
+                                                          <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->parentesco ?></option> 
+                                                          <?php
+                                                      }else{ ?>
+                                                          <option value="<?php  print $pe->id; ?>"> <?php  print $pe->parentesco ?> </option>
+                                                          <?php
+                                                      }
+                                                  }else{ ?>
+                                                      <option value="<?php  print $pe->id; ?>"> <?php  print $pe->parentesco ?> </option>
+                                                      <?php
+                                                      }   ?>
+                                                  <?php
 
-                                            endforeach;
-                                          }
-                                          ?>
-                            </select>
-                          </div>
+                                              endforeach;
+                                            }
+                                            ?>
+                              </select>
+                            </div>
 
-                          <div class="form-group col-md-3">
-                              <label for="lb_cat">Codigo Reloj</label>
-                              <input type="text" class="form-control " name="txt_codigoreloj" id="txt_codigoreloj" placeholder="Codigo Reloj" value="<?php if(@$obj != NULL){ print @$obj->codigoreloj; }?>" >
-                          </div>
+                            <div class="form-group col-md-4">
+                                <label for="lb_cat">Direccion</label>
+                                <input type="text" class="form-control " name="txt_direccioncontacto" id="txt_direccioncontacto" placeholder="Direccion" value="<?php if(@$obj != NULL){ print @$obj->direccioncontacto; }?>" >
+                            </div>
 
+                            <div class="form-group col-md-2">
+                                <label for="lb_cat">Telefonos</label>
+                                <input type="text" class="form-control " name="txt_telefonocontacto" id="txt_telefonocontacto" placeholder="Telefonos" value="<?php if(@$obj != NULL){ print @$obj->telefonocontacto; }?>" >
+                            </div>
+                          </div>  
 
+                          <div class="form-group col-md-12">
+
+                            <spam>
+                              <strong>Datos Bancarios</strong>  
+                            </spam>
+                            <hr class="linea">
+
+                            <div style="" class="form-group col-md-4">
+                              <label for="lb_res">Banco</label>
+                              <select class="form-control" id="cmb_banco" name="cmb_banco">
+                                  <?php 
+                                    if(@$banco != NULL){ ?>
+                                      <option  value="0" selected="TRUE">Seleccione...</option>
+                                  <?php }  
+                                            if (count($banco) > 0) {
+                                              foreach ($banco as $pe):
+                                                  if(@$obj->id_banco != NULL){
+                                                      if($pe->id == $obj->id_banco){ ?>
+                                                          <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->nombre_banco ?></option> 
+                                                          <?php
+                                                      }else{ ?>
+                                                          <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_banco ?> </option>
+                                                          <?php
+                                                      }
+                                                  }else{ ?>
+                                                      <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_banco ?> </option>
+                                                      <?php
+                                                      }   ?>
+                                                  <?php
+
+                                              endforeach;
+                                            }
+                                            ?>
+                              </select>
+                            </div>
+
+                            <div style="" class="form-group col-md-4">
+                              <label for="lb_res">Tipo Cuenta</label>
+                              <select class="form-control" id="cmb_tipocuenta" name="cmb_tipocuenta">
+                                  <?php 
+                                    if(@$tipocuenta != NULL){ ?>
+                                      <option  value="0" selected="TRUE">Seleccione...</option>
+                                  <?php }  
+                                            if (count($tipocuenta) > 0) {
+                                              foreach ($tipocuenta as $pe):
+                                                  if(@$obj->id_tipocuenta != NULL){
+                                                      if($pe->id == $obj->id_tipocuenta){ ?>
+                                                          <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->tipocuentabanco ?></option> 
+                                                          <?php
+                                                      }else{ ?>
+                                                          <option value="<?php  print $pe->id; ?>"> <?php  print $pe->tipocuentabanco ?> </option>
+                                                          <?php
+                                                      }
+                                                  }else{ ?>
+                                                      <option value="<?php  print $pe->id; ?>"> <?php  print $pe->tipocuentabanco ?> </option>
+                                                      <?php
+                                                      }   ?>
+                                                  <?php
+
+                                              endforeach;
+                                            }
+                                            ?>
+                              </select>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="lb_cat">Numero Cuenta</label>
+                                <input type="text" class="form-control " name="txt_numerocuenta" id="txt_numerocuenta" placeholder="Numero Cuenta" value="<?php if(@$obj != NULL){ print @$obj->numerocuenta; }?>" >
+                            </div>
+                          </div>  
+
+                          <div class="form-group col-md-12">
+
+                            <spam>
+                              <strong>Otros</strong>  
+                            </spam>
+                            <hr class="linea">
+
+                            <div style="" class="form-group col-md-3">
+                              <label for="lb_res">Perfil de Usuario</label>
+                              <select class="form-control validate[required]" id="cmb_perfil" name="cmb_perfil">
+                                  <?php 
+                                    if(@$perfil != NULL){ ?>
+                                      <option  value="0" selected="TRUE">Seleccione...</option>
+                                  <?php }  
+                                            if (count($perfil) > 0) {
+                                              foreach ($perfil as $pe):
+                                                  if(@$obj->perfil != NULL){
+                                                      if($pe->id_perfil == $obj->perfil){ ?>
+                                                          <option  value="<?php  print $pe->id_perfil; ?>" selected="TRUE"><?php print $pe->nom_perfil ?></option> 
+                                                          <?php
+                                                      }else{ ?>
+                                                          <option value="<?php  print $pe->id_perfil; ?>"> <?php  print $pe->nom_perfil ?> </option>
+                                                          <?php
+                                                      }
+                                                  }else{ ?>
+                                                      <option value="<?php  print $pe->id_perfil; ?>"> <?php  print $pe->nom_perfil ?> </option>
+                                                      <?php
+                                                      }   ?>
+                                                  <?php
+
+                                              endforeach;
+                                            }
+                                            ?>
+                              </select>
+                            </div>
+
+                            <div style="" class="form-group col-md-3">
+                              <label for="lb_res">Departamento</label>
+                              <select class="form-control" id="cmb_departamento" name="cmb_departamento">
+                                  <?php 
+                                    if(@$departamento != NULL){ ?>
+                                      <option  value="0" selected="TRUE">Seleccione...</option>
+                                  <?php }  
+                                            if (count($departamento) > 0) {
+                                              foreach ($departamento as $pe):
+                                                  if(@$obj->id_departamento != NULL){
+                                                      if($pe->id == $obj->id_departamento){ ?>
+                                                          <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->nombre_departamento ?></option> 
+                                                          <?php
+                                                      }else{ ?>
+                                                          <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_departamento ?> </option>
+                                                          <?php
+                                                      }
+                                                  }else{ ?>
+                                                      <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_departamento ?> </option>
+                                                      <?php
+                                                      }   ?>
+                                                  <?php
+
+                                              endforeach;
+                                            }
+                                            ?>
+                              </select>
+                            </div>
+
+                            <div style="" class="form-group col-md-3">
+                              <label for="lb_res">Empresa</label>
+                              <select class="form-control" id="cmb_empresa" name="cmb_empresa">
+                                  <?php 
+                                    if(@$empresa != NULL){ ?>
+                                      <option  value="0" selected="TRUE">Seleccione...</option>
+                                  <?php }  
+                                            if (count($empresa) > 0) {
+                                              foreach ($empresa as $pe):
+                                                  if(@$obj->id_empresa != NULL){
+                                                      if($pe->id == $obj->id_empresa){ ?>
+                                                          <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->nombre_empresa ?></option> 
+                                                          <?php
+                                                      }else{ ?>
+                                                          <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_empresa ?> </option>
+                                                          <?php
+                                                      }
+                                                  }else{ ?>
+                                                      <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_empresa ?> </option>
+                                                      <?php
+                                                      }   ?>
+                                                  <?php
+
+                                              endforeach;
+                                            }
+                                            ?>
+                              </select>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label for="lb_cat">Codigo Reloj</label>
+                                <input type="text" class="form-control " name="txt_codigoreloj" id="txt_codigoreloj" placeholder="Codigo Reloj" value="<?php if(@$obj != NULL){ print @$obj->codigoreloj; }?>" >
+                            </div>
+                          </div>  
+          
                         </div>  
 
                       </div>  

@@ -40,11 +40,12 @@ class Empleado_model extends CI_Model {
                                  $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, $vivefamiliares, 
                                  $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
                                  $parentescocontacto, $telefonocontacto, $empresa, $tiposangre, $tipodiscapacidad, 
-                                 $p100discapacidad, $contrato, $cargo){
+                                 $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo){
 
       if ((!$perfil) || (trim($perfil) == '')) { $perfil = 'NULL'; }
       if ((!$departamento) || (trim($departamento) == '')) { $departamento = 'NULL'; }
-      if (!$fechanac) { $fechanac = ''; } 
+      if ((!$fechanac) || (trim($fechanac) == '')) { $fechanac = 'NULL'; }
+        else { $fechanac = "to_date('" . $fechanac . "', 'YYYY-MM-DD')";  }
       if ((!$estadocivil) || (trim($estadocivil) == '')) { $estadocivil = 'NULL'; }
       if ((!$ciudad) || (trim($ciudad) == '')) { $ciudad = 'NULL'; }
       if ((!$tipovivienda) || (trim($tipovivienda) == '')) { $tipovivienda = 'NULL'; }
@@ -57,6 +58,15 @@ class Empleado_model extends CI_Model {
       if ((!$p100discapacidad) || (trim($p100discapacidad) == '')) { $p100discapacidad = 0; }
       if ((!$contrato) || (trim($contrato) == '')) { $contrato = 'NULL'; }
       if ((!$cargo) || (trim($cargo) == '')) { $cargo = 'NULL'; }
+      $nuevocontrato = (trim($tipocontrato) == '0');
+      if ((!$tipocontrato) || (trim($tipocontrato) == '')) { $tipocontrato = 'NULL'; }
+      if ((!$fechaingreso) || (trim($fechaingreso) == '')) { $fechaingreso = 'NULL'; }
+        else { $fechaingreso = "to_date('" . $fechaingreso . "', 'YYYY-MM-DD')";  }
+      if ((!$fechasalida) || (trim($fechasalida) == '')) { $fechasalida = 'NULL'; }
+        else { $fechasalida = "to_date('" . $fechasalida . "', 'YYYY-MM-DD')";  }
+      if ((!$sueldo) || (trim($sueldo) == '')) { $sueldo = 0; }
+      if ((!$peso) || (trim($peso) == '')) { $peso = 'NULL'; }
+      if ((!$talla) || (trim($talla) == '')) { $talla = 'NULL'; }
 
       $this->db->query(" UPDATE empleado SET 
                             apellidos = '$apellido',
@@ -72,7 +82,7 @@ class Empleado_model extends CI_Model {
                             lugarexpedicion = '$lugarexpedicion', 
                             cedulamilitar = '$cedulamilitar', 
                             pasaporte = '$pasaporte', 
-                            fecha_nacimiento = case when ('$fechanac' != '') then to_date('$fechanac', 'YYYY-MM-DD') else NULL end, 
+                            fecha_nacimiento = $fechanac, 
                             sexo = '$sexo', 
                             id_estadocivil = $estadocivil, 
                             peso = $peso, 
@@ -98,7 +108,10 @@ class Empleado_model extends CI_Model {
                             id_tipodiscapacidad = $tipodiscapacidad, 
                             p100discapacidad = $p100discapacidad, 
                             id_contrato = $contrato, 
-                            id_cargo = $cargo
+                            id_cargo = $cargo,
+                            fecha_ingreso = $fechaingreso, 
+                            fecha_salida = $fechasalida, 
+                            sueldo = $sueldo
                            WHERE id_empleado = $idempleado");
 
       $usua = $this->session->userdata('usua');
@@ -112,10 +125,17 @@ class Empleado_model extends CI_Model {
                             INNER JOIN empleado_tmp e on e.id = t.id_empleadotmp
                             WHERE e.id_usuario = $idusu");
 
+      if ($contrato != 'NULL'){
+        if ($nuevocontrato == true){
+          $this->db->query("INSERT INTO contrato (id_tipo, id_empleado, id_cargo, fecha_inicio, fecha_fin, sueldo, activo)
+                              VALUES($tipocontrato, $idempleado, $cargo, $fechaingreso, $fecha_salida, $sueldo, 1)");
+        }
+      }
+
     }
 
     public function add_empleado($nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, $celular, $correo, 
-                                 $activo, $departamento, $lugarexpedicion, $cedulamilitar, $pasaporte, $fecha_nacimiento, 
+                                 $activo, $departamento, $lugarexpedicion, $cedulamilitar, $pasaporte, $fechanac, 
                                  $sexo, $estadocivil, $peso, $talla, $codigoreloj, $calleprincipal, $numerovivienda,
                                  $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, $vivefamiliares, 
                                  $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
@@ -124,11 +144,11 @@ class Empleado_model extends CI_Model {
 
         if ((!$perfil) || (trim($perfil) == '')) { $perfil = 'NULL'; }
         if ((!$departamento) || (trim($departamento) == '')) { $departamento = 'NULL'; }
-        if ((!$fecha_nacimiento) || (trim($fecha_nacimiento) == '')) { 
-          $fecha_nacimiento = 'NULL'; 
+        if ((!$fechanac) || (trim($fechanac) == '')) { 
+          $fechanac = 'NULL'; 
         }
         else {
-          $fecha_nacimiento = '$fecha_nacimiento'; 
+          $fechanac = "to_date('" . $fechanac . "', 'YYYY-MM-DD')"; 
         }
         if ((!$estadocivil) || (trim($estadocivil) == '')) { $estadocivil = 'NULL'; }
         if ((!$ciudad) || (trim($ciudad) == '')) { $ciudad = 'NULL'; }
@@ -141,6 +161,9 @@ class Empleado_model extends CI_Model {
         if ((!$tipodiscapacidad) || (trim($tipodiscapacidad) == '')) { $tipodiscapacidad = 'NULL'; }
         if ((!$contrato) || (trim($contrato) == '')) { $contrato = 'NULL'; }
         if ((!$cargo) || (trim($cargo) == '')) { $cargo = 'NULL'; }
+        if ((!$peso) || (trim($peso) == '')) { $peso = 'NULL'; }
+        if ((!$talla) || (trim($talla) == '')) { $talla = 'NULL'; }
+      if ((!$p100discapacidad) || (trim($p100discapacidad) == '')) { $p100discapacidad = 0; }
 
         $this->db->query("INSERT INTO empleado (nombres, apellidos, tipo_identificacion, nro_ident, perfil, 
                                                telf_empleado, celular_empleado, correo_empleado, activo, id_departamento,
@@ -152,7 +175,9 @@ class Empleado_model extends CI_Model {
                                                id_tiposangre, id_tipodiscapacidad, p100discapacidad, id_contrato, id_cargo)
                             VALUES('$nombre', '$apellido', $tipoident, '$identificacion', $perfil, '$telefono', 
                                    '$celular', '$correo', $activo, $departamento, '$lugarexpedicion', '$cedulamilitar', 
-                                   '$pasaporte', $fecha_nacimiento, '$sexo', $estadocivil, $peso, $talla, 
+                                   '$pasaporte', 
+                                   $fechanac,
+                                   '$sexo', $estadocivil, $peso, $talla, 
                                    '$codigoreloj', '$calleprincipal', '$numerovivienda', '$calletransversal', 
                                    '$sector', '$referenciavivienda', $ciudad, $tipovivienda, $vivefamiliares, 
                                    $banco, $tipocuenta, '$numerocuenta', '$nombrecontacto', '$direccioncontacto', 
@@ -187,16 +212,20 @@ class Empleado_model extends CI_Model {
     }
 
     public function sel_empleado_id($idempleado){
-      $query = $this->db->query(" SELECT id_empleado, nombres, apellidos, nro_ident, tipo_identificacion, 
-                                         perfil, telf_empleado, celular_empleado, correo_empleado, 
-                                         activo, id_departamento, lugarexpedicion, cedulamilitar,
-                                         pasaporte, fecha_nacimiento, sexo, id_estadocivil, peso, talla, 
-                                         codigoreloj, calleprincipal, numerovivienda, calletransversal, 
-                                         sector, referenciavivienda, id_ciudad, id_tipovivienda, vivefamiliares,
-                                         id_banco, id_tipocuenta, numerocuenta, nombrecontacto, direccioncontacto,
-                                         id_parentescocontacto, telefonocontacto, id_empresa, id_tiposangre,
-                                         id_tipodiscapacidad, p100discapacidad, id_contrato, id_cargo
-                                  FROM empleado WHERE id_empleado = $idempleado");
+      $query = $this->db->query(" SELECT e.id_empleado, e.nombres, e.apellidos, e.nro_ident, e.tipo_identificacion, 
+                                         e.perfil, e.telf_empleado, e.celular_empleado, e.correo_empleado, 
+                                         e.activo, e.id_departamento, e.lugarexpedicion, e.cedulamilitar,
+                                         e.pasaporte, e.fecha_nacimiento, e.sexo, e.id_estadocivil, e.peso, e.talla, 
+                                         e.codigoreloj, e.calleprincipal, e.numerovivienda, e.calletransversal, 
+                                         e.sector, e.referenciavivienda, e.id_ciudad, e.id_tipovivienda, e.vivefamiliares,
+                                         e.id_banco, e.id_tipocuenta, e.numerocuenta, e.nombrecontacto, e.direccioncontacto,
+                                         e.id_parentescocontacto, e.telefonocontacto, e.id_empresa, e.id_tiposangre,
+                                         e.id_tipodiscapacidad, e.p100discapacidad, e.id_contrato, e.id_cargo,
+                                         e.fecha_ingreso, e.fecha_salida, e.sueldo,
+                                         c.id_tipo as id_tipocontrato
+                                  FROM empleado e
+                                  LEFT JOIN contrato c on c.id = e.id_contrato
+                                  WHERE e.id_empleado = $idempleado");
       $result = $query->result();
       return $result[0];
     }
@@ -357,6 +386,12 @@ class Empleado_model extends CI_Model {
     public function lst_empresa() {
         $query = $this->db->query("SELECT id, nombre_empresa, ruc_empresa, representante_empresa FROM empresa 
                                      WHERE activo = 1;");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function lst_tipocontrato() {
+        $query = $this->db->query("SELECT id, tipocontrato FROM tipocontrato;");
         $result = $query->result();
         return $result;
     }

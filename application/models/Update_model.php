@@ -114,6 +114,8 @@ class Update_model extends CI_Model {
       if ($res != true) $this->add_columna_tabla('empleado','fecha_ingreso', 'date', "");
       $res = $this->existe_columna_tabla('empleado','fecha_salida');
       if ($res != true) $this->add_columna_tabla('empleado','fecha_salida', 'date', "");
+      $res = $this->existe_columna_tabla('empleado','sueldo');
+      if ($res != true) $this->add_columna_tabla('empleado','sueldo', 'numeric(10,2)', "");
 
       $res = $this->existe_tabla('tipobanco');
       if ($res != true) $this->crea_tabla_tipobanco();
@@ -134,6 +136,13 @@ class Update_model extends CI_Model {
 
       $res = $this->existe_columna_tabla('ciudad','id_provincia');
       if ($res != true) $this->add_columna_tabla('ciudad','id_provincia', 'int', "");
+
+      $res = $this->existe_tabla('tipocontrato');
+      if ($res != true) $this->crea_tabla_tipocontrato();
+
+      $res = $this->existe_tabla('contrato');
+      if ($res != true) $this->crea_tabla_contrato();
+
 
       return 1;
     }
@@ -485,6 +494,36 @@ class Update_model extends CI_Model {
                                     nombre_empresa varchar(255),
                                     ruc_empresa varchar(255),
                                     representante_empresa varchar(255),
+                                    activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
+    }
+
+    public function crea_tabla_tipocontrato(){
+      $this->db->query("CREATE TABLE tipocontrato (
+                                    id SERIAL,
+                                    tipocontrato varchar(255),
+                                    PRIMARY KEY (id) 
+                                    )");
+      $this->db->query("INSERT INTO tipocontrato (id, tipocontrato) VALUES(1, 'Tiempo Indefinido')");
+      $this->db->query("INSERT INTO tipocontrato (id, tipocontrato) VALUES(2, 'Eventual')");
+      $this->db->query("INSERT INTO tipocontrato (id, tipocontrato) VALUES(3, 'Ocasional')");
+      $this->db->query("INSERT INTO tipocontrato (id, tipocontrato) VALUES(4, 'De Temporada')");
+      $this->db->query("INSERT INTO tipocontrato (id, tipocontrato) VALUES(5, 'Por Obra Cierta')");
+      $this->db->query("INSERT INTO tipocontrato (id, tipocontrato) VALUES(6, 'De Aprendizaje')");
+      $this->db->query("INSERT INTO tipocontrato (id, tipocontrato) VALUES(7, 'Por Tarea')");
+      $this->db->query("INSERT INTO tipocontrato (id, tipocontrato) VALUES(8, 'A Destajo')");
+    }
+
+    public function crea_tabla_contrato(){
+      $this->db->query("CREATE TABLE contrato (
+                                    id SERIAL,
+                                    id_tipo int,
+                                    id_empleado int,
+                                    id_cargo int,
+                                    fecha_inicio date,
+                                    fecha_fin date,
+                                    sueldo numeric(10,2),
                                     activo int,
                                     PRIMARY KEY (id) 
                                     )");
