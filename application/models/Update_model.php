@@ -143,6 +143,11 @@ class Update_model extends CI_Model {
       $res = $this->existe_tabla('contrato');
       if ($res != true) $this->crea_tabla_contrato();
 
+      $res = $this->existe_tabla('tiporubro');
+      if ($res != true) $this->crea_tabla_tiporubro();
+
+      $res = $this->existe_tabla('rubro');
+      if ($res != true) $this->crea_tabla_rubro();
 
       return 1;
     }
@@ -529,11 +534,30 @@ class Update_model extends CI_Model {
                                     )");
     }
 
+    public function crea_tabla_tiporubro(){
+      $this->db->query("CREATE TABLE tiporubro (
+                                    id SERIAL,
+                                    tiporubro varchar(255),
+                                    ingresoegreso int,
+                                    PRIMARY KEY (id) 
+                                    )");
+      $this->db->query("INSERT INTO tiporubro (id, tiporubro, ingresoegreso) VALUES(1, 'Ingreso', 1)");
+      $this->db->query("INSERT INTO tiporubro (id, tiporubro, ingresoegreso) VALUES(2, 'Egreso', -1)");
+      $this->db->query("INSERT INTO tiporubro (id, tiporubro, ingresoegreso) VALUES(3, 'Informativo', 1)");
+    }
+
     public function crea_tabla_rubro(){
       $this->db->query("CREATE TABLE rubro (
                                     id SERIAL,
+                                    codigo_rubro varchar(4),
                                     nombre_rubro varchar(255),
                                     tipo_rubro int,
+                                    afectadopordias int,
+                                    periodicidadmensual int,
+                                    mesactivo int,
+                                    diasgracia int,
+                                    editable int,
+                                    expresioncalculo varchar(500),
                                     activo int,
                                     PRIMARY KEY (id) 
                                     )");
@@ -545,7 +569,6 @@ class Update_model extends CI_Model {
                                     id_rubro int,
                                     id_empleado int,
                                     valor_neto numeric(10,2),
-                                    activo int,
                                     PRIMARY KEY (id) 
                                     )");
     }
