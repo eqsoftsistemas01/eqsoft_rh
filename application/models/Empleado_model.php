@@ -56,9 +56,8 @@ class Empleado_model extends CI_Model {
       if ((!$tiposangre) || (trim($tiposangre) == '')) { $tiposangre = 'NULL'; }
       if ((!$tipodiscapacidad) || (trim($tipodiscapacidad) == '')) { $tipodiscapacidad = 'NULL'; }
       if ((!$p100discapacidad) || (trim($p100discapacidad) == '')) { $p100discapacidad = 0; }
-      if ((!$contrato) || (trim($contrato) == '')) { $contrato = 'NULL'; }
+      if (($contrato == NULL) || (trim($contrato) == '')) { $contrato = 'NULL'; }
       if ((!$cargo) || (trim($cargo) == '')) { $cargo = 'NULL'; }
-      $nuevocontrato = (trim($tipocontrato) == '0');
       if ((!$tipocontrato) || (trim($tipocontrato) == '')) { $tipocontrato = 'NULL'; }
       if ((!$fechaingreso) || (trim($fechaingreso) == '')) { $fechaingreso = 'NULL'; }
         else { $fechaingreso = "to_date('" . $fechaingreso . "', 'YYYY-MM-DD')";  }
@@ -126,9 +125,22 @@ class Empleado_model extends CI_Model {
                             WHERE e.id_usuario = $idusu");
 
       if ($contrato != 'NULL'){
-        if ($nuevocontrato == true){
+        if ($contrato < 1){
           $this->db->query("INSERT INTO contrato (id_tipo, id_empleado, id_cargo, fecha_inicio, fecha_fin, sueldo, activo)
-                              VALUES($tipocontrato, $idempleado, $cargo, $fechaingreso, $fecha_salida, $sueldo, 1)");
+                              VALUES($tipocontrato, $idempleado, $cargo, $fechaingreso, $fechasalida, $sueldo, 1)");
+          $query = $this->db->query("SELECT max(id) as newid from contrato;");
+          $result = $query->result();
+          $newid = $result[0]->newid;
+          $this->db->query("UPDATE empleado set id_contrato = $newid WHERE id_empleado = $idempleado");
+        } 
+        else {
+          $this->db->query("UPDATE contrato SET 
+                              id_tipo = $tipocontrato, 
+                              id_cargo = $cargo, 
+                              fecha_inicio = $fechaingreso, 
+                              fecha_fin = $fechasalida, 
+                              sueldo = $sueldo
+                              WHERE id = $contrato");
         }
       }
 
@@ -140,7 +152,7 @@ class Empleado_model extends CI_Model {
                                  $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, $vivefamiliares, 
                                  $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
                                  $parentescocontacto, $telefonocontacto, $empresa, $tiposangre, $tipodiscapacidad, 
-                                 $p100discapacidad, $contrato, $cargo){
+                                 $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo){
 
         if ((!$perfil) || (trim($perfil) == '')) { $perfil = 'NULL'; }
         if ((!$departamento) || (trim($departamento) == '')) { $departamento = 'NULL'; }
@@ -159,11 +171,17 @@ class Empleado_model extends CI_Model {
         if ((!$empresa) || (trim($empresa) == '')) { $empresa = 'NULL'; }
         if ((!$tiposangre) || (trim($tiposangre) == '')) { $tiposangre = 'NULL'; }
         if ((!$tipodiscapacidad) || (trim($tipodiscapacidad) == '')) { $tipodiscapacidad = 'NULL'; }
-        if ((!$contrato) || (trim($contrato) == '')) { $contrato = 'NULL'; }
+        if (($contrato == NULL) || (trim($contrato) == '')) { $contrato = 'NULL'; }
         if ((!$cargo) || (trim($cargo) == '')) { $cargo = 'NULL'; }
         if ((!$peso) || (trim($peso) == '')) { $peso = 'NULL'; }
         if ((!$talla) || (trim($talla) == '')) { $talla = 'NULL'; }
-      if ((!$p100discapacidad) || (trim($p100discapacidad) == '')) { $p100discapacidad = 0; }
+        if ((!$p100discapacidad) || (trim($p100discapacidad) == '')) { $p100discapacidad = 0; }
+        if ((!$tipocontrato) || (trim($tipocontrato) == '')) { $tipocontrato = 'NULL'; }
+        if ((!$fechaingreso) || (trim($fechaingreso) == '')) { $fechaingreso = 'NULL'; }
+          else { $fechaingreso = "to_date('" . $fechaingreso . "', 'YYYY-MM-DD')";  }
+        if ((!$fechasalida) || (trim($fechasalida) == '')) { $fechasalida = 'NULL'; }
+          else { $fechasalida = "to_date('" . $fechasalida . "', 'YYYY-MM-DD')";  }
+        if ((!$sueldo) || (trim($sueldo) == '')) { $sueldo = 0; }
 
         $this->db->query("INSERT INTO empleado (nombres, apellidos, tipo_identificacion, nro_ident, perfil, 
                                                telf_empleado, celular_empleado, correo_empleado, activo, id_departamento,
@@ -196,6 +214,15 @@ class Empleado_model extends CI_Model {
                               FROM cargafamiliar_tmp t
                               INNER JOIN empleado_tmp e on e.id = t.id_empleadotmp
                               WHERE e.id_usuario = $idusu");
+
+        if ($contrato != 'NULL'){
+            $this->db->query("INSERT INTO contrato (id_tipo, id_empleado, id_cargo, fecha_inicio, fecha_fin, sueldo, activo)
+                                VALUES($tipocontrato, $newid, $cargo, $fechaingreso, $fechasalida, $sueldo, 1)");
+            $query = $this->db->query("SELECT max(id) as newid from contrato;");
+            $result = $query->result();
+            $newcont = $result[0]->newid;
+            $this->db->query("UPDATE empleado set id_contrato = $newcont WHERE id_empleado = $newid");
+        } 
 
     }
 
