@@ -77,6 +77,7 @@
             height: 550,
             ajax: {
               dataType: "html",
+              
               type: "POST"
             },
             href: "<?php echo base_url('Paises/upd_pais');?>"

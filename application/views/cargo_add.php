@@ -11,7 +11,7 @@
         <div class="box-header with-border">
           <h3 class="box-title"></i> Datos del Cargo</h3>
         </div>
-        <form id="formpais" name="formpais" method='POST' action="#" onSubmit='return false' >
+        <form id="formcargo" name="formcargo" method='POST' action="#" onSubmit='return false' >
             <div class="box-body">
                 <div class="row">
                     <?php /* CAMPO HIDDEN CON EL ID  (EN CASO DE MODIFICACIÓN DEL REGISTRO) */ 

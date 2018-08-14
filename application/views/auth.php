@@ -14,8 +14,8 @@
 <!doctype html>
 <html>
     <head>
-        <title>SISTEMA DE FACTURACION - ACCESO AL SISTEMA</title>
-        <link rel="shortcut icon" type="image/ico" href="<?php print $base_url; ?>public/img/log_eq_ico.png" />
+        <title>SISTEMA DE NOMINA Y RECURSOS HUMANOS - ACCESO AL SISTEMA</title>
+        <link rel="shortcut icon" type="image/ico" href="<?php print $base_url; ?>public/img/logo.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
@@ -118,7 +118,7 @@
         <!-- <h1 class="animated bounceIn"> &nbsp; SISTEMA DE FACTURACIÓN </h1> -->
         <!--<h1>SISTEMA DE GESTIÓN DEL PLAN OPERATIVO ANUAL</h1>-->
         <div class="content-w3ls animated pulse" style="margin-top: 10%;">
-            <h3 class="animated bounceIn" style="color: #000; padding-bottom: 20px; font-weight: 700;   font-size: 22px;"> &nbsp; SISTEMA DE FACTURACIÓN </h3>
+            <h3 class="animated bounceIn" style="color: #000; padding-bottom: 20px; font-weight: 700;   font-size: 22px;"> &nbsp; SISTEMA DE NOMINA Y RECURSOS HUMANOS </h3>
             <form name="popup-validation" id="popup-validation" onsubmit="return false">
                     <noscript>
                         <div class="callout callout-danger">
@@ -150,11 +150,11 @@
                         <button type="submit"  id="btn_ingreso" name="btn_ingreso" class="btn btn-primary btn-block btn-flat" title="Acceder al Sistema"><span class="glyphicon glyphicon-log-in"></span>&nbsp;Ingresar</button>
                     </div>
                     <div class="col-md-12">
-                        <span class=" pull-right"><strong> Versión 3 </strong></span>
+                        <span class=" pull-right"><strong> Versión 1 </strong></span>
                     </div>
                 </div>
             </form>
         </div>
-        <p class="copyright">© EQSOFT 2018. Todos los derechos reservados | Sistema desarrollado por <a href="#" target="_blank">eqsoft</a></p>
+        <p class="copyright">© PUCESA 2018. Todos los derechos reservados | Sistema desarrollado por <a href="#" target="_blank">Jorge González</a></p>
     </body>
 </html>

@@ -2,8 +2,7 @@
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.0
     </div>
-    <strong>Copyright &copy; 2017 <a href="https://adminlte.io">EQ-Soft</a>.</strong> All rights
-    reserved.
+    <strong>Copyright &copy; 2018 <a href="">Jorge González</a>.</strong> Todos los derechos reservados.
   </footer>
 </div>
 <!-- ./wrapper -->

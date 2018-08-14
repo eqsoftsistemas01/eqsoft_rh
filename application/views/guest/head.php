@@ -9,7 +9,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Sistema de Facturación</title>
-        <link rel="shortcut icon" type="image/ico" href="<?php print $base_url; ?>public/img/log_eq_ico.png" />
+        <link rel="shortcut icon" type="image/ico" href="<?php print $base_url; ?>public/img/logo.ico" />
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.6 -->

@@ -1,5 +1,5 @@
 <style>
-    #contenido_ret{
+    #contenido_dep{
         width: 500px;
     }   
 </style>
@@ -7,12 +7,12 @@
     $("#formRET").validationEngine();
 
 </script>
-<div id = "contenido_ret" class="col-md-6">
+<div id = "contenido_dep" class="col-md-6">
     <div class="box box-danger">
         <div class="box-header with-border">
           <h3 class="box-title"></i> Datos del Departamento</h3>
         </div>
-        <form id="formRET" name="formRET" method='POST' action="#" onSubmit='return false' >
+        <form id="formdep" name="formdep" method='POST' action="#" onSubmit='return false' >
             <div class="box-body">
                 <div class="row">
                     <?php /* CAMPO HIDDEN CON EL ID  (EN CASO DE MODIFICACIÓN DEL REGISTRO) */ 

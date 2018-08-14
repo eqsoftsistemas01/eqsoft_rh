@@ -67,7 +67,7 @@
             <div  align="center" class="box-footer">
                 <div class="form-actions ">
                     <button type="submit" class="btn btn-danger btn-grad no-margin-bottom btnguardarprov">
-                    <i class="fa fa-save "></i> Guardar
+                    <i class="fa fa-save "></i> Guardar Provincia
                 </button>
                 </div>
             </div>

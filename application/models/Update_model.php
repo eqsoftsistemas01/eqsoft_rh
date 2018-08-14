@@ -42,9 +42,16 @@ class Update_model extends CI_Model {
       $this->chequea_tabla_parentesco();
       $this->chequea_tabla_estadocivil();
       $this->chequea_tabla_tipovivienda();
+      $this->chequea_tabla_region();
+      $this->chequea_tabla_niveleducacion();
       $this->chequea_tabla_tipocuentabanco();
       $this->chequea_tabla_tiposangre();
       $this->chequea_tabla_tipodiscapacidad();
+
+      $res = $this->existe_columna_tabla('empleado','profesion');
+      if ($res != true) $this->add_columna_tabla('empleado','profesion', 'varchar(100)', "");
+      $res = $this->existe_columna_tabla('empleado','region');
+      if ($res != true) $this->add_columna_tabla('empleado','region', 'varchar(50)', "");
 
       $res = $this->existe_columna_tabla('empleado','apellidos');
       if ($res != true) $this->add_columna_tabla('empleado','apellidos', 'varchar(100)', "");
@@ -393,6 +400,55 @@ class Update_model extends CI_Model {
             $this->db->query("INSERT INTO tipovivienda (id, tipovivienda) VALUES(2, 'Arrendada')");
       }      
     }
+    public function chequea_tabla_region(){
+      $res = $this->existe_tabla('region');
+      if ($res == true) {
+            $query = $this->db->query("SELECT count(*) as cant FROM region");
+            $r = $query->result();
+            $res = ($r[0]->cant != 2);
+      }
+      if ($res != true){
+            $this->db->query("DROP TABLE IF EXISTS region;");
+
+            $this->db->query("CREATE TABLE region (
+                                id int,
+                                region varchar(80),
+                                PRIMARY KEY (id) 
+                                )");
+            $this->db->query("INSERT INTO region (id, region) VALUES(1, 'COSTA')");
+            $this->db->query("INSERT INTO region (id, region) VALUES(2, 'SIERRA')");
+            $this->db->query("INSERT INTO region (id, region) VALUES(3, 'ORIENTE')");
+            $this->db->query("INSERT INTO region (id, region) VALUES(4, 'INSULAR')");
+
+
+      }      
+    }
+    public function chequea_tabla_niveleducacion(){
+      $res = $this->existe_tabla('nivel_educacion');
+      if ($res == true) {
+            $query = $this->db->query("SELECT count(*) as cant FROM nivel_educacion");
+            $r = $query->result();
+            $res = ($r[0]->cant != 2);
+      }
+      if ($res != true){
+            $this->db->query("DROP TABLE IF EXISTS nivel_educacion;");
+
+            $this->db->query("CREATE TABLE nivel_educacion (
+                                id int,
+                                nivel_educacion varchar(80),
+                                PRIMARY KEY (id) 
+                                )");
+            $this->db->query("INSERT INTO nivel_educacion (id, nivel_educacion) VALUES(1, 'PRIMARIA')");
+            $this->db->query("INSERT INTO nivel_educacion (id, nivel_educacion) VALUES(2, 'SECUNDARIA')");
+            $this->db->query("INSERT INTO nivel_educacion (id, nivel_educacion) VALUES(3, 'SUPERIOR')");
+            $this->db->query("INSERT INTO nivel_educacion (id, nivel_educacion) VALUES(4, 'PRIMER NIVEL')");
+            $this->db->query("INSERT INTO nivel_educacion (id, nivel_educacion) VALUES(5, 'SEGUNDO NIVEL')");
+            $this->db->query("INSERT INTO nivel_educacion (id, nivel_educacion) VALUES(6, 'TERCER NIVEL')");
+
+
+      }      
+    }
+    
 
     public function chequea_tabla_tipocuentabanco(){
       $res = $this->existe_tabla('tipocuentabanco');

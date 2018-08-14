@@ -35,7 +35,7 @@ class Empleado_model extends CI_Model {
     }
 
     public function upd_empleado($idempleado, $nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, $celular, $correo, 
-                                 $activo, $departamento, $lugarexpedicion, $cedulamilitar, $pasaporte, $fechanac, 
+                                 $activo, $departamento, $lugarexpedicion, $cedulamilitar,$profesion, $pasaporte, $fechanac, 
                                  $sexo, $estadocivil, $peso, $talla, $codigoreloj, $calleprincipal, $numerovivienda,
                                  $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, $vivefamiliares, 
                                  $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
@@ -80,6 +80,7 @@ class Empleado_model extends CI_Model {
                             activo = $activo,
                             lugarexpedicion = '$lugarexpedicion', 
                             cedulamilitar = '$cedulamilitar', 
+                            profesion = '$profesion', 
                             pasaporte = '$pasaporte', 
                             fecha_nacimiento = $fechanac, 
                             sexo = '$sexo', 
@@ -147,7 +148,7 @@ class Empleado_model extends CI_Model {
     }
 
     public function add_empleado($nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, $celular, $correo, 
-                                 $activo, $departamento, $lugarexpedicion, $cedulamilitar, $pasaporte, $fechanac, 
+                                 $activo, $departamento, $lugarexpedicion, $cedulamilitar,$profesion, $pasaporte, $fechanac, 
                                  $sexo, $estadocivil, $peso, $talla, $codigoreloj, $calleprincipal, $numerovivienda,
                                  $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, $vivefamiliares, 
                                  $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
@@ -185,14 +186,14 @@ class Empleado_model extends CI_Model {
 
         $this->db->query("INSERT INTO empleado (nombres, apellidos, tipo_identificacion, nro_ident, perfil, 
                                                telf_empleado, celular_empleado, correo_empleado, activo, id_departamento,
-                                               lugarexpedicion, cedulamilitar, pasaporte, fecha_nacimiento, sexo, 
+                                               lugarexpedicion, cedulamilitar,profesion, pasaporte, fecha_nacimiento, sexo, 
                                                id_estadocivil, peso, talla, codigoreloj, calleprincipal, numerovivienda, 
                                                calletransversal, sector, referenciavivienda, id_ciudad, id_tipovivienda, 
                                                vivefamiliares, id_banco, id_tipocuenta, numerocuenta, nombrecontacto, 
                                                direccioncontacto, id_parentescocontacto, telefonocontacto, id_empresa, 
                                                id_tiposangre, id_tipodiscapacidad, p100discapacidad, id_contrato, id_cargo)
                             VALUES('$nombre', '$apellido', $tipoident, '$identificacion', $perfil, '$telefono', 
-                                   '$celular', '$correo', $activo, $departamento, '$lugarexpedicion', '$cedulamilitar', 
+                                   '$celular', '$correo', $activo, $departamento, '$lugarexpedicion', '$cedulamilitar','$profesion', 
                                    '$pasaporte', 
                                    $fechanac,
                                    '$sexo', $estadocivil, $peso, $talla, 
@@ -241,7 +242,7 @@ class Empleado_model extends CI_Model {
     public function sel_empleado_id($idempleado){
       $query = $this->db->query(" SELECT e.id_empleado, e.nombres, e.apellidos, e.nro_ident, e.tipo_identificacion, 
                                          e.perfil, e.telf_empleado, e.celular_empleado, e.correo_empleado, 
-                                         e.activo, e.id_departamento, e.lugarexpedicion, e.cedulamilitar,
+                                         e.activo, e.id_departamento, e.lugarexpedicion, e.cedulamilitar, e.profesion,
                                          e.pasaporte, e.fecha_nacimiento, e.sexo, e.id_estadocivil, e.peso, e.talla, 
                                          e.codigoreloj, e.calleprincipal, e.numerovivienda, e.calletransversal, 
                                          e.sector, e.referenciavivienda, e.id_ciudad, e.id_tipovivienda, e.vivefamiliares,

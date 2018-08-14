@@ -6,7 +6,7 @@
  * 
   ------------------------------------------------ */
 // Setear el título HTML de la página
-print "<script>document.title = 'EQsoft - Datos de Empleado'</script>";
+print "<script>document.title = 'ProdegelRRHH - Datos de Empleado'</script>";
 date_default_timezone_set("America/Guayaquil");
 ?>
 
@@ -327,6 +327,10 @@ date_default_timezone_set("America/Guayaquil");
                         <div class="form-group col-md-2">
                             <label for="lb_cat">Cedula Militar</label>
                             <input type="text" class="form-control" name="txt_cedulamilitar" id="txt_cedulamilitar" placeholder="Cedula Militar" value="<?php if(@$obj != NULL){ print @$obj->cedulamilitar; }?>" >
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="lb_cat">Profesión</label>
+                            <input type="text" class="form-control" name="txt_profesion" id="txt_profesion" placeholder="Profesión" value="<?php if(@$obj != NULL){ print @$obj->profesion; }?>" >
                         </div>
 
                         <div class="form-group col-md-2">

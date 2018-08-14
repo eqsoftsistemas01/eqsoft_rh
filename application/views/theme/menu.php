@@ -88,7 +88,7 @@
         </div>
         <div class="pull-left info">
           <p><?php  print $this->session->userdata("sess_na"); ?></p>
-          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          <a href="#"><i class="fa fa-circle text-success"></i> Usuario Actual</a>
         </div>
       </div>
       <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -99,24 +99,10 @@
           <a href="<?php   print $base_url ?>inicio"><i class="fa fa-home"></i> <span>Inicio</span></a>
         </li> 
 
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-th"></i> <span>Transacciones</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="<?php print $base_url ?>rolpagos"><i class="fa fa-calendar"></i> Rol de Pagos</a></li>
-
-          </ul>
-        </li> 
-
         <?php if($perfil != 2) { ?>
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-cog" aria-hidden="true"></i>
-            <span>Mantenimiento</span>
+            <i class="fa fa-address-book"></i> <span>EMPLEADOS</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -149,19 +135,44 @@
             <?php if($perfil == 1) { ?>
             <li><a href="<?php print $base_url ?>rubro"><i class="fa fa-home"></i> Rubros</a></li>
             <?php } ?> 
+
           </ul>
-        </li>
+        </li> 
         <?php } ?> 
 
-        <?php if($perfil == 1) { ?>
-        <li class="<?php if ($content == 'usuarios') {  print 'active';} ?> treeview"> <!-- active -->
+        <li class="treeview">
           <a href="#">
-            <i class="fa fa-cogs"></i> <span>Configurar</span>
+            <i class="fa fa-handshake-o"></i> <span>NOMINA</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
+            <li><a href="<?php print $base_url ?>rolpagos"><i class="fa fa-calendar"></i> Rol de Pagos</a></li>
+
+          </ul>
+        </li> 
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-hand-paper-o"></i> <span>ASISTENCIA</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="<?php print $base_url ?>rolpagos"><i class="fa fa-calendar"></i> Rol de Pagos</a></li>
+
+          </ul>
+        </li> 
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-gears"></i> <span>CONFIGURACION</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          
+            <ul class="treeview-menu">
           <?php if($perfil == 1) { ?>
           <li><a href="<?php print $base_url ?>empresa"><i class="fa fa-fort-awesome"></i> Empresa</a></li>
           <?php } ?>          
@@ -174,9 +185,13 @@
           <?php if($perfil == 1) { ?>          
           <li><a href="<?php print $base_url ?>banco"><i class="fa fa-university" aria-hidden="true"></i> Bancos</a></li>
           <?php } ?>
+          
+
           </ul>
-        </li>        
-        <?php } ?>
+        </li> 
+
+
+
   
         <?php if($perfil == 1) { ?>
         <li class="treeview">

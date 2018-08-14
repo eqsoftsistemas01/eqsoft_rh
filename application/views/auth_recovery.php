@@ -16,7 +16,7 @@
 <html>
     <head>
         <title>EQSOFT - RECUPERAR DATOS DE ACCESO</title>
-        <link rel="shortcut icon" type="image/ico" href="<?php print $base_url; ?>public/img/log_eq_ico.png" />
+        <link rel="shortcut icon" type="image/ico" href="<?php print $base_url; ?>public/img/logo.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 

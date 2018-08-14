@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>ProdegelRRHH - Sistema de Nómina y recursos humanos</title>
   <!-- Tell the browser to be responsive to screen width -->
-  <link rel="shortcut icon" type="image/ico" href="<?php print $base_url; ?>public/img/log_eq_ico.png" />
+  <link rel="shortcut icon" type="image/ico" href="<?php print $base_url; ?>public/img/logo.ico" />
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <script type="text/javascript">
   <?php // Declarar variable global base_url para que esté disponible en los documentos .js     ?>

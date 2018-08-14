@@ -52,9 +52,21 @@ class Rubro_model extends CI_Model {
                                           t.tiporubro
                                      FROM rubro r
                                      INNER JOIN tiporubro t on t.id = r.tipo_rubro
+                                     Where r.activo = 1
                                      ORDER BY r.codigo_rubro;");
         $result = $query->result();
         return $result;
+    }
+    public function add_rubro($codigo_rubro, $nombre_rubro, $rubro_activo,$tipo_rubro, $periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, $expresion) {
+
+        $query = $this->db->query("INSERT INTO rubro (codigo_rubro, nombre_rubro,tipo_rubro, activo,afectadopordias, periodicidadmensual, mesactivo, diasgracia, editable, expresioncalculo)
+                                    VALUES ('$codigo_rubro', '$nombre_rubro',$tipo_rubro,$rubro_activo,$periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, '$expresion')");
+        
+    }
+    public function del_rubro($id_rubro) {
+
+        $query = $this->db->query("DELETE FROM rubro WHERE id = @id_rubro");
+        
     }
 
 }

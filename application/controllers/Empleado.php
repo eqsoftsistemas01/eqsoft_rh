@@ -141,6 +141,7 @@ class Empleado extends CI_Controller {
 
         $lugarexpedicion = $this->input->post('txt_lugarexpedicion');
         $cedulamilitar = $this->input->post('txt_cedulamilitar');
+        $profesion = $this->input->post('txt_profesion');
         $pasaporte = $this->input->post('txt_pasaporte');
         $sexo = $this->input->post('cmb_sexo');
 
@@ -187,7 +188,7 @@ class Empleado extends CI_Controller {
 
         if($id != 0){
             $resu = $this->Empleado_model->upd_empleado($id, $nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, 
-                                 $celular, $correo, $activo, $departamento, $lugarexpedicion, $cedulamilitar, $pasaporte, 
+                                 $celular, $correo, $activo, $departamento, $lugarexpedicion, $cedulamilitar,$profesion, $pasaporte, 
                                  $fecha_nacimiento, $sexo, $estadocivil, $peso, $talla, $codigoreloj, $calleprincipal, 
                                  $numerovivienda, $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, 
                                  $vivefamiliares, $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
@@ -195,7 +196,7 @@ class Empleado extends CI_Controller {
                                  $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo);
         } else {
             $resu = $this->Empleado_model->add_empleado($nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, 
-                                 $celular, $correo, $activo, $departamento, $lugarexpedicion, $cedulamilitar, $pasaporte, 
+                                 $celular, $correo, $activo, $departamento, $lugarexpedicion, $cedulamilitar,$profesion, $pasaporte, 
                                  $fecha_nacimiento, $sexo, $estadocivil, $peso, $talla, $codigoreloj, $calleprincipal, 
                                  $numerovivienda, $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, 
                                  $vivefamiliares, $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 

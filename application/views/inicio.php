@@ -8,7 +8,7 @@
 // Setear el título HTML de la página
 
 
-print "<script>document.title = 'EQsoft - Inicio' </script>";
+print "<script>document.title = 'ProdegelRRHH - Inicio' </script>";
 
 /*  $objupdate = &get_instance();
   $objupdate->load->model("Update_model");

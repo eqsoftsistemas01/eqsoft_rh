@@ -37,7 +37,7 @@
         <div class="box-header with-border">
           <h3 class="box-title"></i> Datos de Rubro</h3>
         </div>
-        <form id="formrubro" name="formrubro" method='POST' action="#" onSubmit='return false' >
+        <form id="formrubro" name="formrubro" method='POST' action="<?=base_url();?>Rubro/guardar">
             <div class="box-body">
                 <div class="row">
                     <?php /* CAMPO HIDDEN CON EL ID  (EN CASO DE MODIFICACIÓN DEL REGISTRO) */ 
@@ -49,7 +49,7 @@
 
                     <div class="form-group col-md-9">
                         <label for="lb_cat">Nombre de Rubro</label>
-                        <input type="text" class="form-control validate[required]" name="txt_nombre" id="txt_nombre" placeholder="Nombre de Rubro" value="<?php if(@$obj != NULL){ print @$obj->nombre_rubro; }?>" >
+                        <input type="text" class="form-control validate[required]" name="nombre_rubro" id="nombre_rubro" placeholder="Nombre de Rubro" value="<?php if(@$obj != NULL){ print @$obj->nombre_rubro; }?>" >
                     </div>
 
                     <div class="form-group col-md-3">
@@ -58,7 +58,7 @@
 
                     <div class="form-group col-md-6">
                         <label for="lb_cat">Codigo de Rubro</label>
-                        <input type="text" class="form-control validate[required]" name="txt_codigo" id="txt_codigo" placeholder="Codigo de Rubro" value="<?php if(@$obj != NULL){ print @$obj->codigo_rubro; }?>" >
+                        <input type="text" class="form-control validate[required]" name="codigo_rubro" id="codigo_rubro" placeholder="Codigo de Rubro" value="<?php if(@$obj != NULL){ print @$obj->codigo_rubro; }?>" >
                     </div>
 
                     <div class="form-group col-md-6">
