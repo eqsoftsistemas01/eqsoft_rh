@@ -40,7 +40,8 @@ class Rubro_model extends CI_Model {
                                    UNION SELECT 9 as id, 'Septiembre' as mes
                                    UNION SELECT 10 as id, 'Octubre' as mes
                                    UNION SELECT 11 as id, 'Noviembre' as mes
-                                   UNION SELECT 12 as id, 'Diciembre' as mes;");
+                                   UNION SELECT 12 as id, 'Diciembre' as mes
+                                   ORDER BY id;");
         $result = $query->result();
         return $result;
     }
@@ -57,16 +58,54 @@ class Rubro_model extends CI_Model {
         $result = $query->result();
         return $result;
     }
-    public function add_rubro($codigo_rubro, $nombre_rubro, $rubro_activo,$tipo_rubro, $periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, $expresion) {
-
-        $query = $this->db->query("INSERT INTO rubro (codigo_rubro, nombre_rubro,tipo_rubro, activo,afectadopordias, periodicidadmensual, mesactivo, diasgracia, editable, expresioncalculo)
-                                    VALUES ('$codigo_rubro', '$nombre_rubro',$tipo_rubro,$rubro_activo,$periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, '$expresion')");
+    public function add_rubro($codigo_rubro, $nombre_rubro, $rubro_activo, $tipo_rubro, $periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, $expresion) {
+        $this->db->query("INSERT INTO rubro (codigo_rubro, nombre_rubro, tipo_rubro, activo, periodicidadmensual, mesactivo, afectadopordias, diasgracia, editable, expresioncalculo)
+                            VALUES ('$codigo_rubro', '$nombre_rubro', $tipo_rubro, $rubro_activo, $periodo, $mesactivo, $diastrabajados, $diasgracia, 1 - $calculado, '$expresion')");
         
     }
+    public function upd_rubro($id, $codigo_rubro, $nombre_rubro, $rubro_activo,$tipo_rubro, $periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, $expresion) {
+        $this->db->query("UPDATE rubro SET 
+                             codigo_rubro = '$codigo_rubro', 
+                             nombre_rubro = '$nombre_rubro',
+                             tipo_rubro = $tipo_rubro, 
+                             activo = $rubro_activo,
+                             afectadopordias = $diastrabajados, 
+                             periodicidadmensual = $periodo, 
+                             mesactivo = $mesactivo, 
+                             diasgracia = $diasgracia, 
+                             editable = 1 - $calculado, 
+                             expresioncalculo = '$expresion'
+                            WHERE id = $id");        
+    }
+
+    public function candel_rubro($id){
+      $query = $this->db->query("SELECT count(*) as cant FROM rubro_empleado WHERE id_rubro = $id");
+      $result = $query->result();
+/*      if ($result[0]->cant == 0){
+        $query = $this->db->query("SELECT count(*) as cant FROM caja_efectivo WHERE id_puntoemision = $puntoemision");
+        $result = $query->result();
+      }*/
+      if ($result[0]->cant == 0)
+        { return 1; }
+      else
+        { return 0; }
+    }
+
     public function del_rubro($id_rubro) {
-
-        $query = $this->db->query("DELETE FROM rubro WHERE id = @id_rubro");
-        
+      if ($this->candel_rubro($id_rubro) == 1){
+        $query = $this->db->query("DELETE FROM rubro WHERE id = $id_rubro");
+        return 1;
+      } else {
+        return 0;
+      }       
     }
 
+    public function sel_rubro_id($id){
+      $query = $this->db->query("SELECT r.id, r.codigo_rubro, r.nombre_rubro, r.tipo_rubro, r.afectadopordias, r.periodicidadmensual, 
+                                        r.mesactivo, r.diasgracia, r.editable, r.expresioncalculo, r.activo
+                                     FROM rubro r
+                                     Where r.id = $id");
+      $result = $query->result();
+      return $result[0];
+    }
 }

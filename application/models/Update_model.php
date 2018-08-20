@@ -157,6 +157,9 @@ class Update_model extends CI_Model {
       if ($res != true) $this->crea_tabla_rubro();
       $res = $this->existe_tabla('rubro_empleado');
       if ($res != true) $this->crea_tabla_rubro_empleado();
+      $res = $this->existe_tabla('rubro_empleado_tmp');
+      if ($res != true) $this->crea_tabla_rubro_empleado_tmp();
+
 
       return 1;
     }
@@ -628,6 +631,17 @@ class Update_model extends CI_Model {
                                     id_empleado int,
                                     valor_neto numeric(10,2),
                                     PRIMARY KEY (id) 
+                                    )");
+    }
+
+    public function crea_tabla_rubro_empleado_tmp(){
+      $this->db->query("CREATE TABLE rubro_empleado_tmp (
+                                    id_usuario int,
+                                    id_rubro int,
+                                    id_empleadotmp int,
+                                    existe int,
+                                    valor_neto numeric(10,2),
+                                    PRIMARY KEY (id_usuario, id_rubro, id_empleadotmp) 
                                     )");
     }
 

@@ -71,24 +71,30 @@ class rubro extends CI_Controller {
 
     public function upd_rubro(){
         $id = $this->session->userdata("tmp_rubro_id");
-        $this->carga_rubrotmp($id);
-        $codigo_rubro = $this->input->post('txt_codiforubro');
-        $this->load->view("layout", $data);
-//        $this->load->view("rubro_add", $data);
+        $obj = $this->Rubro_model->sel_rubro_id($id);
+        $data["obj"] = $obj;
+
+        $tiporubro = $this->Rubro_model->lst_tiporubro();
+        $data["tiporubro"] = $tiporubro;
+        $periodo = $this->Rubro_model->lst_periodo();
+        $data["periodo"] = $periodo;
+        $mesactivo = $this->Rubro_model->lst_mesactivo();
+        $data["mesactivo"] = $mesactivo;
+
+        $data["base_url"] = base_url();
+        $this->load->view("rubro_add", $data);
+
     }
 
     public function guardar(){
         $id = $this->input->post("txt_id");
         $codigo_rubro=$this->input->post('codigo_rubro');
-        echo $codigo_rubro;
-        //echo '<br>';
+/*        echo $codigo_rubro;*/
         $nombre_rubro=$this->input->post('nombre_rubro');
-        //echo $nombre_rubro;
         $rubro_activo =$this->input->post('chkactivo');
-        //echo $rubro_activo;
         $tipo_rubro =$this->input->post('cmb_tiporubro');
 
-        if ($rubro_activo = 'on') {
+        if ($rubro_activo == 'on') {
             $rubro_activo = '1';
         }else
         {
@@ -96,45 +102,46 @@ class rubro extends CI_Controller {
         }
 
         $periodo =$this->input->post('cmb_periodo');
-        echo "Periodo: ".$periodo;
-        echo '<br>';
+/*        echo "Periodo: ".$periodo;
+        echo '<br>';*/
 
         $mesactivo =$this->input->post('cmb_mesactivo');
         if ($mesactivo == null ) {
             $mesactivo = 0;
         }
-        echo  "Mes activo: ".$mesactivo;
-        echo '<br>';
+        /*echo  "Mes activo: ".$mesactivo;
+        echo '<br>';*/
         $diastrabajados =$this->input->post('chkdias');
-        if ($diastrabajados = 'on') {
+        if ($diastrabajados == 'on') {
             $diastrabajados = '1';
         }else
         {
             $diastrabajados = '0';
         }
-        echo "Dias trabajados: ". $diastrabajados;
-        echo '<br>';
+        /*echo "Dias trabajados: ". $diastrabajados;
+        echo '<br>';*/
         $diasgracia =$this->input->post('txt_diasgracia');
-        echo $diasgracia;
-        echo '<br>';
+        if ($diasgracia == '') { $diasgracia = 0; }
+        /*echo $diasgracia;
+        echo '<br>';*/
         $calculado =$this->input->post('chkcalculo');
-        if ($calculado = 'on') {
+        if ($calculado == 'on') {
             $calculado = '1';
         }else
         {
             $calculado = '0';
         }
-        echo $calculado;
-        echo '<br>';
+        /*echo $calculado;
+        echo '<br>';*/
         $expresion =$this->input->post('txt_expresion');
-        echo $expresion;
-        echo '<br>';
+        /*echo $expresion;
+        echo '<br>';*/
 
 
         if($id != 0){
-            $resu = $this->Rubro_model->upd_rubro($codigo_rubro, $nombre_rubro, $rubro_activo,$tipo_rubro, $periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, $expresion);
+            $resu = $this->Rubro_model->upd_rubro($id, $codigo_rubro, $nombre_rubro, $rubro_activo,$tipo_rubro, $periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, $expresion);
         } else {
-            $resu = $this->Rubro_model->add_rubro($codigo_rubro, $nombre_rubro, $rubro_activo,$tipo_rubro, $periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, $expresion);
+            $resu = $this->Rubro_model->add_rubro($codigo_rubro, $nombre_rubro, $rubro_activo, $tipo_rubro, $periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, $expresion);
         }
         print "<script> window.location.href = '" . base_url() . "rubro'; </script>";
     }

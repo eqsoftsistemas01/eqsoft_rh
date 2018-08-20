@@ -59,7 +59,7 @@ date_default_timezone_set("America/Guayaquil");
         $(this).datepicker('hide');
     });
     
-    $('#TableCargaRubroEmpleado').dataTable({
+    $('#TableRubroEmpleado').dataTable({
       "language":{  "lengthMenu":"Mostrar _MENU_ registros por página.",
                     "zeroRecords": "Lo sentimos. No se encontraron registros.",
                     "info": "Mostrando página _PAGE_ de _PAGES_",
@@ -73,10 +73,10 @@ date_default_timezone_set("America/Guayaquil");
                     },
         'ajax': "listadoRubroEmpleado",
         'columns': [
+            {"data": "ver"},                            
             {"data": "codigo"},
             {"data": "descripcion"},
-            {"data": "valor"},   
-            {"data": "ver"}                            
+            {"data": "valor"}   
         ]
     });
 
@@ -203,6 +203,46 @@ date_default_timezone_set("America/Guayaquil");
       actualiza_estado_fechasalida();
     });
 
+    $(document).on('click', '.chk_rubro', function(){
+      var id = this.id;
+      var existe = 1;
+      if ($('.chk_rubro[id='+id+']').is(":checked") == false){
+        $('.valor_rubro[id='+id+']').val('0.00');
+        $('.valor_rubro[id='+id+']').attr('disabled',true); 
+        existe = 0;
+      }
+      else {
+        if ($('.chk_rubro[id='+id+']').name() == 1){
+          $('.valor_rubro[id='+id+']').attr('disabled',false); 
+        }
+      }
+      var valor = $('.valor_rubro[id='+id+']').val();
+
+      $.ajax({
+        url: base_url + "Empleado/actualiza_rubroempleado",
+        data: { id: id, existe: existe, valor: valor },
+        type: 'POST',
+        dataType: 'json',
+        success: function(json) {
+        }
+      });
+    });
+
+    $(document).on('blur', '.valor_rubro', function(){
+      var id = this.id;
+      var existe = 1;
+      var valor = $('.valor_rubro[id='+id+']').val();
+
+      $.ajax({
+        url: base_url + "Empleado/actualiza_rubroempleado",
+        data: { id: id, existe: existe, valor: valor },
+        type: 'POST',
+        dataType: 'json',
+        success: function(json) {
+        }
+      });
+    });
+
     actualiza_estado_fechasalida();
 
   });
@@ -236,7 +276,7 @@ date_default_timezone_set("America/Guayaquil");
                   <ul class="nav nav-tabs">
                    <li class="active"><a href="#tabpersonal" data-toggle="tab"><i class="fa fa-tint" aria-hidden="true"></i> DATOS PERSONALES</a></li>                            
                    <li ><a href="#tabgeneral" data-toggle="tab"><i class="fa fa-tint" aria-hidden="true"></i> DATOS GENERALES</a></li>                            
-                   <li ><a href="#tabadicional" data-toggle="tab"><i class="fa fa-tint" aria-hidden="true"></i> VALORES ADICIONALES</a></li>                            
+                   <li ><a href="#tabrubro" data-toggle="tab"><i class="fa fa-tint" aria-hidden="true"></i> RUBROS</a></li>                            
                    <li ><a href="#tabcargafamiliar" data-toggle="tab"><i class="fa fa-tint" aria-hidden="true"></i> CARGAS FAMILIARES</a></li>                            
                   </ul>
 
@@ -903,24 +943,14 @@ date_default_timezone_set("America/Guayaquil");
 
                     </div>  <!-- Tab General --> 
 
-                    <div class="tab-pane" id="tabadicional">
+                    <div class="tab-pane" id="tabrubro">
                          <div class="box box-danger">
                       
                             <div class="box-header with-border">
 
                                 <div class="form-group col-md-12">
-                                <?php /* CAMPO HIDDEN CON EL ID  (EN CASO DE MODIFICACIÓN DEL REGISTRO) */ 
-                            if(@$obj != NULL){ ?>
-                                <input type="text" id="txt_id" name="txt_id" value="<?php if($obj != NULL){ print $obj->id_empleado; }?>" >    
-                            <?php } else { ?>
-                                <input type="text" id="txt_id" name="txt_id" value="0">    
-                        <?php } ?>
+              
 
-<div class="pull-right">
-                              <button type="button" class="btn btn-info btn-grad add_rubroemp">
-                                  <i class="fa fa-plus-square"></i> Añadir
-                              </button>
-                          </div>
                                 </div>
                             </div>
                          </div>
@@ -928,13 +958,13 @@ date_default_timezone_set("America/Guayaquil");
                          <div class="row">
                             <div class="col-xs-12">
                                 <div class="box-body table-responsive">
-                                  <table id="TableCargaRubroEmpleado" class="table table-bordered table-striped table-responsive">
+                                  <table id="TableRubroEmpleado" class="table table-bordered table-striped table-responsive">
                                     <thead>
                                       <tr >
+                                        <th>Habilitado</th>
                                         <th>Codigo</th>
                                         <th>Descripcion</th>
                                         <th>Valor</th>
-                                        <th>Accion</th>
                                       </tr>
                                     </thead>
                                     <tbody>

@@ -145,6 +145,13 @@ class Empleado_model extends CI_Model {
         }
       }
 
+      $this->db->query("DELETE FROM rubro_empleado WHERE id_empleado = $idempleado"); 
+      $this->db->query("INSERT INTO rubro_empleado (id_empleado, id_rubro, valor_neto)
+                          SELECT $idempleado, t.id_rubro, t.valor_neto
+                            FROM rubro_empleado_tmp t
+                            INNER JOIN empleado_tmp e on e.id = t.id_empleadotmp
+                            WHERE e.id_usuario = $idusu AND existe = 1");
+
     }
 
     public function add_empleado($nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, $celular, $correo, 
@@ -315,6 +322,11 @@ class Empleado_model extends CI_Model {
     }
 
     public function get_empleadotmp($usuario, $idempleado = 0) {
+        $this->db->query("DELETE FROM rubro_empleado_tmp WHERE NOT id_empleadotmp IN 
+                            (SELECT DISTINCT id_empleado FROM empleado_tmp);");
+        $this->db->query("DELETE FROM rubro_empleado_tmp WHERE id_empleadotmp IN 
+                            (SELECT id_empleado FROM empleado_tmp WHERE id_usuario = $usuario AND id_empleado = $idempleado);");
+
         $this->db->query("DELETE FROM cargafamiliar_tmp WHERE NOT id_empleadotmp IN 
                             (SELECT DISTINCT id_empleado FROM empleado_tmp);");
         $this->db->query("DELETE FROM cargafamiliar_tmp WHERE id_empleadotmp IN 
@@ -335,6 +347,13 @@ class Empleado_model extends CI_Model {
                               FROM cargafamiliar t
                               WHERE id_empleado = $idempleado");
 
+        $this->db->query("INSERT INTO rubro_empleado_tmp (id_usuario, id_empleadotmp, id_rubro, existe, valor_neto)
+                            SELECT $idusu, $newtmpid, r.id, 
+                                   CASE WHEN t.id_rubro IS NULL THEN 0 ELSE 1 END, 
+                                   COALESCE(t.valor_neto, 0)
+                              FROM rubro r 
+                              LEFT JOIN rubro_empleado t on t.id_rubro = r.id AND t.id_empleado = $idempleado");
+
         return $newtmpid;
     }
 
@@ -354,11 +373,10 @@ class Empleado_model extends CI_Model {
       return $result;
     }
     public function sel_robrosempleado_tmpid($idempleado){
-        $query = $this->db->query("SELECT re.id as id, re.id_rubro as codigo, re.id_empleado as descripcion, re.valor_neto as valor
-        FROM rubro_empleado re
-        LEFT JOIN empleado e on e.id_empleado = re.id_empleado
-        WHERE re.id_empleado = 1");
-        //echo "query: ".$query;
+        $query = $this->db->query("SELECT r.id, r.codigo_rubro, r.nombre_rubro, t.valor_neto, t.existe, r.editable
+                                    FROM rubro r 
+                                    INNER JOIN rubro_empleado_tmp t on t.id_rubro = r.id
+                                    WHERE t.id_empleadotmp = $idempleado");
         $result = $query->result();
         return $result;
       }
@@ -432,6 +450,13 @@ class Empleado_model extends CI_Model {
         $query = $this->db->query("SELECT id, tipocontrato FROM tipocontrato;");
         $result = $query->result();
         return $result;
+    }
+
+    public function actualiza_rubroempleado($idusu, $empleadotmp, $id, $existe, $valor) {
+        $this->db->query("UPDATE rubro_empleado_tmp SET 
+                              valor_neto = $valor,
+                              existe = $existe
+                            WHERE id_rubro = $id AND id_empleadotmp = $empleadotmp AND id_usuario = $idusu;");
     }
 
 }

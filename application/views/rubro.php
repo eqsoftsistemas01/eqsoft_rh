@@ -40,26 +40,12 @@
         ]
     });
 
-
-    $(document).on('click', '.ret_ver', function(){
+    $(document).on('click', '.rubro_ver', function(){
       id = $(this).attr('id');
       $.ajax({
         type: "POST",
         dataType: "json",
-        url: "<?php echo base_url('Rubro/tmp_Rubro');?>",
-        data: {id: id},
-        success: function(json) {
-          location.replace("<?php print $base_url;?>Rubro/upd_Rubro");
-        }
-      });
-    });  
-
-    $(document).on('click', '.ret_ver00', function(){
-      id = $(this).attr('id');
-      $.ajax({
-        type: "POST",
-        dataType: "json",
-        url: "<?php echo base_url('Rubro/tmp_Rubro');?>",
+        url: "<?php echo base_url('Rubro/tmp_rubro');?>",
         data: {id: id},
         success: function(json) {
           $.fancybox.open({
@@ -75,6 +61,20 @@
               $('#TableObj').DataTable().ajax.reload();
             }
           });
+        }
+      });
+    });  
+
+
+    $(document).on('click', '.ret_ver0', function(){
+      id = $(this).attr('id');
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "<?php echo base_url('Rubro/tmp_Rubro');?>",
+        data: {id: id},
+        success: function(json) {
+          location.replace("<?php print $base_url;?>Rubro/upd_Rubro");
         }
       });
     });  
@@ -95,16 +95,21 @@
       });
     });
 
-    $(document).on('click','.ret_del', function() {
+    $(document).on('click','.rubro_del', function() {
         id = $(this).attr('id');
         if (conf_del()) {
           $.ajax({
-            url: base_url + "Rubro/del_Rubro",
+            url: base_url + "Rubro/del_rubro",
             data: { id: id },
             type: 'POST',
             dataType: 'json',
             success: function(json) {
-              $('#TableObj').DataTable().ajax.reload();
+              if (json.mens == 1){
+                $('#TableObj').DataTable().ajax.reload();
+              } else {
+                alert("No se pudo eliminar el rubro. Existe informacion asociada.");
+                return false;                
+              }  
             }
           });
       }

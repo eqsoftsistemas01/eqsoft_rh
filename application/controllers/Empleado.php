@@ -274,6 +274,7 @@ class Empleado extends CI_Controller {
 
     public function listadoCargaFamiliar() {
         $id = $this->session->userdata("tmp_empleado_idtmp");
+        $registro = $this->Empleado_model->sel_cargafamiliar_tmpid($id);
         $tabla = "";
         foreach ($registro as $row) {
             $fec = "";
@@ -301,11 +302,16 @@ class Empleado extends CI_Controller {
         $tabla = "";
         foreach ($registro as $row) {
            
-            $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad rubro_emp_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad rubroemp_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
+           if ($row->existe == 0) { $marcado = ''; } else { $marcado = 'checked'; }
+           $ver = '<div ><input type=\"checkbox\" class=\"chk_rubro\" name=\"'.$row->editable.'\" id=\"'.$row->id.'\" value=\"'.$row->existe.'\" '. $marcado .'></div>';
+
+           if (($row->existe == 0) || ($row->editable == 0)) { $deshabilitado = 'disabled'; } else { $deshabilitado = ''; }
+           $valor = '<div ><input type=\"text\" class=\"valor_rubro\" name=\"'.$row->id.'\" id=\"'.$row->id.'\" value=\"'.$row->valor_neto.'\" '. $deshabilitado .'></div>';
+
             $tabla.='{  "id":"' .$row->id. '",
-                        "codigo":"' .$row->codigo. '",
-                        "descripcion":"' .$row->descripcion. '",
-                        "valor":"' .$row->valor. '",
+                        "codigo":"' .$row->codigo_rubro. '",
+                        "descripcion":"' .$row->nombre_rubro. '",
+                        "valor":"' .$valor. '",
                         "ver":"'.$ver.'"
                     },';
         }
@@ -380,6 +386,17 @@ class Empleado extends CI_Controller {
         else {
             $resu = $this->Empleado_model->upd_cargafamiliar_tmp($id, $apellidos, $nombres, $ident, $parentesco, $telf, $fechanac, $fechafall, $activo, $sexo);
         }
+        $arr['mens'] = $id;
+        print json_encode($arr); 
+    }
+
+    public function actualiza_rubroempleado(){
+        $idusu = $this->session->userdata("sess_id");
+        $empleadotmp = $this->session->userdata("tmp_empleado_idtmp");
+        $id = $this->input->post('id'); 
+        $existe = $this->input->post('existe'); 
+        $valor = $this->input->post('valor'); 
+        $this->Empleado_model->actualiza_rubroempleado($idusu, $empleadotmp, $id, $existe, $valor);
         $arr['mens'] = $id;
         print json_encode($arr); 
     }
