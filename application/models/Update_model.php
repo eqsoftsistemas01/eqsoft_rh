@@ -155,6 +155,8 @@ class Update_model extends CI_Model {
 
       $res = $this->existe_tabla('rubro');
       if ($res != true) $this->crea_tabla_rubro();
+      $res = $this->existe_tabla('rubro_empleado');
+      if ($res != true) $this->crea_tabla_rubro_empleado();
 
       return 1;
     }

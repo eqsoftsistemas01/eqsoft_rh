@@ -58,6 +58,27 @@ date_default_timezone_set("America/Guayaquil");
     $('#fechasalida').on('changeDate', function(ev){
         $(this).datepicker('hide');
     });
+    
+    $('#TableCargaRubroEmpleado').dataTable({
+      "language":{  "lengthMenu":"Mostrar _MENU_ registros por página.",
+                    "zeroRecords": "Lo sentimos. No se encontraron registros.",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "No hay registros aún.",
+                    "infoFiltered": "(filtrados de un total de _MAX_ registros)",
+                    "search" : "Búsqueda",
+                    "LoadingRecords": "Cargando ...",
+                    "Processing": "Procesando...",
+                    "SearchPlaceholder": "Comience a teclear...",
+                    "paginate": { "previous": "Anterior", "next": "Siguiente", }
+                    },
+        'ajax': "listadoRubroEmpleado",
+        'columns': [
+            {"data": "codigo"},
+            {"data": "descripcion"},
+            {"data": "valor"},   
+            {"data": "ver"}                            
+        ]
+    });
 
     $('#TableCargaFamiliar').dataTable({
       "language":{  "lengthMenu":"Mostrar _MENU_ registros por página.",
@@ -883,6 +904,46 @@ date_default_timezone_set("America/Guayaquil");
                     </div>  <!-- Tab General --> 
 
                     <div class="tab-pane" id="tabadicional">
+                         <div class="box box-danger">
+                      
+                            <div class="box-header with-border">
+
+                                <div class="form-group col-md-12">
+                                <?php /* CAMPO HIDDEN CON EL ID  (EN CASO DE MODIFICACIÓN DEL REGISTRO) */ 
+                            if(@$obj != NULL){ ?>
+                                <input type="text" id="txt_id" name="txt_id" value="<?php if($obj != NULL){ print $obj->id_empleado; }?>" >    
+                            <?php } else { ?>
+                                <input type="text" id="txt_id" name="txt_id" value="0">    
+                        <?php } ?>
+
+<div class="pull-right">
+                              <button type="button" class="btn btn-info btn-grad add_rubroemp">
+                                  <i class="fa fa-plus-square"></i> Añadir
+                              </button>
+                          </div>
+                                </div>
+                            </div>
+                         </div>
+
+                         <div class="row">
+                            <div class="col-xs-12">
+                                <div class="box-body table-responsive">
+                                  <table id="TableCargaRubroEmpleado" class="table table-bordered table-striped table-responsive">
+                                    <thead>
+                                      <tr >
+                                        <th>Codigo</th>
+                                        <th>Descripcion</th>
+                                        <th>Valor</th>
+                                        <th>Accion</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                  </table>
+                                </div>
+                            </div>
+                          </div>                      
+
                     </div>  <!-- tabadicional --> 
 
                     <div class="tab-pane" id="tabcargafamiliar">

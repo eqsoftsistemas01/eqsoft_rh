@@ -274,7 +274,6 @@ class Empleado extends CI_Controller {
 
     public function listadoCargaFamiliar() {
         $id = $this->session->userdata("tmp_empleado_idtmp");
-        $registro = $this->Empleado_model->sel_cargafamiliar_tmpid($id);
         $tabla = "";
         foreach ($registro as $row) {
             $fec = "";
@@ -290,6 +289,23 @@ class Empleado extends CI_Controller {
                         "telefono":"' .$row->telf_familiar. '",
                         "fechanac":"' .$fec. '",
                         "sexo":"' .$row->sexonombre. '",
+                        "ver":"'.$ver.'"
+                    },';
+        }
+        $tabla = substr($tabla, 0, strlen($tabla) - 1);
+        echo '{"data":[' . $tabla . ']}';
+    }
+    public function listadoRubroEmpleado() {
+        $id = $this->session->userdata("tmp_empleado_idtmp");
+        $registro = $this->Empleado_model->sel_robrosempleado_tmpid($id);
+        $tabla = "";
+        foreach ($registro as $row) {
+           
+            $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad rubro_emp_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad rubroemp_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
+            $tabla.='{  "id":"' .$row->id. '",
+                        "codigo":"' .$row->codigo. '",
+                        "descripcion":"' .$row->descripcion. '",
+                        "valor":"' .$row->valor. '",
                         "ver":"'.$ver.'"
                     },';
         }

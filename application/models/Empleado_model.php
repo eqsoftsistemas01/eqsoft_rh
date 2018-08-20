@@ -353,6 +353,15 @@ class Empleado_model extends CI_Model {
       $result = $query->result();
       return $result;
     }
+    public function sel_robrosempleado_tmpid($idempleado){
+        $query = $this->db->query("SELECT re.id as id, re.id_rubro as codigo, re.id_empleado as descripcion, re.valor_neto as valor
+        FROM rubro_empleado re
+        LEFT JOIN empleado e on e.id_empleado = re.id_empleado
+        WHERE re.id_empleado = 1");
+        //echo "query: ".$query;
+        $result = $query->result();
+        return $result;
+      }
 
     public function sel_cargafamiliar_id($id){
       $query = $this->db->query("SELECT id, apellidos_familiar, nombres_familiar, nro_ident, tipo_parentesco, 
@@ -362,6 +371,7 @@ class Empleado_model extends CI_Model {
       $result = $query->result();
       return $result[0];
     }
+    
 
     /* SELECCIONAR EL Empleado POR IDENTIF */
     public function existeIdentificacionCarga($idempleado, $identificacion){
