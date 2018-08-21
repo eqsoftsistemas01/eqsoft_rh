@@ -5,7 +5,7 @@
  * 
   ------------------------------------------------ */
 // Setear el título HTML de la página
-  print "<script>document.title = 'EQsoftRH - Listado de Cargos'</script>";
+  print "<script>document.title = 'ProdegelRRHH - Listado de Cargos'</script>";
   date_default_timezone_set("America/Guayaquil");
 
 ?>

@@ -6,7 +6,7 @@
  * 
   ------------------------------------------------ */
 // Setear el título HTML de la página
-print "<script>document.title = 'EQsoft - Parametros'</script>";
+print "<script>document.title = 'ProdegelRRHH - Parametros'</script>";
 date_default_timezone_set("America/Guayaquil");
 ?>
 <script>

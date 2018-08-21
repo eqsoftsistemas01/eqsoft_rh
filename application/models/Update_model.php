@@ -159,6 +159,8 @@ class Update_model extends CI_Model {
       if ($res != true) $this->crea_tabla_rubro_empleado();
       $res = $this->existe_tabla('rubro_empleado_tmp');
       if ($res != true) $this->crea_tabla_rubro_empleado_tmp();
+      $res = $this->existe_tabla('tipotrabajador');
+      if ($res != true) $this->crea_tabla_tipotrabajador();
 
 
       return 1;
@@ -667,6 +669,16 @@ class Update_model extends CI_Model {
                                     valor_neto numeric(10,2),
                                     PRIMARY KEY (id) 
                                     )");
+    }
+    public function crea_tabla_tipotrabajador(){
+      $query = $this->db->query("CREATE TABLE tipotrabajador (
+                                    id SERIAL,
+                                    tipo_trabajador varchar(120),
+                                    descripcion varchar(255),
+                                    activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
+
     }
 
 }

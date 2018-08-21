@@ -1,11 +1,11 @@
 <?php
 /* ------------------------------------------------
-  ARCHIVO: departamento.php
-  DESCRIPCION: Contiene la vista principal del módulo de departamento.
+  ARCHIVO: cargo.php
+  DESCRIPCION: Contiene la vista principal del módulo de cargo.
  * 
   ------------------------------------------------ */
 // Setear el título HTML de la página
-  print "<script>document.title = 'ProdegelRRHH - Listado de Departamentos'</script>";
+  print "<script>document.title = 'ProdegelRRHH - Listado de Tipos de trabajador'</script>";
   date_default_timezone_set("America/Guayaquil");
 
 ?>
@@ -18,7 +18,9 @@
 
   $(document).ready(function () {
 
-    $('#TableObj').dataTable({
+    $("#formtipotrabajador").validationEngine();
+
+    $('#TablaTipoTrabajador').dataTable({
       "language":{  "lengthMenu":"Mostrar _MENU_ registros por página.",
                     "zeroRecords": "Lo sentimos. No se encontraron registros.",
                     "info": "Mostrando página _PAGE_ de _PAGES_",
@@ -30,15 +32,14 @@
                     "SearchPlaceholder": "Comience a teclear...",
                     "paginate": { "previous": "Anterior", "next": "Siguiente", }
                     },
-        'ajax': "Departamento/listadoDepartamentos",
+        'ajax': "Tipo_trabajador/listadoTipoTrabajador",
         'columns': [
             {"data": "nombre"},
-            {"data": "jefe"},   
             {"data": "ver"}                            
         ]
     });
 
-    $(document).on('click', '.btnguardardpto', function(){
+    $(document).on('click', '.btnguardarcargo', function(){
       id = $("#txt_id").val();
       if (id == '') { id = 0; }
       nombre = $("#txt_nombre").val();
@@ -46,16 +47,15 @@
         alert("Ingrese el nombre");
         return false;
       }
-      jefe = $("#cmb_empleado").val();
-      if (jefe == '') { jefe = 0; }
-      if($("#chkactivodpto").is(":checked")){ activo = 1; } 
+      
+      if($("#chkactivo").is(":checked")){ activo = 1; } 
         else{ activo = 0; } 
 
       $.ajax({
         type: "POST",
         dataType: "json",
-        url: "<?php echo base_url('Departamento/agregar');?>",
-        data: {id: id, nombre: nombre, jefe: jefe, activo: activo},
+        url: "<?php echo base_url('Tipo_trabajador/agregar');?>",
+        data: {id: id, nombre: nombre, activo: activo},
         success: function(json) {
           $.fancybox.close();
           $('#TableObj').DataTable().ajax.reload();
@@ -63,12 +63,12 @@
       });
     });
 
-    $(document).on('click', '.dpto_ver', function(){
+    $(document).on('click', '.cargo_ver', function(){
       id = $(this).attr('id');
       $.ajax({
         type: "POST",
         dataType: "json",
-        url: "<?php echo base_url('Departamento/tmp_departamento');?>",
+        url: "<?php echo base_url('Tipo_trabajador/tmp_cargo');?>",
         data: {id: id},
         success: function(json) {
           $.fancybox.open({
@@ -79,13 +79,13 @@
               dataType: "html",
               type: "POST"
             },
-            href: "<?php echo base_url('Departamento/upd_departamento');?>"
+            href: "<?php echo base_url('Tipo_trabajador/upd_cargo');?>"
           });
         }
       });
     });  
 
-    $(document).on('click', '.dpto_add', function(){
+    $(document).on('click', '.cargo_add', function(){
       $.fancybox.open({
         type: "ajax",
         width: 550,
@@ -94,18 +94,15 @@
            dataType: "html",
            type: "POST"
         },
-        href: "<?php echo base_url('Departamento/add_departamento');?>",
-        afterClose: function(){
-          $('#TableObj').DataTable().ajax.reload();
-        } 
+        href: "<?php echo base_url('Tipo_trabajador/add_cargo');?>"
       });
     });
 
-    $(document).on('click','.dpto_del', function() {
+    $(document).on('click','.cargo_del', function() {
       id = $(this).attr('id');
         if (conf_del()) {
           $.ajax({
-            url: base_url + "Departamento/del_departamento",
+            url: base_url + "Tipo_trabajador/del_cargo",
             data: { id: id },
             type: 'POST',
             dataType: 'json',
@@ -113,7 +110,7 @@
               if (json.mens == 1){
                 $('#TableObj').DataTable().ajax.reload();
               } else {
-                alert("No se pudo eliminar el departamento. Existe informacion asociada.");
+                alert("No se pudo eliminar el cargo. Existe informacion asociada.");
                 return false;                
               }  
             }
@@ -123,7 +120,7 @@
 
 
     function conf_del() {
-        return  confirm("¿Confirma que desea eliminar este departamento?");
+        return  confirm("¿Confirma que desea eliminar este cargo?");
     }
 
 
@@ -138,11 +135,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <i class="fa fa-registered"></i> Lista de Departamentos
+        <i class="fa fa-registered"></i> Lista de Cargos
       </h1>
       <ol class="breadcrumb">
         <li><a href="<?php print $base_url ?>inicio"><i class="fa fa-dashboard"></i> Inicio</a></li>
-        <li class="active"><a href="<?php print $base_url ?>departamento">Departamentos</a></li>
+        <li class="active"><a href="<?php print $base_url ?>tipotrabajador">Tipo de</a></li>
         
       </ol>
     </section>
@@ -154,10 +151,10 @@
             <div class="col-md-12">
                 <div class="box box-danger">
                     <div class="box-header with-border">
-                      <h3 class="box-title"></i> Datos de Departamentos</h3>
+                      <h3 class="box-title"></i> Tipos de trabajador</h3>
                       <div class="pull-right"> 
 
-                          <button type="button" class="btn btn-info btn-grad dpto_add" >
+                          <button type="button" class="btn btn-info btn-grad cargo_add" >
                             <i class="fa fa-plus-square"></i> Añadir
                           </button>   
 
@@ -169,11 +166,11 @@
                       <div class="row">
                         <div class="col-xs-12">
                             <div class="box-body table-responsive">
-                              <table id="TableObj" class="table table-bordered table-striped table-responsive">
+                              <table id="TablaTipoTrabajador" class="table table-bordered table-striped table-responsive">
                                 <thead>
                                   <tr >
-                                    <th>Nombre de Departamento</th>
-                                    <th>Nombre de Jefe</th>
+                                    <th>Tipo de trabajador</th>
+                                    <th>Descripcion</th>
                                     <th>Accion</th>
                                   </tr>
                                 </thead>

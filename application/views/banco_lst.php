@@ -5,7 +5,7 @@
   FECHA DE CREACIÓN: 06/07/2017
  * 
   ------------------------------------------------ */
-print "<script>document.title = 'EQsoft - Bancos'</script>";
+print "<script>document.title = 'ProdegelRRHH - Bancos'</script>";
 date_default_timezone_set("America/Guayaquil");
 ?>
 

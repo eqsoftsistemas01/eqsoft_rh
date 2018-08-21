@@ -6,7 +6,7 @@
  * 
   ------------------------------------------------ */
 // Setear el título HTML de la página
-print "<script>document.title = 'EQsoft - Usuarios'</script>";
+print "<script>document.title = 'ProdegelRRHH - Usuarios'</script>";
 date_default_timezone_set("America/Guayaquil");
 
 if(@$fic_usu->perfil != NULL){
