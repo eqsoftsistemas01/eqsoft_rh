@@ -29,6 +29,28 @@
         }  
     });
 
+    /* MASCARA PARA COD */
+    $("#codigo_rubro").mask("9999");
+
+    $(document).on('blur', '#txt_expresion', function(){
+      var exp = $(this).val();
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "<?php echo base_url('Rubro/eval_expresion');?>",
+        data: {exp: exp},
+        success: function(json) {
+          if (json.mens == 0){
+            $('.btnguardarubro').attr('disabled',true); 
+            alert('Expresion no Válida.');
+            $('#txt_expresion').focus();
+          } else {
+            $('.btnguardarubro').attr('disabled',false); 
+          }
+        }
+      });
+    });  
+
   });     
 
 </script>
@@ -162,7 +184,7 @@
                     </div>
 
                     <div class="form-group col-md-12">
-                        <input type="text" class="form-control " name="txt_expresion" id="txt_expresion" placeholder="Expresion de Calculo" value="<?php if(@$obj != NULL){ print @$obj->expresioncalculo; }?>" >
+                        <input type="text" class="form-control " name="txt_expresion" id="txt_expresion" placeholder="Expresion de Calculo" value="<?php if(@$obj != NULL){ print @$obj->expresioncalculo; }?>" <?php if(@$obj != NULL){ if(@$obj->editable == 1){ print " disabled";} } else { print " disabled";}  ?>>
                     </div>
 
 

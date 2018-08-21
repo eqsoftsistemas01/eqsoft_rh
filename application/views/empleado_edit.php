@@ -212,7 +212,7 @@ date_default_timezone_set("America/Guayaquil");
         existe = 0;
       }
       else {
-        if ($('.chk_rubro[id='+id+']').name() == 1){
+        if ($('.chk_rubro[id='+id+']').attr('name') == 1){
           $('.valor_rubro[id='+id+']').attr('disabled',false); 
         }
       }

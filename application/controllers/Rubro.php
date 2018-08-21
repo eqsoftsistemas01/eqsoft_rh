@@ -18,6 +18,9 @@ class rubro extends CI_Controller {
         $this->load->Model("Rubro_model");
         //$this->load->Model("usuario_model");
         //$this->load->Model("Departamento_model");
+
+        $this->load->library('Evalmath');
+
     }
 
     /* MÉTODO PREDETERMINADO DEL CONTROLADOR */
@@ -56,12 +59,13 @@ class rubro extends CI_Controller {
         $registro = $this->Rubro_model->lst_rubro();
         $tabla = "";
         foreach ($registro as $row) {
+            if ($row->periodicidadmensual == 1) { $periodicidad = 'Mensual'; } else { $periodicidad = 'Anual'; }
             $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad rubro_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad rubro_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
             $tabla.='{  "id":"' .$row->id. '",
                         "nombre":"' .$row->nombre_rubro. '",
                         "codigo":"' .$row->codigo_rubro. '",
                         "tiporubro":"' .$row->tiporubro. '",
-                        "periodicidad":"' .$row->periodicidadmensual. '",
+                        "periodicidad":"' .$periodicidad. '",
                         "ver":"'.$ver.'"
                     },';
         }
@@ -162,6 +166,24 @@ class rubro extends CI_Controller {
         $id = $this->input->post('id'); 
         $resu = $this->Rubro_model->del_rubro($id);
         $arr['mens'] = $id;
+        print json_encode($arr); 
+    }
+
+    public function eval_expresion(){
+        $exp = $this->input->post('exp'); 
+        $exp = str_replace('[', '', $exp);
+        $expresion = str_replace(']', '', $exp);
+        $m = new EvalMath;
+        $m->suppress_errors = true;
+        $result = $m->evaluate($expresion);
+
+        if ($result == false) {
+            $myres = 0;
+        }
+        else {
+            $myres = 1;
+        }
+        $arr['mens'] = $myres;
         print json_encode($arr); 
     }
 
