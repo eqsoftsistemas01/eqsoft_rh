@@ -101,11 +101,24 @@ class Rubro_model extends CI_Model {
     }
 
     public function sel_rubro_id($id){
-      $query = $this->db->query("SELECT r.id, r.codigo_rubro, r.nombre_rubro, r.tipo_rubro, r.afectadopordias, r.periodicidadmensual, 
-                                        r.mesactivo, r.diasgracia, r.editable, r.expresioncalculo, r.activo
-                                     FROM rubro r
-                                     Where r.id = $id");
+      $query = $this->db->query("SELECT id, codigo_rubro, nombre_rubro, tipo_rubro, afectadopordias, 
+                                        periodicidadmensual, mesactivo, diasgracia, editable, expresioncalculo, activo
+                                     FROM rubro 
+                                     Where id = $id");
       $result = $query->result();
       return $result[0];
     }
+
+    public function sel_rubro_codigo($codigo){
+      $query = $this->db->query("SELECT id, codigo_rubro, nombre_rubro, tipo_rubro, afectadopordias, 
+                                        periodicidadmensual, mesactivo, diasgracia, editable, expresioncalculo, activo
+                                     FROM rubro 
+                                     Where codigo_rubro = '$codigo'");
+      $result = $query->result();
+      if ($result)
+        return $result[0];
+      else
+        return NULL;
+    }
+
 }

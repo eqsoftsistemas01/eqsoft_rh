@@ -139,7 +139,7 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="<?php print $base_url ?>rolpagos"><i class="fa fa-calendar"></i> Rol de Pagos</a></li>
+            <li><a href="<?php print $base_url ?>rol"><i class="fa fa-calendar"></i> Rol de Pagos</a></li>
 
           </ul>
         </li> 

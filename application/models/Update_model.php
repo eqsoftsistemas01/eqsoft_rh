@@ -162,6 +162,18 @@ class Update_model extends CI_Model {
       $res = $this->existe_tabla('tipotrabajador');
       if ($res != true) $this->crea_tabla_tipotrabajador();
 
+      $res = $this->existe_tabla('roldepagos');
+      if ($res != true) $this->crea_tabla_roldepagos();
+      $res = $this->existe_tabla('roldepagos_tmp');
+      if ($res != true) $this->crea_tabla_roldepagos_tmp();
+
+      $res = $this->existe_tabla('roldepagos_det');
+      if ($res != true) $this->crea_tabla_roldepagos_det();
+      $res = $this->existe_tabla('roldepagos_tmpdet');
+      if ($res != true) $this->crea_tabla_roldepagos_tmpdet();
+
+      $res = $this->existe_tabla('parametros');
+      if ($res != true) $this->crea_tabla_parametros();
 
       return 1;
     }
@@ -654,10 +666,22 @@ class Update_model extends CI_Model {
                                     fechaini_rol date,
                                     fechafin_rol date,
                                     estado_rol int,
-                                    /*
-                                    asistencia??????  
-                                    */
+                                    asistencia_ini date,
+                                    asistencia_fin date,
                                     PRIMARY KEY (id) 
+                                    )");
+    }
+
+    public function crea_tabla_roldepagos_tmp(){
+      $this->db->query("CREATE TABLE roldepagos_tmp (
+                                    id_usuario int,
+                                    descripcion_rol varchar(255),
+                                    fechaini_rol date,
+                                    fechafin_rol date,
+                                    estado_rol int,
+                                    asistencia_ini date,
+                                    asistencia_fin date,
+                                    PRIMARY KEY (id_usuario) 
                                     )");
     }
 
@@ -666,10 +690,23 @@ class Update_model extends CI_Model {
                                     id SERIAL,
                                     id_rol int,
                                     id_empleado int,
+                                    id_rubro int,
                                     valor_neto numeric(10,2),
                                     PRIMARY KEY (id) 
                                     )");
     }
+
+    public function crea_tabla_roldepagos_tmpdet(){
+      $this->db->query("CREATE TABLE roldepagos_tmpdet (
+                                    id SERIAL,
+                                    id_usuario int,
+                                    id_empleado int,
+                                    id_rubro int,
+                                    valor_neto numeric(10,2),
+                                    PRIMARY KEY (id) 
+                                    )");
+    }
+
     public function crea_tabla_tipotrabajador(){
       $query = $this->db->query("CREATE TABLE tipotrabajador (
                                     id SERIAL,
@@ -679,6 +716,19 @@ class Update_model extends CI_Model {
                                     PRIMARY KEY (id) 
                                     )");
 
+    }
+
+    public function crea_tabla_parametros(){
+      $this->db->query("CREATE TABLE parametros (
+                                    id int,
+                                    descripcion varchar(255),
+                                    valor varchar(255),
+                                    PRIMARY KEY (id) 
+                                    )");
+      $this->db->query("INSERT INTO parametros (id, descripcion, valor) VALUES(1, 'IVA', '0.12')");
+      $this->db->query("INSERT INTO parametros (id, descripcion, valor) VALUES(2, 'ID Rubro Sueldo Base', '')");
+      $this->db->query("INSERT INTO parametros (id, descripcion, valor) VALUES(3, 'ID Rubro Dias Trabajados', '')");
+      $this->db->query("INSERT INTO parametros (id, descripcion, valor) VALUES(4, 'ID Rubro Neto a Cobrar', '')");
     }
 
 }
