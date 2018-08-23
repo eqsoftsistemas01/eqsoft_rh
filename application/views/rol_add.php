@@ -139,6 +139,34 @@ date_default_timezone_set("America/Guayaquil");
         dataType: 'json',
         success: function(json) {
             $('#TableRubro').DataTable().ajax.reload();
+            $.ajax({
+              url: base_url + "Rol/sel_rubroneto_tmp",
+              type: 'POST',
+              dataType: 'json',
+              success: function(json) {
+                  $('.valor_neto[id='+ json.idemp +']').html(json.valor);
+              }  
+            });  
+        }  
+      });  
+
+    });  
+
+    $(document).on('change', '.actualiza_rubro', function(){
+      var fechainirol = $('#fechainirol').val();
+      var fechafinrol = $('#fechafinrol').val();
+      var feciniasist = $('#feciniasist').val();
+      var fecfinasist = $('#fecfinasist').val();
+      var txt_descripcion = $('#txt_descripcion').val();
+
+      $.ajax({
+        url: base_url + "Rol/upd_tmprol",
+        data: { fechainirol: fechainirol, fechafinrol: fechafinrol,
+                feciniasist: feciniasist, fecfinasist: fecfinasist,
+                txt_descripcion: txt_descripcion },
+        type: 'POST',
+        dataType: 'json',
+        success: function(json) {
         }  
       });  
 
@@ -173,24 +201,32 @@ date_default_timezone_set("America/Guayaquil");
 
               <div class="form-group col-md-10" style="padding-left: 0px;padding-bottom: 0px; margin-left: 0px; margin-top: 0px; margin-bottom: 0px;">
 
+                <?php /* CAMPO HIDDEN CON EL ID  (EN CASO DE MODIFICACIÓN DEL REGISTRO) */ 
+                    if(@$obj != NULL){ ?>
+                        <input type="hidden" id="txt_id" name="txt_id" value="<?php if($idrol != NULL){ print $idrol; }?>" >    
+                    <?php } else { ?>
+                        <input type="hidden" id="txt_id" name="txt_id" value="0">    
+                <?php } ?>  
+
+
                 <div class="form-group col-md-3">
                   <label >Inicio Rol</label>
-                  <input type="text" class="form-control " name="fechainirol" id="fechainirol" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->fechaini_rol); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
+                  <input type="text" class="form-control actualiza_rubro" name="fechainirol" id="fechainirol" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->fechaini_rol); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
                 </div>                       
 
                 <div class="form-group col-md-3">
                     <label >Fin Rol</label>
-                    <input type="text" class="form-control " name="fechafinrol" id="fechafinrol" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->fechafin_rol); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
+                    <input type="text" class="form-control actualiza_rubro" name="fechafinrol" id="fechafinrol" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->fechafin_rol); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
                 </div>                       
 
                 <div class="form-group col-md-3">
                     <label >Inicio Asistenc.</label>
-                    <input type="text" class="form-control" name="feciniasist" id="feciniasist" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->asistencia_ini); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
+                    <input type="text" class="form-control actualiza_rubro" name="feciniasist" id="feciniasist" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->asistencia_ini); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
                 </div>                       
 
                 <div class="form-group col-md-3">
                     <label >Fin Asistencia</label>
-                    <input type="text" class="form-control " name="fecfinasist" id="fecfinasist" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->asistencia_fin); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
+                    <input type="text" class="form-control actualiza_rubro" name="fecfinasist" id="fecfinasist" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->asistencia_fin); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
                 </div>                       
 
               </div>                       
@@ -203,7 +239,7 @@ date_default_timezone_set("America/Guayaquil");
 
               <div class="col-md-12" >
                 <label >Descripcion</label>
-                <input type="text" class="form-control " name="txt_descripcion" id="txt_descripcion" value="<?php if(@$obj != NULL){ print @$obj->descripcion; }?>" >
+                <input type="text" class="form-control actualiza_rubro" name="txt_descripcion" id="txt_descripcion" value="<?php if(@$obj != NULL){ print @$obj->descripcion_rol; }?>" >
               </div>
 
               <div class="col-md-6" style="margin-top: 15px;">
@@ -245,7 +281,7 @@ date_default_timezone_set("America/Guayaquil");
                                       <?php print $det->nombres; ?>
                                     </td>
 
-                                    <td class="text-center">
+                                    <td class="text-center valor_neto" id="<?php print $det->id_empleado; ?>">
                                       <?php print $det->valor_neto; ?>
                                     </td>
 

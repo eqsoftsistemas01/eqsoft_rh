@@ -63,6 +63,19 @@ class Rol extends CI_Controller {
         echo '{"data":[' . $tabla . ']}';
     }
 
+    public function tmp_rol() {
+        $this->session->unset_userdata("tmp_rol_id"); 
+        $id = $this->input->post("id");
+        $this->session->set_userdata("tmp_rol_id", NULL);
+        if ($id != NULL) {
+            $this->session->set_userdata("tmp_rol_id", $id);
+        } else {
+            $this->session->set_userdata("tmp_rol_id", NULL);
+        }
+        $arr['resu'] = 1;
+        print json_encode($arr);
+    }
+
     public function tmp_empleado() {
         $this->session->unset_userdata("tmp_emprol_id"); 
         $id = $this->input->post("id");
@@ -77,33 +90,52 @@ class Rol extends CI_Controller {
     }
 
     public function listadoRubro() {
+        $tabla = "";
         $idusu = $this->session->userdata("sess_id");
         $idemp = $this->session->userdata("tmp_emprol_id");
         if (($idemp == '') || ($idemp == '')) { $idemp =0; }
-        $registro = $this->Rol_model->lst_rubros($idusu, $idemp);
-        $this->calcula_valorrubros($idusu, $idemp, $registro);
-        $registro = $this->Rol_model->lst_rubros($idusu, $idemp);
-        $tabla = "";
-        foreach ($registro as $row) {
-            if ($row->modificable == 1) { 
-              $valor = '<div ><input type=\"text\" class=\"valor_rubro\" name=\"'.$row->id_rubro.'\" id=\"'.$row->id_rubro.'\" value=\"'.$row->valor_neto.'\" ></div>';
-            } 
-            else {
-              $valor = $row->valor_neto;
-            }    
-            $tabla.='{  "id":"' .$row->id_rubro. '",
-                        "codigo":"' .$row->codigo_rubro. '",
-                        "nombre":"' .$row->nombre_rubro. '",
-                        "valor":"' .$valor. '"
-                    },';
+        else {
+          $registro = $this->Rol_model->lst_rubros_calculo($idusu, $idemp);
+          $this->calcula_valorrubros($idusu, $idemp, $registro);
+          $registro = $this->Rol_model->lst_rubros($idusu, $idemp);
+          foreach ($registro as $row) {
+              if ($row->modificable == 1) { 
+                $valor = '<div ><input type=\"text\" class=\"valor_rubro\" name=\"'.$row->id_rubro.'\" id=\"'.$row->id_rubro.'\" value=\"'.$row->valor_neto.'\" ></div>';
+              } 
+              else {
+                $valor = $row->valor_neto;
+              }    
+              $tabla.='{  "id":"' .$row->id_rubro. '",
+                          "codigo":"' .$row->codigo_rubro. '",
+                          "nombre":"' .$row->nombre_rubro. '",
+                          "valor":"' .$valor. '"
+                      },';
+          }
+          $tabla = substr($tabla, 0, strlen($tabla) - 1);
         }
-        $tabla = substr($tabla, 0, strlen($tabla) - 1);
         echo '{"data":[' . $tabla . ']}';
     }
 
     public function add_rol(){
+        $this->session->unset_userdata("tmp_emprol_id"); 
         $idusu = $this->session->userdata("sess_id");
         $obj = $this->Rol_model->carga_rol(0, $idusu);
+        $data["obj"] = $obj;
+        $data["idrol"] = 0;
+        $empleados = $this->Rol_model->lst_empleados($idusu);
+        $data["empleados"] = $empleados;       
+
+        $data["base_url"] = base_url();
+        $data["content"] = "rol_add";
+        $this->load->view("layout", $data);
+    } 
+
+    public function upd_rol(){
+        $this->session->unset_userdata("tmp_emprol_id"); 
+        $idusu = $this->session->userdata("sess_id");
+        $id = $this->session->userdata("tmp_rol_id");
+        $data["idrol"] = $id;
+        $obj = $this->Rol_model->carga_rol($id, $idusu);
         $data["obj"] = $obj;
         $empleados = $this->Rol_model->lst_empleados($idusu);
         $data["empleados"] = $empleados;       
@@ -112,6 +144,24 @@ class Rol extends CI_Controller {
         $data["content"] = "rol_add";
         $this->load->view("layout", $data);
     } 
+
+    public function del_rol() {
+        $id = $this->input->post("id");
+        if ($id == '') { $id = 0; }
+        $valor = $this->Rol_model->del_rol($id);
+        $arr['resu'] = 1;
+        print json_encode($arr);
+    }
+
+    public function sel_rubroneto_tmp() {
+        $idusu = $this->session->userdata("sess_id");
+        $idemp = $this->session->userdata("tmp_emprol_id");
+        if ($idemp == '') { $idemp = 0; }
+        $valor = $this->Rol_model->sel_rubroneto_tmp($idusu, $idemp);
+        $arr['valor'] = $valor;
+        $arr['idemp'] = $idemp;
+        print json_encode($arr);
+    }
 
     function get_expresion_por_id($exp){
         $newexp = '';
@@ -151,6 +201,8 @@ class Rol extends CI_Controller {
           $objrubro->calculadorealizado = ($rubro->editable == 1);
           $calculador->arreglo[$rubro->id_rubro] = $objrubro;
         }
+       /* var_dump($calculador->arreglo);die();*/
+
         $calculador->calcular();
         foreach ($calculador->arreglo as $rubro) {
           $this->Rol_model->actualiza_valorrubro($idusuario, $idempleado, $rubro->id, $rubro->valor);
@@ -167,6 +219,46 @@ class Rol extends CI_Controller {
         $arr['resu'] = 1;
         print json_encode($arr);
     } 
+
+    public function upd_tmprol(){
+        $idusu = $this->session->userdata("sess_id");
+
+        $fec = $this->input->post('fechainirol');
+        $fechainirol = str_replace('/', '-', $fec); 
+        $fechainirol = date("Y-m-d", strtotime($fechainirol));
+
+        $fec = $this->input->post('fechafinrol');
+        $fechafinrol = str_replace('/', '-', $fec); 
+        $fechafinrol = date("Y-m-d", strtotime($fechafinrol));
+
+        $fec = $this->input->post('feciniasist');
+        $feciniasist = str_replace('/', '-', $fec); 
+        $feciniasist = date("Y-m-d", strtotime($feciniasist));
+
+        $fec = $this->input->post('fecfinasist');
+        $fecfinasist = str_replace('/', '-', $fec); 
+        $fecfinasist = date("Y-m-d", strtotime($fecfinasist));
+
+        $descripcion = $this->input->post('txt_descripcion');
+
+        $this->Rol_model->upd_tmprol($idusu, $fechainirol, $fechafinrol, $feciniasist, $fecfinasist, $descripcion);
+
+        $arr['resu'] = 1;
+        print json_encode($arr);
+    }
+
+    public function guardar(){
+        $idusu = $this->session->userdata("sess_id");
+        $id = $this->input->post('txt_id'); 
+
+        if($id != 0){
+            $resu = $this->Rol_model->upd_rol($idusu, $id);
+        } else {
+            $resu = $this->Rol_model->add_rol($idusu);
+        }
+        print "<script> window.location.href = '" . base_url() . "rol'; </script>";
+    }
+
 
 }
 
@@ -193,6 +285,10 @@ class Rubro_Calculador {
   }
 
   public function calcula_rubro($id, $m){
+   /* $keys=array_keys($this->arreglo);
+    if (array_search($id, $keys) == false){
+      return 0;
+    }*/
     $obj = $this->arreglo[$id];
     if ($obj){
       if (($obj->escalculado == false) || ($obj->calculadorealizado == true)){

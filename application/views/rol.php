@@ -78,7 +78,7 @@
 
 
     function conf_del() {
-        return  confirm("¿Confirma que desea eliminar este Rol?");
+        return  confirm("¿Confirma que desea eliminar este Rol de Pago?");
     }
 
 
