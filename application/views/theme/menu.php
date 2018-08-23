@@ -185,6 +185,9 @@
           <?php if($perfil == 1) { ?>          
           <li><a href="<?php print $base_url ?>banco"><i class="fa fa-university" aria-hidden="true"></i> Bancos</a></li>
           <?php } ?>
+          <?php if($perfil == 1) { ?>          
+          <li><a href="<?php print $base_url ?>parametros"><i class="fa fa-gears" aria-hidden="true"></i> Parametros</a></li>
+          <?php } ?>
           
 
           </ul>
