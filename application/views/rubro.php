@@ -36,6 +36,7 @@
             {"data": "nombre"},
             {"data": "tiporubro"},   
             {"data": "periodicidad"},   
+            {"data": "calculado"},   
             {"data": "ver"}                            
         ]
     });
@@ -215,6 +216,7 @@
                                     <th>Nombre</th>
                                     <th>Tipo Rubro</th>
                                     <th>Periodicidad</th>
+                                    <th>Calculado</th>
                                     <th>Accion</th>
                                   </tr>
                                 </thead>

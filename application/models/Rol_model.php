@@ -72,6 +72,7 @@ class Rol_model extends CI_Model {
                                                         t.id_empleado = r.id_empleado and
                                                         t.id_rubro = r.id_rubro);");
 
+        /* actualizando sueldo */
         $this->db->query("UPDATE roldepagos_tmpdet 
                             SET valor_neto = empleado.sueldo
                             FROM empleado 
@@ -84,6 +85,25 @@ class Rol_model extends CI_Model {
                                     FROM roldepagos_tmp 
                                     WHERE id_usuario = $idusuario;");
         $result = $query->result();
+        $ini_asis = $result[0]->asistencia_ini;
+        $fin_asis = $result[0]->asistencia_fin;
+
+        /* actualizando dias trabajados */
+        $this->db->query("UPDATE roldepagos_tmpdet 
+                            SET valor_neto = (SELECT count(*) FROM asistencia a
+                                                LEFT JOIN empleado e on e.id_empleado = a.id_empleado
+                                                LEFT JOIN jornada j on j.id = e.id_jornada
+                                                WHERE a.id_empleado = roldepagos_tmpdet.id_empleado AND 
+                                                      a.fecha BETWEEN '$ini_asis' AND '$fin_asis' AND
+                                                      ((j.id IS NULL) OR 
+                                                       (a.entrada_trabajo <= j.entrada_trabajo AND
+                                                        a.salida_trabajo >= j.salida_trabajo AND
+                                                        a.salida_almuerzo >= j.salida_almuerzo AND
+                                                        a.entrada_almuerzo <= j.entrada_almuerzo))
+                                              )
+                            WHERE roldepagos_tmpdet.id_usuario = $idusuario AND
+                                  roldepagos_tmpdet.id_rubro = (SELECT valor FROM parametros WHERE id = 3)::integer;");
+
         return $result[0];
     }
 

@@ -60,12 +60,14 @@ class rubro extends CI_Controller {
         $tabla = "";
         foreach ($registro as $row) {
             if ($row->periodicidadmensual == 1) { $periodicidad = 'Mensual'; } else { $periodicidad = 'Anual'; }
+            if ($row->editable == 0) { $calculado = 'SI'; } else { $calculado = 'NO'; }
             $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad rubro_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad rubro_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
             $tabla.='{  "id":"' .$row->id. '",
                         "nombre":"' .$row->nombre_rubro. '",
                         "codigo":"' .$row->codigo_rubro. '",
                         "tiporubro":"' .$row->tiporubro. '",
                         "periodicidad":"' .$periodicidad. '",
+                        "calculado":"' .$calculado. '",
                         "ver":"'.$ver.'"
                     },';
         }
