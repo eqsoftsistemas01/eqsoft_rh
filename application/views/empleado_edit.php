@@ -105,6 +105,46 @@ date_default_timezone_set("America/Guayaquil");
         ]
     });
 
+    /* BUSQUEDA DINAMICA POR CEDULA */
+    $('#txt_ident').blur(function(){
+      var ident = $(this).val();    
+      var id = $("#txt_id").val();    
+
+      if (ident === ""){
+        alert("Debe ingresar un numero de identificación");
+        return false;
+      }   
+      /* ruc / cedula valido*/
+      var idtp = $('#cmb_tipoident option:selected').attr('name');      
+      $.ajax({
+          type: "POST",
+          dataType: "json",
+          url: base_url + "Utiles/validarIdentificacion",
+          data: { tipo: idtp, identificacion: ident },
+          success: function(json) {
+            if (json.resu == 1){
+              $.ajax({
+                  type: "POST",
+                  dataType: "json",
+                  url: base_url + "Empleado/existeIdentificacion",
+                  data: { id: id, identificacion: ident },
+                  success: function(json) {
+                    if (json.resu != 0){
+                        alert("El numero de identificación ya esta registrado para otro empleado");
+                        $('#txt_ident').focus();
+                        return false;
+                    } 
+                  }
+              });
+            } else {
+                alert("El numero de identificación no es valido");
+                $('#txt_ident').focus();
+                return false;
+              } 
+          }
+      });
+    });
+
     $(document).on('click', '.add_carga', function(){
       $.fancybox.open({
         type: "ajax",

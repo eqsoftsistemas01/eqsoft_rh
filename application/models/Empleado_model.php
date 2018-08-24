@@ -132,8 +132,8 @@ class Empleado_model extends CI_Model {
 
       if ($contrato != 'NULL'){
         if ($contrato < 1){
-          $this->db->query("INSERT INTO contrato (id_tipo, id_empleado, id_cargo, fecha_inicio, fecha_fin, sueldo, activo)
-                              VALUES($tipocontrato, $idempleado, $cargo, $fechaingreso, $fechasalida, $sueldo, 1)");
+          $this->db->query("INSERT INTO contrato (id_tipo, id_empleado, id_cargo, fecha_inicio, fecha_fin, sueldo, activo, causa_salida)
+                              VALUES($tipocontrato, $idempleado, $cargo, $fechaingreso, $fechasalida, $sueldo, 1, '$causasalida')");
           $query = $this->db->query("SELECT max(id) as newid from contrato;");
           $result = $query->result();
           $newid = $result[0]->newid;
@@ -145,6 +145,7 @@ class Empleado_model extends CI_Model {
                               id_cargo = $cargo, 
                               fecha_inicio = $fechaingreso, 
                               fecha_fin = $fechasalida, 
+                              causa_salida = '$causasalida',
                               sueldo = $sueldo
                               WHERE id = $contrato");
         }
@@ -217,7 +218,7 @@ class Empleado_model extends CI_Model {
                                    '$sector', '$referenciavivienda', $ciudad, $tipovivienda, $vivefamiliares, 
                                    $banco, $tipocuenta, '$numerocuenta', '$nombrecontacto', '$direccioncontacto', 
                                    $parentescocontacto, '$telefonocontacto', $empresa, $tiposangre, $tipodiscapacidad, 
-                                   $p100discapacidad, $contrato, $cargo, '$causa_salida', $idjornada);");
+                                   $p100discapacidad, $contrato, $cargo, '$causasalida', $idjornada);");
         $query = $this->db->query("SELECT max(id_empleado) as maxid FROM empleado");
         $resultado = $query->result();
         $newid = $resultado[0]->maxid;
@@ -233,8 +234,8 @@ class Empleado_model extends CI_Model {
                               WHERE e.id_usuario = $idusu");
 
         if ($contrato != 'NULL'){
-            $this->db->query("INSERT INTO contrato (id_tipo, id_empleado, id_cargo, fecha_inicio, fecha_fin, sueldo, activo)
-                                VALUES($tipocontrato, $newid, $cargo, $fechaingreso, $fechasalida, $sueldo, 1)");
+            $this->db->query("INSERT INTO contrato (id_tipo, id_empleado, id_cargo, fecha_inicio, fecha_fin, sueldo, activo, causa_salida)
+                                VALUES($tipocontrato, $newid, $cargo, $fechaingreso, $fechasalida, $sueldo, 1, '$causasalida')");
             $query = $this->db->query("SELECT max(id) as newid from contrato;");
             $result = $query->result();
             $newcont = $result[0]->newid;
