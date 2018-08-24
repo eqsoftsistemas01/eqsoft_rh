@@ -72,6 +72,13 @@ class Rol_model extends CI_Model {
                                                         t.id_empleado = r.id_empleado and
                                                         t.id_rubro = r.id_rubro);");
 
+        $this->db->query("UPDATE roldepagos_tmpdet 
+                            SET valor_neto = empleado.sueldo
+                            FROM empleado 
+                            WHERE roldepagos_tmpdet.id_empleado = empleado.id_empleado AND
+                                  roldepagos_tmpdet.id_usuario = $idusuario AND
+                                  roldepagos_tmpdet.id_rubro = (SELECT valor FROM parametros WHERE id = 2)::integer;");
+
         $query = $this->db->query("SELECT id_usuario, descripcion_rol, fechaini_rol, fechafin_rol, 
                                           estado_rol, asistencia_ini, asistencia_fin 
                                     FROM roldepagos_tmp 

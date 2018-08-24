@@ -175,6 +175,12 @@ class Update_model extends CI_Model {
       $res = $this->existe_tabla('parametros');
       if ($res != true) $this->crea_tabla_parametros();
 
+      $res = $this->existe_tabla('jornada');
+      if ($res != true) $this->crea_tabla_jornada();
+
+      $res = $this->existe_columna_tabla('empleado','id_jornada');
+      if ($res != true) $this->add_columna_tabla('empleado','id_jornada', 'int', "");
+
       return 1;
     }
 
@@ -729,6 +735,20 @@ class Update_model extends CI_Model {
       $this->db->query("INSERT INTO parametros (id, descripcion, valor) VALUES(2, 'ID Rubro Sueldo Base', '')");
       $this->db->query("INSERT INTO parametros (id, descripcion, valor) VALUES(3, 'ID Rubro Dias Trabajados', '')");
       $this->db->query("INSERT INTO parametros (id, descripcion, valor) VALUES(4, 'ID Rubro Neto a Cobrar', '')");
+    }
+
+    public function crea_tabla_jornada(){
+      $query = $this->db->query("CREATE TABLE jornada (
+                                    id SERIAL,
+                                    descripcion varchar(255),
+                                    entrada_trabajo time,
+                                    salida_almuerzo time,
+                                    entrada_almuerzo time,
+                                    salida_trabajo time,
+                                    activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
+
     }
 
 }

@@ -123,6 +123,13 @@ class Rol extends CI_Controller {
         $data["obj"] = $obj;
         $data["idrol"] = 0;
         $empleados = $this->Rol_model->lst_empleados($idusu);
+
+        foreach ($empleados as $emp) {
+          $registro = $this->Rol_model->lst_rubros_calculo($idusu, $emp->id_empleado);
+          $this->calcula_valorrubros($idusu, $emp->id_empleado, $registro);          
+        }
+
+        $empleados = $this->Rol_model->lst_empleados($idusu);
         $data["empleados"] = $empleados;       
 
         $data["base_url"] = base_url();
@@ -137,6 +144,13 @@ class Rol extends CI_Controller {
         $data["idrol"] = $id;
         $obj = $this->Rol_model->carga_rol($id, $idusu);
         $data["obj"] = $obj;
+        $empleados = $this->Rol_model->lst_empleados($idusu);
+
+        foreach ($empleados as $emp) {
+          $registro = $this->Rol_model->lst_rubros_calculo($idusu, $emp->id_empleado);
+          $this->calcula_valorrubros($idusu, $emp->id_empleado, $registro);          
+        }
+
         $empleados = $this->Rol_model->lst_empleados($idusu);
         $data["empleados"] = $empleados;       
 

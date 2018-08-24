@@ -126,6 +126,9 @@
             <?php if($perfil == 1) { ?>
             <li><a href="<?php print $base_url ?>rubro"><i class="fa fa-home"></i> Rubros</a></li>
             <?php } ?> 
+            <?php if($perfil == 1) { ?>
+            <li><a href="<?php print $base_url ?>jornada"><i class="fa fa-home"></i> Jornadas</a></li>
+            <?php } ?> 
 
           </ul>
         </li> 
