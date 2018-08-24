@@ -5,7 +5,7 @@
  * 
   ------------------------------------------------ */
 // Setear el título HTML de la página
-  print "<script>document.title = 'ProdegelRRHH - Listado de Tipos de trabajador'</script>";
+  print "<script>document.title = 'ProdegelRRHH - Listado de Tipos de Empleado'</script>";
   date_default_timezone_set("America/Guayaquil");
 
 ?>
@@ -32,21 +32,23 @@
                     "SearchPlaceholder": "Comience a teclear...",
                     "paginate": { "previous": "Anterior", "next": "Siguiente", }
                     },
-        'ajax': "Tipo_trabajador/listadoTipoTrabajador",
+        'ajax': "Tipotrabajador/listadoTipoTrabajador",
         'columns': [
-            {"data": "nombre"},
+            {"data": "tipotrabajador"},
+            {"data": "descripcion"},
             {"data": "ver"}                            
         ]
     });
 
-    $(document).on('click', '.btnguardarcargo', function(){
+    $(document).on('click', '.btnguardartipo', function(){
       id = $("#txt_id").val();
       if (id == '') { id = 0; }
-      nombre = $("#txt_nombre").val();
-      if (nombre == '') {
-        alert("Ingrese el nombre");
+      tipotrabajador = $("#txt_tipotrabajador").val();
+      if (tipotrabajador == '') {
+        alert("Ingrese el Tipo de trabajador");
         return false;
       }
+      descripcion = $("#txt_descripcion").val();
       
       if($("#chkactivo").is(":checked")){ activo = 1; } 
         else{ activo = 0; } 
@@ -54,21 +56,21 @@
       $.ajax({
         type: "POST",
         dataType: "json",
-        url: "<?php echo base_url('Tipo_trabajador/agregar');?>",
-        data: {id: id, nombre: nombre, activo: activo},
+        url: "<?php echo base_url('Tipotrabajador/agregar');?>",
+        data: {id: id, tipotrabajador: tipotrabajador, descripcion: descripcion, activo: activo},
         success: function(json) {
           $.fancybox.close();
-          $('#TableObj').DataTable().ajax.reload();
+          $('#TablaTipoTrabajador').DataTable().ajax.reload();
         }  
       });
     });
 
-    $(document).on('click', '.cargo_ver', function(){
+    $(document).on('click', '.tipo_ver', function(){
       id = $(this).attr('id');
       $.ajax({
         type: "POST",
         dataType: "json",
-        url: "<?php echo base_url('Tipo_trabajador/tmp_cargo');?>",
+        url: "<?php echo base_url('Tipotrabajador/tmp_tipotrab');?>",
         data: {id: id},
         success: function(json) {
           $.fancybox.open({
@@ -79,13 +81,13 @@
               dataType: "html",
               type: "POST"
             },
-            href: "<?php echo base_url('Tipo_trabajador/upd_cargo');?>"
+            href: "<?php echo base_url('Tipotrabajador/upd_tipotrabajador');?>"
           });
         }
       });
     });  
 
-    $(document).on('click', '.cargo_add', function(){
+    $(document).on('click', '.tipo_add', function(){
       $.fancybox.open({
         type: "ajax",
         width: 550,
@@ -94,23 +96,23 @@
            dataType: "html",
            type: "POST"
         },
-        href: "<?php echo base_url('Tipo_trabajador/add_cargo');?>"
+        href: "<?php echo base_url('Tipotrabajador/add_tipotrabajador');?>"
       });
     });
 
-    $(document).on('click','.cargo_del', function() {
+    $(document).on('click','.tipo_del', function() {
       id = $(this).attr('id');
         if (conf_del()) {
           $.ajax({
-            url: base_url + "Tipo_trabajador/del_cargo",
+            url: base_url + "Tipotrabajador/del_tipotrabajador",
             data: { id: id },
             type: 'POST',
             dataType: 'json',
             success: function(json) {
               if (json.mens == 1){
-                $('#TableObj').DataTable().ajax.reload();
+                $('#TablaTipoTrabajador').DataTable().ajax.reload();
               } else {
-                alert("No se pudo eliminar el cargo. Existe informacion asociada.");
+                alert("No se pudo eliminar el tipo de empleado. Existe informacion asociada.");
                 return false;                
               }  
             }
@@ -120,7 +122,7 @@
 
 
     function conf_del() {
-        return  confirm("¿Confirma que desea eliminar este cargo?");
+        return  confirm("¿Confirma que desea eliminar este tipo de empleado?");
     }
 
 
@@ -154,7 +156,7 @@
                       <h3 class="box-title"></i> Tipos de trabajador</h3>
                       <div class="pull-right"> 
 
-                          <button type="button" class="btn btn-info btn-grad cargo_add" >
+                          <button type="button" class="btn btn-info btn-grad tipo_add" >
                             <i class="fa fa-plus-square"></i> Añadir
                           </button>   
 

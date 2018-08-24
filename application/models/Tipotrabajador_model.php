@@ -22,7 +22,7 @@ class Tipotrabajador_model extends CI_Model {
 
     public function sel_tipotrabajador_id($tipotrabajador){
       $query = $this->db->query("SELECT id, tipo_trabajador, descripcion, activo
-                                   FROM tipo_trabajador WHERE id = $tipotrabajador");
+                                   FROM tipotrabajador WHERE id = $tipotrabajador");
       $result = $query->result();
       return $result[0];
     }
@@ -32,7 +32,7 @@ class Tipotrabajador_model extends CI_Model {
      
       $query = $this->db->query(" UPDATE tipotrabajador SET 
                                     tipo_trabajador = '$tipotrabajador', 
-                                    descripcion = $descripcion,
+                                    descripcion = '$descripcion',
                                     activo = $activo
                                    WHERE id = $idtipotrabajador");
     }
@@ -40,7 +40,7 @@ class Tipotrabajador_model extends CI_Model {
     public function add_tipotrabajador($tipotrabajador, $descripcion, $activo){
       if ((!$tipotrabajador) || (trim($tipotrabajador) == '')) { $tipotrabajador = 'NULL'; }
       $query = $this->db->query("INSERT INTO tipotrabajador (tipo_trabajador, descripcion, activo)
-                                   VALUES('$tipotrabajador', $descripcion, $activo);");
+                                   VALUES('$tipotrabajador', '$descripcion', $activo);");
     }
 
     public function cant_tipotrabajador($tipotrabajador){
@@ -59,12 +59,14 @@ class Tipotrabajador_model extends CI_Model {
     }
 
     public function del_tipotrabajador($tipotrabajador){
-      if ($this->cant_tipotrabajador($tipotrabajador) == 1){
+   /*   if ($this->cant_tipotrabajador($tipotrabajador) == 1){
         $query = $this->db->query("DELETE FROM tipotrabajador WHERE id = $tipotrabajador");
         return 1;
       } else {
         return 0;
-      }
+      }*/
+      $query = $this->db->query("DELETE FROM tipotrabajador WHERE id = $tipotrabajador");
+      return 1;
     }
 
     public function lst_tipotrabajador(){
