@@ -42,7 +42,7 @@
         success: function(json) {
           if (json.mens == 0){
             $('.btnguardarubro').attr('disabled',true); 
-            alert('Expresion no Válida.');
+           /* alert('Expresion no Válida.');*/
             $('#txt_expresion').focus();
           } else {
             $('.btnguardarubro').attr('disabled',false); 
