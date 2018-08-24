@@ -165,7 +165,7 @@ class rubro extends CI_Controller {
     public function del_rubro(){
         $id = $this->input->post('id'); 
         $resu = $this->Rubro_model->del_rubro($id);
-        $arr['mens'] = $id;
+        $arr['mens'] = $resu;
         print json_encode($arr); 
     }
 

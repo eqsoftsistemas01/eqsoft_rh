@@ -187,6 +187,9 @@ class Update_model extends CI_Model {
       $res = $this->existe_columna_tabla('empleado','causa_salida');
       if ($res != true) $this->add_columna_tabla('empleado','causa_salida', 'varchar(255)', "");
 
+      $res = $this->existe_tabla('asistencia');
+      if ($res != true) $this->crea_tabla_asistencia();
+
       return 1;
     }
 
@@ -753,6 +756,21 @@ class Update_model extends CI_Model {
                                     entrada_almuerzo time,
                                     salida_trabajo time,
                                     activo int,
+                                    PRIMARY KEY (id) 
+                                    )");
+
+    }
+
+    public function crea_tabla_asistencia(){
+      $query = $this->db->query("CREATE TABLE asistencia (
+                                    id SERIAL,
+                                    fecha date,
+                                    id_empleado int,
+                                    codigoreloj varchar(100),
+                                    entrada_trabajo time,
+                                    salida_almuerzo time,
+                                    entrada_almuerzo time,
+                                    salida_trabajo time,
                                     PRIMARY KEY (id) 
                                     )");
 

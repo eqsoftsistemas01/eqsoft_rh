@@ -106,7 +106,7 @@ class Jornada extends CI_Controller {
     public function del_jornada(){
         $id = $this->input->post('id'); 
         $resu = $this->Jornada_model->del_jornada($id);
-        $arr['mens'] = $id;
+        $arr['mens'] = $resu;
         print json_encode($arr); 
     }
 
