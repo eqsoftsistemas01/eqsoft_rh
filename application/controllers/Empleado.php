@@ -18,6 +18,7 @@ class Empleado extends CI_Controller {
         $this->load->Model("Empleado_model");
         $this->load->Model("usuario_model");
         $this->load->Model("Departamento_model");
+        $this->load->Model("Jornada_model");
     }
 
     /* MÉTODO PREDETERMINADO DEL CONTROLADOR */
@@ -107,6 +108,8 @@ class Empleado extends CI_Controller {
         $data["empresa"] = $empresa;
         $tipocontrato = $this->Empleado_model->lst_tipocontrato();
         $data["tipocontrato"] = $tipocontrato;
+        $jornadas = $this->Jornada_model->lst_jornada();
+        $data["jornadas"] = $jornadas;
 
         $data["content"] = "empleado_edit";
         $this->load->view("layout", $data);
@@ -186,6 +189,10 @@ class Empleado extends CI_Controller {
         if($activo == 'on'){ $activo = 1; } else { $activo = 0; }
         if($vivefamiliares == 'on'){ $vivefamiliares = 1; } else { $vivefamiliares = 0; }
 
+        $causasalida = $this->input->post('txt_causasalida');
+        $idjornada = $this->input->post('cmb_jornada'); 
+
+
         if($id != 0){
             $resu = $this->Empleado_model->upd_empleado($id, $nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, 
                                  $celular, $correo, $activo, $departamento, $lugarexpedicion, $cedulamilitar,$profesion, $pasaporte, 
@@ -193,7 +200,8 @@ class Empleado extends CI_Controller {
                                  $numerovivienda, $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, 
                                  $vivefamiliares, $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
                                  $parentescocontacto, $telefonocontacto, $empresa, $tiposangre, $tipodiscapacidad, 
-                                 $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo);
+                                 $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo,
+                                 $idjornada, $causasalida);
         } else {
             $resu = $this->Empleado_model->add_empleado($nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, 
                                  $celular, $correo, $activo, $departamento, $lugarexpedicion, $cedulamilitar,$profesion, $pasaporte, 
@@ -201,7 +209,8 @@ class Empleado extends CI_Controller {
                                  $numerovivienda, $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, 
                                  $vivefamiliares, $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
                                  $parentescocontacto, $telefonocontacto, $empresa, $tiposangre, $tipodiscapacidad, 
-                                 $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo);
+                                 $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo,
+                                 $idjornada, $causasalida);
         }
         print "<script> window.location.href = '" . base_url() . "empleado'; </script>";
     }
@@ -238,6 +247,8 @@ class Empleado extends CI_Controller {
         $data["empresa"] = $empresa;
         $tipocontrato = $this->Empleado_model->lst_tipocontrato();
         $data["tipocontrato"] = $tipocontrato;
+        $jornadas = $this->Jornada_model->lst_jornada();
+        $data["jornadas"] = $jornadas;
 
         $data["base_url"] = base_url();
         $data["content"] = "empleado_edit";

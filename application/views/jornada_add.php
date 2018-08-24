@@ -68,7 +68,7 @@
                     <div class="form-group col-md-6">
                       <label >Entrada Almuerzo</label>
                       <div class="input-group">
-                        <input style="width:100px;" type="text" class="form-control text-center hora" id="entrada_almuerzo" name="entrada_almuerzo" value="<?php if(@$obj != NULL){ print @$obj->entrada_almuerzo; } else {print '23:59:59';} ?>">
+                        <input style="width:100px;" type="text" class="form-control text-center hora" id="entrada_almuerzo" name="entrada_almuerzo" value="<?php if(@$obj != NULL){ print @$obj->entrada_almuerzo; } else {print '00:00:00';} ?>">
                       </div>
                     </div>                       
 

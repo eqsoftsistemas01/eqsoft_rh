@@ -40,7 +40,8 @@ class Empleado_model extends CI_Model {
                                  $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, $vivefamiliares, 
                                  $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
                                  $parentescocontacto, $telefonocontacto, $empresa, $tiposangre, $tipodiscapacidad, 
-                                 $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo){
+                                 $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo,
+                                 $idjornada, $causasalida){
 
       if ((!$perfil) || (trim($perfil) == '')) { $perfil = 'NULL'; }
       if ((!$departamento) || (trim($departamento) == '')) { $departamento = 'NULL'; }
@@ -66,6 +67,8 @@ class Empleado_model extends CI_Model {
       if ((!$sueldo) || (trim($sueldo) == '')) { $sueldo = 0; }
       if ((!$peso) || (trim($peso) == '')) { $peso = 'NULL'; }
       if ((!$talla) || (trim($talla) == '')) { $talla = 'NULL'; }
+      if ((!$causasalida) || (trim($causasalida) == '')) { $causasalida = ''; }
+      if ((!$idjornada) || (trim($idjornada) == '')) { $idjornada = 'NULL'; }
 
       $this->db->query(" UPDATE empleado SET 
                             apellidos = '$apellido',
@@ -111,6 +114,8 @@ class Empleado_model extends CI_Model {
                             id_cargo = $cargo,
                             fecha_ingreso = $fechaingreso, 
                             fecha_salida = $fechasalida, 
+                            causa_salida = '$causasalida', 
+                            id_jornada = $idjornada, 
                             sueldo = $sueldo
                            WHERE id_empleado = $idempleado");
 
@@ -160,7 +165,8 @@ class Empleado_model extends CI_Model {
                                  $calletransversal, $sector, $referenciavivienda, $ciudad, $tipovivienda, $vivefamiliares, 
                                  $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
                                  $parentescocontacto, $telefonocontacto, $empresa, $tiposangre, $tipodiscapacidad, 
-                                 $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo){
+                                 $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo,
+                                 $idjornada, $causasalida){
 
         if ((!$perfil) || (trim($perfil) == '')) { $perfil = 'NULL'; }
         if ((!$departamento) || (trim($departamento) == '')) { $departamento = 'NULL'; }
@@ -190,6 +196,8 @@ class Empleado_model extends CI_Model {
         if ((!$fechasalida) || (trim($fechasalida) == '')) { $fechasalida = 'NULL'; }
           else { $fechasalida = "to_date('" . $fechasalida . "', 'YYYY-MM-DD')";  }
         if ((!$sueldo) || (trim($sueldo) == '')) { $sueldo = 0; }
+        if ((!$causasalida) || (trim($causasalida) == '')) { $causasalida = ''; }
+        if ((!$idjornada) || (trim($idjornada) == '')) { $idjornada = 'NULL'; }
 
         $this->db->query("INSERT INTO empleado (nombres, apellidos, tipo_identificacion, nro_ident, perfil, 
                                                telf_empleado, celular_empleado, correo_empleado, activo, id_departamento,
@@ -198,7 +206,8 @@ class Empleado_model extends CI_Model {
                                                calletransversal, sector, referenciavivienda, id_ciudad, id_tipovivienda, 
                                                vivefamiliares, id_banco, id_tipocuenta, numerocuenta, nombrecontacto, 
                                                direccioncontacto, id_parentescocontacto, telefonocontacto, id_empresa, 
-                                               id_tiposangre, id_tipodiscapacidad, p100discapacidad, id_contrato, id_cargo)
+                                               id_tiposangre, id_tipodiscapacidad, p100discapacidad, id_contrato, id_cargo,
+                                               causa_salida, id_jornada)
                             VALUES('$nombre', '$apellido', $tipoident, '$identificacion', $perfil, '$telefono', 
                                    '$celular', '$correo', $activo, $departamento, '$lugarexpedicion', '$cedulamilitar','$profesion', 
                                    '$pasaporte', 
@@ -208,7 +217,7 @@ class Empleado_model extends CI_Model {
                                    '$sector', '$referenciavivienda', $ciudad, $tipovivienda, $vivefamiliares, 
                                    $banco, $tipocuenta, '$numerocuenta', '$nombrecontacto', '$direccioncontacto', 
                                    $parentescocontacto, '$telefonocontacto', $empresa, $tiposangre, $tipodiscapacidad, 
-                                   $p100discapacidad, $contrato, $cargo);");
+                                   $p100discapacidad, $contrato, $cargo, '$causa_salida', $idjornada);");
         $query = $this->db->query("SELECT max(id_empleado) as maxid FROM empleado");
         $resultado = $query->result();
         $newid = $resultado[0]->maxid;
@@ -256,7 +265,7 @@ class Empleado_model extends CI_Model {
                                          e.id_banco, e.id_tipocuenta, e.numerocuenta, e.nombrecontacto, e.direccioncontacto,
                                          e.id_parentescocontacto, e.telefonocontacto, e.id_empresa, e.id_tiposangre,
                                          e.id_tipodiscapacidad, e.p100discapacidad, e.id_contrato, e.id_cargo,
-                                         e.fecha_ingreso, e.fecha_salida, e.sueldo,
+                                         e.fecha_ingreso, e.fecha_salida, e.sueldo, e.id_jornada, e.causa_salida,
                                          c.id_tipo as id_tipocontrato
                                   FROM empleado e
                                   LEFT JOIN contrato c on c.id = e.id_contrato

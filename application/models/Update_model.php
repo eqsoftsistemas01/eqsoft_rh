@@ -181,6 +181,12 @@ class Update_model extends CI_Model {
       $res = $this->existe_columna_tabla('empleado','id_jornada');
       if ($res != true) $this->add_columna_tabla('empleado','id_jornada', 'int', "");
 
+      $res = $this->existe_columna_tabla('contrato','causa_salida');
+      if ($res != true) $this->add_columna_tabla('contrato','causa_salida', 'varchar(255)', "");
+
+      $res = $this->existe_columna_tabla('empleado','causa_salida');
+      if ($res != true) $this->add_columna_tabla('empleado','causa_salida', 'varchar(255)', "");
+
       return 1;
     }
 
@@ -609,6 +615,7 @@ class Update_model extends CI_Model {
                                     id_cargo int,
                                     fecha_inicio date,
                                     fecha_fin date,
+                                    causa_salida varchar(255),
                                     sueldo numeric(10,2),
                                     activo int,
                                     PRIMARY KEY (id) 

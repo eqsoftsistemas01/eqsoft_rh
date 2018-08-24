@@ -193,9 +193,11 @@ date_default_timezone_set("America/Guayaquil");
     function actualiza_estado_fechasalida(){
         if($("#chkfechasalida").is(":checked")){ 
           $('#fechasalida').attr('disabled',false); 
+          $('#txt_causasalida').attr('disabled',false); 
         } 
         else{ 
           $('#fechasalida').attr('disabled',true); 
+          $('#txt_causasalida').attr('disabled',true); 
         }  
     }      
 
@@ -635,80 +637,85 @@ date_default_timezone_set("America/Guayaquil");
 
                             <div class="seccioncontrato" <?php if(@$obj->id_tipocontrato != NULL) { print 'style="display:block"';} else { print 'style="display:none"'; } ?> >
 
-                            <div class="form-group col-md-2">
-                                <label for="lb_cat">Fecha Ingreso</label>
-                                <input type="text" class="form-control  validate[required]" name="fechaingreso" id="fechaingreso" placeholder="Fecha Ingreso" value="<?php if(@$obj != NULL){ if(@$obj->fecha_ingreso != NULL){ @$fec = str_replace('-', '/', @$obj->fecha_ingreso); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; }} ?>" >
-                            </div>                       
+                              <div class="form-group col-md-3">
+                                  <label for="lb_cat">Fecha Ingreso</label>
+                                  <input type="text" class="form-control  validate[required]" name="fechaingreso" id="fechaingreso" placeholder="Fecha Ingreso" value="<?php if(@$obj != NULL){ if(@$obj->fecha_ingreso != NULL){ @$fec = str_replace('-', '/', @$obj->fecha_ingreso); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; }} ?>" >
+                              </div>                       
 
-                            <div class="form-group col-md-2">
-                              <div class="form-group col-md-12 text-center" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;margin-bottom: 3px;">
-                                <input id="chkfechasalida" name="chkfechasalida" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->fecha_salida == 1){ print " checked";} } ?> > <strong>Fecha Salida</strong>
-                              </div>  
-                                <input type="text" class="form-control " name="fechasalida" id="fechasalida" placeholder="Fecha Salida" value="<?php if(@$obj != NULL){ if(@$obj->fecha_salida != NULL){ @$fec = str_replace('-', '/', @$obj->fecha_salida); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; }} ?>" >
-                            </div>                       
+                              <div style="" class="form-group col-md-3">
+                                <label for="lb_res">Tipo Contrato</label>
+                                <select class="form-control  validate[required]" id="cmb_tipocontrato" name="cmb_tipocontrato">
+                                    <?php 
+                                      if(@$tipocontrato != NULL){ ?>
+                                        <option  value="0" selected="TRUE">Seleccione...</option>
+                                    <?php }  
+                                              if (count($tipocontrato) > 0) {
+                                                foreach ($tipocontrato as $pe):
+                                                    if(@$obj->id_tipocontrato != NULL){
+                                                        if($pe->id == $obj->id_tipocontrato){ ?>
+                                                            <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->tipocontrato ?></option> 
+                                                            <?php
+                                                        }else{ ?>
+                                                            <option value="<?php  print $pe->id; ?>"> <?php  print $pe->tipocontrato ?> </option>
+                                                            <?php
+                                                        }
+                                                    }else{ ?>
+                                                        <option value="<?php  print $pe->id; ?>"> <?php  print $pe->tipocontrato ?> </option>
+                                                        <?php
+                                                        }   ?>
+                                                    <?php
 
-                            <div style="" class="form-group col-md-3">
-                              <label for="lb_res">Tipo Contrato</label>
-                              <select class="form-control  validate[required]" id="cmb_tipocontrato" name="cmb_tipocontrato">
-                                  <?php 
-                                    if(@$tipocontrato != NULL){ ?>
-                                      <option  value="0" selected="TRUE">Seleccione...</option>
-                                  <?php }  
-                                            if (count($tipocontrato) > 0) {
-                                              foreach ($tipocontrato as $pe):
-                                                  if(@$obj->id_tipocontrato != NULL){
-                                                      if($pe->id == $obj->id_tipocontrato){ ?>
-                                                          <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->tipocontrato ?></option> 
-                                                          <?php
-                                                      }else{ ?>
-                                                          <option value="<?php  print $pe->id; ?>"> <?php  print $pe->tipocontrato ?> </option>
-                                                          <?php
-                                                      }
-                                                  }else{ ?>
-                                                      <option value="<?php  print $pe->id; ?>"> <?php  print $pe->tipocontrato ?> </option>
-                                                      <?php
-                                                      }   ?>
-                                                  <?php
+                                                endforeach;
+                                              }
+                                              ?>
+                                </select>
+                              </div>
 
-                                              endforeach;
-                                            }
-                                            ?>
-                              </select>
-                            </div>
+                              <div style="" class="form-group col-md-3">
+                                <label for="lb_res">Cargo</label>
+                                <select class="form-control  validate[required]" id="cmb_cargo" name="cmb_cargo">
+                                    <?php 
+                                      if(@$cargo != NULL){ ?>
+                                        <option  value="0" selected="TRUE">Seleccione...</option>
+                                    <?php }  
+                                              if (count($cargo) > 0) {
+                                                foreach ($cargo as $pe):
+                                                    if(@$obj->id_cargo != NULL){
+                                                        if($pe->id == $obj->id_cargo){ ?>
+                                                            <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->nombre_cargo ?></option> 
+                                                            <?php
+                                                        }else{ ?>
+                                                            <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_cargo ?> </option>
+                                                            <?php
+                                                        }
+                                                    }else{ ?>
+                                                        <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_cargo ?> </option>
+                                                        <?php
+                                                        }   ?>
+                                                    <?php
 
-                            <div style="" class="form-group col-md-3">
-                              <label for="lb_res">Cargo</label>
-                              <select class="form-control  validate[required]" id="cmb_cargo" name="cmb_cargo">
-                                  <?php 
-                                    if(@$cargo != NULL){ ?>
-                                      <option  value="0" selected="TRUE">Seleccione...</option>
-                                  <?php }  
-                                            if (count($cargo) > 0) {
-                                              foreach ($cargo as $pe):
-                                                  if(@$obj->id_cargo != NULL){
-                                                      if($pe->id == $obj->id_cargo){ ?>
-                                                          <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->nombre_cargo ?></option> 
-                                                          <?php
-                                                      }else{ ?>
-                                                          <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_cargo ?> </option>
-                                                          <?php
-                                                      }
-                                                  }else{ ?>
-                                                      <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_cargo ?> </option>
-                                                      <?php
-                                                      }   ?>
-                                                  <?php
+                                                endforeach;
+                                              }
+                                              ?>
+                                </select>
+                              </div>
 
-                                              endforeach;
-                                            }
-                                            ?>
-                              </select>
-                            </div>
+                              <div class="form-group col-md-3">
+                                  <label for="lb_cat">Sueldo</label>
+                                  <input type="text" class="form-control  validate[required]" name="txt_sueldo" id="txt_sueldo" placeholder="Sueldo" value="<?php if(@$obj != NULL){ print @$obj->sueldo; }?>" >
+                              </div>
 
-                            <div class="form-group col-md-2">
-                                <label for="lb_cat">Sueldo</label>
-                                <input type="text" class="form-control  validate[required]" name="txt_sueldo" id="txt_sueldo" placeholder="Sueldo" value="<?php if(@$obj != NULL){ print @$obj->sueldo; }?>" >
-                            </div>
+                              <div class="form-group col-md-3">
+                                <div class="form-group col-md-12" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;margin-bottom: 3px;">
+                                  <input id="chkfechasalida" name="chkfechasalida" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->fecha_salida == 1){ print " checked";} } ?> > <strong>Fecha Salida</strong>
+                                </div>  
+                                  <input type="text" class="form-control " name="fechasalida" id="fechasalida" placeholder="Fecha Salida" value="<?php if(@$obj != NULL){ if(@$obj->fecha_salida != NULL){ @$fec = str_replace('-', '/', @$obj->fecha_salida); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; }} ?>" >
+                              </div>                       
+
+                              <div class="form-group col-md-9">
+                                  <label for="lb_cat">Causa de Salida</label>
+                                  <input type="text" class="form-control" name="txt_causasalida" id="txt_causasalida" placeholder="Causa de Salida" value="<?php if(@$obj != NULL){ print @$obj->causa_salida; }?>" >
+                              </div>
 
                             </div>
 
@@ -873,7 +880,7 @@ date_default_timezone_set("America/Guayaquil");
                               </select>
                             </div>
 
-                            <div style="" class="form-group col-md-3">
+                            <div style="" class="form-group col-md-2">
                               <label for="lb_res">Departamento</label>
                               <select class="form-control" id="cmb_departamento" name="cmb_departamento">
                                   <?php 
@@ -931,7 +938,36 @@ date_default_timezone_set("America/Guayaquil");
                               </select>
                             </div>
 
-                            <div class="form-group col-md-3">
+                            <div style="" class="form-group col-md-2">
+                              <label for="lb_res">Jornada</label>
+                              <select class="form-control" id="cmb_jornada" name="cmb_jornada">
+                                  <?php 
+                                    if(@$jornadas != NULL){ ?>
+                                      <option  value="0" selected="TRUE">Seleccione...</option>
+                                  <?php }  
+                                            if (count($jornadas) > 0) {
+                                              foreach ($jornadas as $pe):
+                                                  if(@$obj->id_jornada != NULL){
+                                                      if($pe->id == $obj->id_jornada){ ?>
+                                                          <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->descripcion ?></option> 
+                                                          <?php
+                                                      }else{ ?>
+                                                          <option value="<?php  print $pe->id; ?>"> <?php  print $pe->descripcion ?> </option>
+                                                          <?php
+                                                      }
+                                                  }else{ ?>
+                                                      <option value="<?php  print $pe->id; ?>"> <?php  print $pe->descripcion ?> </option>
+                                                      <?php
+                                                      }   ?>
+                                                  <?php
+
+                                              endforeach;
+                                            }
+                                            ?>
+                              </select>
+                            </div>
+
+                            <div class="form-group col-md-2">
                                 <label for="lb_cat">Codigo Reloj</label>
                                 <input type="text" class="form-control " name="txt_codigoreloj" id="txt_codigoreloj" placeholder="Codigo Reloj" value="<?php if(@$obj != NULL){ print @$obj->codigoreloj; }?>" >
                             </div>
