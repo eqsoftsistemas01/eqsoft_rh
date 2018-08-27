@@ -8,6 +8,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+require(APPPATH.'libraries/fpdf.php');
 
 class Rol extends CI_Controller {
 
@@ -273,6 +274,96 @@ class Rol extends CI_Controller {
         print "<script> window.location.href = '" . base_url() . "rol'; </script>";
     }
 
+    public function print_tmprol(){
+        $idemp = $this->session->userdata("tmp_emprol_id");
+        $idusu = $this->session->userdata("sess_id");
+        if (($idemp == '') || ($idemp == '')) { $idemp =0; }
+
+        $emp = $this->Rol_model->lst_tmprolemp_encab($idusu, $idemp);
+        $lstrubros = $this->Rol_model->lst_tmprolemp_rubros($idusu, $idemp);
+
+        $neto = $this->Rol_model->sel_rubroneto_tmp($idusu, $idemp);
+
+        $fechahoy = date('Y-m-d');
+
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial','B',12);
+
+        $pdf->SetXY(1,1);
+        $pdf->Cell(20,10,'EMPRESA ');
+
+        $pdf->SetXY(70,1);
+        $pdf->Cell(20,10,'PLANILLA INDIVIDUAL AL ' . $emp->fechafin_rol);
+
+        $pdf->SetXY(170,1);
+        $pdf->Cell(20,10,'Fecha: ' . $fechahoy);
+
+        $pdf->SetXY(70,6);
+        $pdf->Cell(20,10,$emp->apellidos . ' ' . $emp->nombres );
+
+        $pdf->SetXY(70,11);
+        $pdf->Cell(20,10,$emp->nombre_cargo);
+
+        $pdf->SetXY(1,16);
+        $pdf->Cell(20,10,'DIAS TRABAJADOS: ' . number_format($emp->diastrab,0));
+
+        $pdf->SetXY(1,26);
+        $pdf->Cell(20,10,'INGRESOS: ');
+        $tmp_ying = 26;
+        $total_ing = 0;
+        foreach ($lstrubros as $rubro) {
+          if ($rubro->tipo_rubro == 1){
+            $tmp_ying += 5;
+            $total_ing += $rubro->valor_neto;
+
+            $pdf->SetXY(1,$tmp_ying);
+            $pdf->Cell(20,10,$rubro->nombre_rubro);
+
+            $pdf->SetXY(70,$tmp_ying);
+            $pdf->Cell(20,10,$rubro->valor_neto);
+          }
+        }
+
+        $pdf->SetXY(100,26);
+        $pdf->Cell(20,10,'DESCUENTOS: ');
+        $tmp_yegre = 26;
+        $total_egre = 0;
+        foreach ($lstrubros as $rubro) {
+          if ($rubro->tipo_rubro == 2){
+            $tmp_yegre += 5;
+            $total_egre += $rubro->valor_neto;
+
+            $pdf->SetXY(100,$tmp_yegre);
+            $pdf->Cell(20,10,$rubro->nombre_rubro);
+
+            $pdf->SetXY(170,$tmp_yegre);
+            $pdf->Cell(20,10,$rubro->valor_neto);
+          }
+        }
+
+        $tmp_y = $tmp_ying;
+        if ($tmp_ying < $tmp_yegre) {
+          $tmp_y = $tmp_yegre;
+        }
+        $tmp_y += 5;
+        $pdf->SetXY(1,$tmp_y);
+        $pdf->Cell(20,10,'TOTAL INGRESOS: ');
+        $pdf->SetXY(70,$tmp_y);
+        $pdf->Cell(20,10,number_format($total_ing,2));
+
+        $pdf->SetXY(100,$tmp_y);
+        $pdf->Cell(20,10,'TOTAL DESCUENTOS: ');
+        $pdf->SetXY(170,$tmp_y);
+        $pdf->Cell(20,10,number_format($total_egre,2));
+
+        $tmp_y += 15;
+        $pdf->SetXY(70,$tmp_y);
+        $pdf->Cell(20,10,'Neto a Recibir: ' . number_format($neto,2));
+
+        $pdf->Output('PLANILLA INDIVIDUAL DE PAGO','I');
+
+    } 
 
 }
 

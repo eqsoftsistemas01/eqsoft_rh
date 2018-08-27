@@ -238,4 +238,30 @@ class Rol_model extends CI_Model {
         $this->db->query("DELETE FROM roldepagos WHERE id = $id");
     }
 
+    public function lst_tmprolemp_encab($idusuario, $idempleado) {
+        $query = $this->db->query("SELECT e.id_empleado, e.nombres, e.apellidos, c.nombre_cargo,
+                                          l. fechafin_rol,
+                                          COALESCE(t.valor_neto,0) as diastrab                                          
+                                     FROM rubro r 
+                                     INNER JOIN roldepagos_tmpdet t on t.id_rubro = r.id AND t.id_usuario = $idusuario AND t.id_empleado = $idempleado
+                                     INNER JOIN roldepagos_tmp l on l.id_usuario = t.id_usuario 
+                                     INNER JOIN parametros p on p.valor = t.id_rubro::char 
+                                     INNER JOIN empleado e on e.id_empleado = t.id_empleado
+                                     LEFT JOIN cargo c on c.id = e.id_cargo
+                                     WHERE p.id = 3"); /*dias trabajados*/
+        $result = $query->result();
+        return $result[0];
+    }
+
+    public function lst_tmprolemp_rubros($idusuario, $idempleado) {
+        $query = $this->db->query("SELECT r.id as id_rubro, r.codigo_rubro, r.nombre_rubro, 
+                                          COALESCE(t.valor_neto,0) as valor_neto, r.tipo_rubro
+                                     FROM rubro r 
+                                     LEFT JOIN roldepagos_tmpdet t on t.id_rubro = r.id AND t.id_usuario = $idusuario AND t.id_empleado = $idempleado
+                                     WHERE not r.id::char in (SELECT valor FROM parametros WHERE id in (3,4)) /*excepto dias trab y neto a cobrar*/
+                                     ORDER BY r.codigo_rubro;");
+        $result = $query->result();
+        return $result;
+    }
+
 }

@@ -172,7 +172,33 @@ date_default_timezone_set("America/Guayaquil");
 
     });  
 
+    $(document).on('click', '.printrol', function(){
+      $.fancybox.open({
+        type:'iframe',
+        width: 800,
+        height: 550,
+        ajax: {
+           dataType: "html",
+           type: "POST",
+        },
+        href: base_url + 'Rol/print_tmprol' 
+      });
+/*
+      $.ajax({
+        url: base_url + "Rol/print_tmprol",
+        data: { id: id },
+        type: 'POST',
+        dataType: 'json',
+        success: function(json) {
+        }  
+      });  
+*/
+    });  
+
+
   });
+
+
 
 </script>
 
@@ -260,6 +286,7 @@ date_default_timezone_set("America/Guayaquil");
                                   <th class="text-center col-md-1">Apellidos</th>                    
                                   <th class="text-center col-md-1">Nombres</th>                    
                                   <th class="text-center col-md-1">Monto</th>                    
+                                  <th class="text-center col-md-1">Ver</th>                    
                                 </tr>
                               </thead>
                               <tbody>                                                        
@@ -283,6 +310,12 @@ date_default_timezone_set("America/Guayaquil");
 
                                     <td class="text-center valor_neto" id="<?php print $det->id_empleado; ?>">
                                       <?php print $det->valor_neto; ?>
+                                    </td>
+
+                                    <td class="text-center">
+                                      <div class="text-center">
+                                        <a href="#" title="Imprimir Rol" id="<?php print $det->id_empleado; ?>" class="btn btn-success btn-xs btn-grad printrol"><i class="fa fa-print"></i></a>  
+                                      </div>
                                     </td>
 
                                    </tr>
