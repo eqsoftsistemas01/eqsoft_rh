@@ -190,6 +190,9 @@ class Update_model extends CI_Model {
       $res = $this->existe_tabla('asistencia');
       if ($res != true) $this->crea_tabla_asistencia();
 
+      $res = $this->existe_tabla('permisoausencia');
+      if ($res != true) $this->crea_tabla_permisoausencia();
+
       return 1;
     }
 
@@ -771,6 +774,21 @@ class Update_model extends CI_Model {
                                     salida_almuerzo time,
                                     entrada_almuerzo time,
                                     salida_trabajo time,
+                                    PRIMARY KEY (id) 
+                                    )");
+
+    }
+
+    public function crea_tabla_permisoausencia(){
+      $query = $this->db->query("CREATE TABLE permisoausencia (
+                                    id SERIAL,
+                                    id_empleado int,
+                                    fecha_desde date,
+                                    hora_desde time,
+                                    fecha_hasta date,
+                                    hora_hasta time,
+                                    motivo varchar(255),
+                                    aprobado int,
                                     PRIMARY KEY (id) 
                                     )");
 

@@ -120,7 +120,7 @@
             <?php } ?> 
             <li><a href="<?php print $base_url ?>asistencia"><i class="fa fa-calendar"></i> Asistencia por fecha</a></li>
             <li><a href="<?php print $base_url ?>asistenciat"><i class="fa fa-calendar"></i> Asistencia por trabajador</a></li>
-
+            <li><a href="<?php print $base_url ?>permisoausencia"><i class="fa fa-calendar"></i> Permisos de Ausencia</a></li>
           </ul>
         </li> 
         <li class="treeview">
