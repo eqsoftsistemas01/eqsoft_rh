@@ -115,8 +115,7 @@
         <div height="100px" class="animated">
            
         </div>
-        <!-- <h1 class="animated bounceIn"> &nbsp; SISTEMA DE FACTURACIÓN </h1> -->
-        <!--<h1>SISTEMA DE GESTIÓN DEL PLAN OPERATIVO ANUAL</h1>-->
+        
         <div class="content-w3ls animated pulse" style="margin-top: 10%;">
             <h3 class="animated bounceIn" style="color: #000; padding-bottom: 20px; font-weight: 700;   font-size: 22px;"> &nbsp; SISTEMA DE NOMINA Y RECURSOS HUMANOS </h3>
             <form name="popup-validation" id="popup-validation" onsubmit="return false">

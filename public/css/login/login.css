@@ -83,7 +83,7 @@ img {
 /*--- end reset code ---*/
 body {
 /*	background:url(../../img/login/banner.jpg); */
-    background:url(../../img/login/eqweb3.jpg);
+    background:url(../../img/login/logoprodegel.png);
 	background-repeat:no-repeat;
 	background-position:center;
 	background-attachment:fixed;
@@ -184,7 +184,7 @@ input.sign-in:hover {
 p.copyright {
 	text-align:center;
 	padding:50px 0;
-	color: #fff;
+	color: #08ACFB;
 	font-size:16px;
 	font-weight:normal;
 }

@@ -57,7 +57,7 @@ class Empleado extends CI_Controller {
         $registro = $this->Empleado_model->lst_empleado();
         $tabla = "";
         foreach ($registro as $row) {
-            $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id_empleado.'\" class=\"btn btn-success btn-xs btn-grad ret_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id_empleado.'\" class=\"btn btn-danger btn-xs btn-grad ret_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
+            $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id_empleado.'\" class=\"btn btn-success btn-xs btn-grad ret_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Asistencia\" id=\"'.$row->id_empleado.'\" class=\"btn btn-primary btn-xs btn-grad reta_ver\"><i class=\"fa fa-calendar-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id_empleado.'\" class=\"btn btn-danger btn-xs btn-grad ret_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
             $tabla.='{  "id":"' .$row->id_empleado. '",
                         "apellido":"' .$row->apellidos. '",
                         "nombre":"' .$row->nombres. '",
@@ -65,6 +65,24 @@ class Empleado extends CI_Controller {
                         "departamento":"' .$row->nombre_departamento. '",
                         "telefono":"' .$row->telf_empleado. '",
                         "correo":"' .$row->correo_empleado. '",
+                        "ver":"'.$ver.'"
+                    },';
+        }
+        $tabla = substr($tabla, 0, strlen($tabla) - 1);
+        echo '{"data":[' . $tabla . ']}';
+    }
+    public function asiEmpleado() {
+        $registro = $this->Empleado_model->asi_empleado();
+        $tabla = "";
+        foreach ($registro as $row) {
+            $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id_empleado.'\" class=\"btn btn-success btn-xs btn-grad ret_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Asistencia\" id=\"'.$row->id_empleado.'\" class=\"btn btn-primary btn-xs btn-grad reta_ver\"><i class=\"fa fa-calendar-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id_empleado.'\" class=\"btn btn-danger btn-xs btn-grad ret_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
+            $tabla.='{  "id":"' .$row->id. '",
+                        "fecha":"' .$row->fecha. '",
+                        "entrada":"' .$row->entrada_trabajo. '",
+                        "salida":"' .$row->salida_trabajo. '",
+                        "entrada almuerzo":"' .$row->entrada_almuerzo. '",
+                        "salida almuerzo":"' .$row->entrada_almuerzo. '",
+                        "apellidos":"' .$row->apellidos. '",
                         "ver":"'.$ver.'"
                     },';
         }

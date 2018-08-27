@@ -33,6 +33,17 @@ class Empleado_model extends CI_Model {
         $result = $query->result();
         return $result;
     }
+    public function asi_empleado($empleado) {
+        $query = $this->db->query("SELECT a.id, a.fecha, a.entrada_trabajo, a.salida_trabajo, 
+                                          a.salida_almuerzo, a.entrada_almuerzo, a.codigoreloj,
+                                          a.id_empleado, e.nombres, e.apellidos, e.nro_ident
+                                     FROM asistencia a
+                                     INNER JOIN empleado e on e.id_empleado = a.id_empleado
+                                     Where a.id_empleado = '$empleado'
+                                     ORDER BY a.fecha;");
+        $result = $query->result();
+        return $result;
+    }
 
     public function upd_empleado($idempleado, $nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, $celular, $correo, 
                                  $activo, $departamento, $lugarexpedicion, $cedulamilitar,$profesion, $pasaporte, $fechanac, 

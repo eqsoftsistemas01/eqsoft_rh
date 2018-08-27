@@ -136,7 +136,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <i class="fa fa-registered"></i> Lista de Paises
+        <i class="fa fa-globe"></i> Lista de Paises
       </h1>
       <ol class="breadcrumb">
         <li><a href="<?php print $base_url ?>inicio"><i class="fa fa-dashboard"></i> Inicio</a></li>

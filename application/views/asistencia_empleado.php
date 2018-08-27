@@ -18,7 +18,7 @@
 
   $(document).ready(function () {
 
-    $('#TableObj').dataTable({
+    $('#AsisEmpleado').dataTable({
       "language":{  "lengthMenu":"Mostrar _MENU_ registros por página.",
                     "zeroRecords": "Lo sentimos. No se encontraron registros.",
                     "info": "Mostrando página _PAGE_ de _PAGES_",
@@ -32,12 +32,12 @@
                     },
         'ajax': "Empleado/listadoEmpleados",
         'columns': [
-            {"data": "apellido"},
-            {"data": "nombre"},
-            {"data": "identificacion"},   
-            {"data": "departamento"},   
-            {"data": "telefono"},   
-            {"data": "correo"},   
+            {"data": "fecha"},
+            {"data": "entrada_trabajo"},
+            {"data": "salida_trabajo"},   
+            {"data": "entrada_almuerzo"},   
+            {"data": "salida_almuerzo"},   
+            {"data": "apellidos"},   
             {"data": "ver"}                            
         ]
     });
@@ -58,11 +58,16 @@
 
     $(document).on('click', '.reta_ver', function(){
       id = $(this).attr('id');
-      //alert("Hola");
-
-      
-      window.location.href = "<?php print $base_url;?>Asistenciat/listadoAsistenciat";
-     
+      alert("Hola");
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "<?php echo base_url('Empleado/asiEmpleado');?>",
+        data: {id: id},
+        success: function(json) {
+          location.replace("<?php print $base_url;?>Empleado/asiEmpleado");
+        }
+      });
     });  
 
     $(document).on('click', '.ret_ver00', function(){
@@ -218,15 +223,15 @@
                       <div class="row">
                         <div class="col-xs-12">
                             <div class="box-body table-responsive">
-                              <table id="TableObj" class="table table-bordered table-striped table-responsive">
+                              <table id="AsisEmpleado" class="table table-bordered table-striped table-responsive">
                                 <thead>
                                   <tr >
+                                    <th>Fecha</th>
+                                    <th>Entrada trabajo</th>
+                                    <th>Salida trabajo</th>
+                                    <th>Entrada almuerzo</th>
+                                    <th>Salida almuerzo</th>
                                     <th>Apellidos</th>
-                                    <th>Nombres</th>
-                                    <th>Identificacion</th>
-                                    <th>Departamento</th>
-                                    <th>Telefono</th>
-                                    <th>Correo</th>
                                     <th>Accion</th>
                                   </tr>
                                 </thead>

@@ -316,10 +316,10 @@ date_default_timezone_set("America/Guayaquil");
 
                 <div class="nav-tabs-custom">
                   <ul class="nav nav-tabs">
-                   <li class="active"><a href="#tabpersonal" data-toggle="tab"><i class="fa fa-tint" aria-hidden="true"></i> DATOS PERSONALES</a></li>                            
-                   <li ><a href="#tabgeneral" data-toggle="tab"><i class="fa fa-tint" aria-hidden="true"></i> DATOS GENERALES</a></li>                            
-                   <li ><a href="#tabrubro" data-toggle="tab"><i class="fa fa-tint" aria-hidden="true"></i> RUBROS</a></li>                            
-                   <li ><a href="#tabcargafamiliar" data-toggle="tab"><i class="fa fa-tint" aria-hidden="true"></i> CARGAS FAMILIARES</a></li>                            
+                   <li class="active"><a href="#tabpersonal" data-toggle="tab"><i class="fa fa-user-circle" aria-hidden="true"></i> DATOS PERSONALES</a></li>                            
+                   <li ><a href="#tabgeneral" data-toggle="tab"><i class="fa fa-id-card" aria-hidden="true"></i> DATOS GENERALES</a></li>                            
+                   <li ><a href="#tabrubro" data-toggle="tab"><i class="fa fa-usd" aria-hidden="true"></i> RUBROS</a></li>                            
+                   <li ><a href="#tabcargafamiliar" data-toggle="tab"><i class="fa fa-users" aria-hidden="true"></i> CARGAS FAMILIARES</a></li>                            
                   </ul>
 
                   <div class="tab-content">
