@@ -7,7 +7,8 @@ $(document).ready(function () {
     //btn_ingreso
     $(document).on("click", "#btn_ingreso", function () {
         logi = $("#txt_usua").val();
-        pass = sha1($("#txt_pass").val().toString());
+        /*pass = sha1($("#txt_pass").val().toString());*/
+        pass = $("#txt_pass").val().toString();
         if (logi != "" && pass != "") {
             $.ajax({
                 url: base_url + 'auth/login',

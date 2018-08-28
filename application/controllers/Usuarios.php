@@ -28,20 +28,10 @@ class Usuarios extends CI_Controller {
 
     public function agregar(){
         $perfil = $this->usuario_model->perfil_lst();
-        $mesero = $this->usuario_model->meseros();
-        $punto = $this->usuario_model->lst_puntos(); 
-        $id_usu = 0;
-        $usupre = $this->usuario_model->usu_precios($id_usu);
-        $data['mesero'] = $mesero; 
         $data['perfil'] = $perfil;        
-        $data['punto'] = $punto;  
-        $data['usupre'] = $usupre; 
-        $suc = $this->usuario_model->lst_sucursal($id_usu);
-        $data['suc'] = $suc; 
-        $alm = $this->usuario_model->lst_almacen($id_usu);
-        $data['alm'] = $alm;    
-        $caja = $this->usuario_model->lst_caja_efectivo($id_usu);
-        $data['caja'] = $caja;                
+        $empleado = $this->usuario_model->lst_empleado();
+        $data['empleado'] = $empleado;        
+
         $data["base_url"] = base_url();
         $data["content"] = "usu_add";
         $this->load->view("layout", $data);
@@ -53,22 +43,12 @@ class Usuarios extends CI_Controller {
         $val = 1;        
         $fic_usu = $this->usuario_model->usu_get($id_usu);
         $perfil = $this->usuario_model->perfil_lst();
-        if ($fic_usu->perfil){
-            $mesero = $this->usuario_model->meseros($fic_usu->perfil);
-        }
-        $punto = $this->usuario_model->lst_puntos(); 
-        $usupre = $this->usuario_model->usu_precios($id_usu);
-        $data['punto'] = $punto;                
-        $data['mesero'] = $mesero;        
         $data['fic_usu'] = $fic_usu;
         $data['perfil'] = $perfil;
-        $data['usupre'] = $usupre;
-        $suc = $this->usuario_model->lst_sucursal($id_usu);
-        $data['suc'] = $suc;        
-        $alm = $this->usuario_model->lst_almacen($id_usu);
-        $data['alm'] = $alm;  
-        $caja = $this->usuario_model->lst_caja_efectivo($id_usu);
-        $data['caja'] = $caja;  
+        $idemp = $fic_usu->id_empleado;
+        if (($idemp == NULL) || ($idemp == '')) { $idemp = 0; }
+        $empleado = $this->usuario_model->lst_empleado($idemp);
+        $data['empleado'] = $empleado;        
         $data["content"] = "usu_add";
         $this->load->view("layout", $data);
     }
@@ -77,66 +57,13 @@ class Usuarios extends CI_Controller {
         /* SE CAPTURAN LOS DATOS DEL FORMULARIO */
         $id = $this->input->post('txt_id');
         $nom = $this->input->post('txt_nombre');  
-        $ape = $this->input->post('txt_apellido');
-        $nac = $this->input->post('cmb_nac');
-        $ide = $this->input->post('txt_identificacion');
-        $fec = $this->input->post('fecha');  
-        $fec = str_replace('/', '-', $fec);
-        $fec = date("Y-m-d", strtotime($fec));
-        $tlf = $this->input->post('txt_telefono');
-        $ema = $this->input->post('txt_email');
-        $dir = $this->input->post('txt_direccion');
         $usu = $this->input->post('txt_usuario');
         $pwd = $this->input->post('txt_clave');
         $est = $this->input->post('cmb_estatus');
         $foto = $this->input->post('foto');
         $perfil = $this->input->post('cmb_perfil');
-        $idmesero = $this->input->post('cmb_mesero');
-        if($idmesero == ''){ $idmesero = 0; }
-        $idpunto = $this->input->post('cmb_punto');
-        if($idpunto == ''){ $idpunto = 0; }    
-
-        $preventa = $this->input->post('txtpre0'); 
-
-        $arra = array();  $sucarr = array(); $almarr = array(); $cajarr = array();
-
-        foreach($this->input->post() as $nombre_campo => $valor){
-            $campo = substr($nombre_campo, 0,5); 
-            if($campo == "txtpp"){
-                $c = substr($nombre_campo, 5,5); 
-                if($valor == ""){ $monto = 0;
-                    $arra[$c] = $c."-".$monto; 
-                }else{
-                    $arra[$c] = $c."-".$valor;  
-                }
-            }
-            if($campo == "txtsu"){
-                $s = substr($nombre_campo, 6,6); 
-                if($valor == ""){ $monto = 0;
-                    $sucarr[$s] = $s."-".$monto; 
-                }else{
-                    $sucarr[$s] = $s."-".$valor;  
-                }
-            }
-            if($campo == "txtal"){
-                $a = substr($nombre_campo, 6,6); 
-                if($valor == ""){ $monto = 0;
-                    $almarr[$a] = $a."-".$monto; 
-                }else{
-                    $almarr[$a] = $a."-".$valor;  
-                }
-            }
-            if($campo == "txtca"){
-                $j = substr($nombre_campo, 6,6); 
-                if($valor == ""){ $monto = 0;
-                    $cajarr[$j] = $j."-".$monto; 
-                }else{
-                    $cajarr[$j] = $j."-".$valor;  
-                }
-            }
-        }
-
-    //    print_r($sucarr); die;
+        $idempleado = $this->input->post('cmb_empleado');
+        if($idempleado == ''){ $idempleado = 0; }
 
         $foto_name= $_FILES["foto"]["name"];
         /* ESTE CONDICIONAL NOS PERMITE GUARDAR O MODIFICAR USUARIOS SIN QUE LE ASIGNEN FOTO */
@@ -166,29 +93,11 @@ class Usuarios extends CI_Controller {
         /* EVALUAR SI EL REGISTRO ES DE ACTUALIZACION O DE INGRESO */
         if($id != 0){
             /* SE ACTUALIZA EL REGISTRO DEL USUARIO */
-            $resu = $this->usuario_model->usu_upd($id, $nom, $ape, $nac, $ide, $fec, $tlf, $ema, $dir, $usu, $pwd, $est, $fot, $perfil, $idmesero, $idpunto);
-            $resu = $this->usuario_model->prepro_usu($id, $arra);
-            $this->usuario_model->sucursal_usu($id, $sucarr);
-            $this->usuario_model->almacen_usu($id, $almarr);
-            $this->usuario_model->caja_usu($id, $cajarr);
+            $resu = $this->usuario_model->usu_upd($id, $nom, $usu, $pwd, $est, $fot, $perfil, $idempleado);
         } else {
             /* SE GUARDA EL REGISTRO DEL USUARIO */
-            $resu = $this->usuario_model->usu_add($nom, $ape, $nac, $ide, $fec, $tlf, $ema, $dir, $usu, $pwd, $est, $fot, $perfil, $idmesero, $idpunto);
-            $resu = $this->usuario_model->prepro_usu($id, $arra);
-            $this->usuario_model->sucursal_usu($id, $sucarr);
-            $this->usuario_model->almacen_usu($id, $almarr);
-            $this->usuario_model->caja_usu($id, $cajarr);
+            $resu = $this->usuario_model->usu_add($nom, $usu, $pwd, $est, $fot, $perfil, $idempleado);
         }
-
-
-/*
-
-
-
-
-
-*/
-
 
         /* SE REDIRECCIONA A LA PANTALLA PRINCIPAL*/
         print "<script> window.location.href = '" . base_url() . "usuarios'; </script>";

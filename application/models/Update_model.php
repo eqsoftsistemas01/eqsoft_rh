@@ -193,6 +193,17 @@ class Update_model extends CI_Model {
       $res = $this->existe_tabla('permisoausencia');
       if ($res != true) $this->crea_tabla_permisoausencia();
 
+      $res = $this->existe_columna_tabla('usu_sistemas','id_empleado');
+      if ($res != true) $this->add_columna_tabla('usu_sistemas','id_empleado', 'int', "");
+
+      $res = $this->existe_columna_tabla('usu_sistemas','ape_usu');
+      if ($res == true){
+        $this->drop_tabla('usu_sistemas');
+        $this->crea_tabla_usu_sistemas();
+      }  
+
+
+
       return 1;
     }
 
@@ -792,6 +803,24 @@ class Update_model extends CI_Model {
                                     PRIMARY KEY (id) 
                                     )");
 
+    }
+
+    public function crea_tabla_usu_sistemas(){
+      $query = $this->db->query("CREATE TABLE usu_sistemas (
+                                    id_usu SERIAL,
+                                    nom_usu varchar(255),
+                                    log_usu varchar(255),
+                                    pwd_usu varchar(255),
+                                    est_usu varchar(3),
+                                    fot_usu bytea,
+                                    perfil int,
+                                    id_empleado int,
+                                    ultimoacceso timestamp,
+                                    PRIMARY KEY (id_usu) 
+                                    )");
+
+      $this->db->query("INSERT INTO usu_sistemas (nom_usu, log_usu, pwd_usu, est_usu, perfil, ultimoacceso) 
+                          VALUES('admin', 'admin', MD5('admin'), 'A', 1, now())");
     }
 
 }

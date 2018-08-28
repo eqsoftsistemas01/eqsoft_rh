@@ -15,9 +15,10 @@ class Usuario_model extends CI_Model {
     }
 
     /* INSERTA EL REGISTRO DEL USUARIO*/
-    public function usu_add($nom, $ape, $nac, $ide, $fec, $tlf, $ema, $dir, $usu, $pwd, $est, $fot, $perfil, $idmesero, $idpunto){
-        $query = $this->db->query("INSERT INTO usu_sistemas (nom_usu, ape_usu, nac_usu, ide_usu, fec_usu, tlf_usu, ema_usu, dir_usu, log_usu, pwd_usu, est_usu, fot_usu, perfil, id_mesero, id_punto, ultimoacceso)
-                                   VALUES('$nom', '$ape', '$nac', '$ide', '$fec', '$tlf', '$ema', '$dir', '$usu', MD5(sha1('$pwd')), '$est', '$fot', $perfil, $idmesero, $idpunto, now())");
+    public function usu_add($nom, $usu, $pwd, $est, $fot, $perfil, $idempleado){
+        $query = $this->db->query("INSERT INTO usu_sistemas (nom_usu, log_usu, pwd_usu, est_usu, fot_usu, perfil,
+                                                             id_empleado, ultimoacceso)
+                                   VALUES('$nom', '$usu', MD5('$pwd'), '$est', '$fot', $perfil, $idempleado, now())");
     }
 
   /* OBTENER TODOS LOS DATOS DEL USUARIO A TRAVÉS DE SU ID */
@@ -36,67 +37,21 @@ class Usuario_model extends CI_Model {
 
 
     /* ACTUALIZA EL REGISTRO DEL USUARIO*/
-    public function usu_upd($id, $nom, $ape, $nac, $ide, $fec, $tlf, $ema, $dir, $usu, $pwd, $est, $fot, $perfil, $idmesero, $idpunto){
+    public function usu_upd($id, $nom, $usu, $pwd, $est, $fot, $perfil, $idempleado){
         if ($fot == NULL || $fot == ""){ $foto = ""; }
         else {$foto = "fot_usu = '$fot',"; }
         $query = $this->db->query("UPDATE usu_sistemas 
                                       SET nom_usu = '$nom', 
-                                          ape_usu = '$ape', 
-                                          nac_usu = '$nac', 
-                                          ide_usu = '$ide', 
-                                          fec_usu = '$fec', 
-                                          tlf_usu = '$tlf', 
-                                          ema_usu = '$ema', 
-                                          dir_usu = '$dir', 
                                           log_usu = '$usu', 
-                                          pwd_usu = MD5(sha1('$pwd')),
+                                          pwd_usu = MD5('$pwd'),
                                           ".$foto."
                                           est_usu = '$est',
                                           perfil = $perfil,
-                                          id_mesero = $idmesero,
-                                          id_punto = $idpunto                                          
+                                          id_empleado = $idempleado
                                     WHERE id_usu = $id");
                                     
     }
 
-    public function prepro_usu($idusu, $arra){
-      $this->db->query("DELETE FROM usuprecio WHERE idusu = $idusu");
-      foreach ($arra as $ar) {
-        list($campo,$valor)=explode("-",$ar);
-        $this->db->query("INSERT INTO usuprecio (idusu, idpre, estatus) VALUES ($idusu, $campo, $valor)");
-      }
-    }    
-
-    public function prepro_usu00($idusu, $arra){
-      // $retorno = array();
-      foreach ($arra as $ar) {
-        list($campo,$valor)=explode("-",$ar);
-        /* CONSULTAR SI EXISTE EL REGISTRO DEL PRECIO */
-        $busc = $this->db->query("SELECT COUNT(*) as nro FROM usuprecio WHERE idusu = $idusu AND idpre = $campo");
-        $result = $busc->result();
-        $val = $result[0];
-      //  $retorno[$campo] = $campo."-".$val->nro;
-
-        if($result){/*($val->nro > 0)*/
-        /* SI EXISTE ACTUALIZA EL PRECIO */  
-          $upd = $this->db->query("UPDATE usuprecio SET estatus = $valor WHERE idusu = $idusu AND idpre = $campo");            
-        }else{
-        /* SI NO EXISTE INSERTAR EL REGISTRO EN LA TABLA */  
-          if($idusu == 0){
-            /* SI EL ID ES = 0 HAY QUE CONSULTAR EL ULTIMO REGISTRO QUE SE INTRODUJO EN LA TABLA  */
-            $ult_id = $this->db->query("SELECT MAX(id_usu) as id FROM usu_sistemas");
-            $result = $ult_id->result();  
-            $usuid = $result[0]->id; 
-            $add = $this->db->query("INSERT INTO usuprecio (idusu, idpre, estatus) VALUES ($usuid, $campo, $valor)");           
-
-          }else{
-
-            $add = $this->db->query("INSERT INTO usuprecio (idusu, idpre, estatus) VALUES ($idusu, $campo, $valor)");
-          }
-                     
-        }
-      }
-    }    
     //OBTENER EL ID DEL USUARIO
     public function usua_get_id($log_usu, $pas_usu) {
       $sql = $this->db->query("SELECT * FROM usu_sistemas WHERE log_usu = '$log_usu' AND pwd_usu = MD5('$pas_usu')");
@@ -120,7 +75,7 @@ class Usuario_model extends CI_Model {
   //OBTENER TODOS LOS DATOS DEL USUARIO A TRAVÉS DE SU ID
 
     public function usua_get_tod_log($id_usu) {
-        $query = $this->db->query(" SELECT id_usu, nom_usu, ape_usu, ema_usu, log_usu, perfil
+        $query = $this->db->query(" SELECT id_usu, nom_usu, log_usu, perfil, id_empleado
                                     FROM usu_sistemas
                                     WHERE id_usu = $id_usu");
         $result = $query->result();
@@ -134,7 +89,7 @@ class Usuario_model extends CI_Model {
     //OBTENER LOS DATOS DE UN USUARIO A TRAVÉS DE SU ID (ESTA FUNCIÓN SE UTILIZA DESDE AUTH_LIBRARY)
 
     public function usua_get($id_usu) {
-        $query = $this->db->query(" SELECT id_usu, nom_usu, ape_usu, log_usu, ide_usu, perfil
+        $query = $this->db->query(" SELECT id_usu, nom_usu, log_usu, perfil, id_empleado
                                     FROM usu_sistemas
                                     WHERE id_usu = $id_usu");
         $result = $query->result();
@@ -170,40 +125,29 @@ class Usuario_model extends CI_Model {
 
     /* LISTADO DE USUARIOS */
     public function lst_usu(){
-      $sql = $this->db->query("SELECT id_usu, ide_usu, nom_usu, ape_usu, log_usu, est_usu FROM usu_sistemas");
+      $sql = $this->db->query("SELECT id_usu, nom_usu, log_usu, est_usu FROM usu_sistemas");
       $resu = $sql->result();
       return $resu;
     }
 
-    /* LISTADO DE MESEROS */
-    public function meseros($perfil){
-      $sql = $this->db->query("SELECT id_empleado as id_mesero, nombre_empleado as nom_mesero 
-                                 FROM empleado WHERE activo=1 and perfil=$perfil");
-      $resu = $sql->result();
-      return $resu;
-    }    
+    /* lista de empleados */
+    public function lst_empleado($idempleado = 0) {
+        $query = $this->db->query("SELECT e.id_empleado, e.nombres, e.apellidos, e.nro_ident
+                                     FROM empleado e
+                                     WHERE e.activo = 1 AND
+                                           (e.id_empleado = $idempleado OR 
+                                            NOT exists (SELECT id_empleado FROM usu_sistemas u WHERE u.id_empleado = e.id_empleado))
+                                     ORDER BY e.apellidos, e.nombres;");
+        $result = $query->result();
+        return $result;
+    }
+
 
     /* LISTADO DE MESEROS */
     public function usua_del($id_usu){
       $sql = $this->db->query("DELETE FROM usu_sistemas WHERE id_usu = $id_usu");
-      $sql = $this->db->query("DELETE FROM usuprecio WHERE idusu = $id_usu");
     } 
 
-    /* LISTADO DE PUNTOS DE VENTAS */
-    public function lst_puntos(){
-      $punto = $this->db->query(" SELECT m.id_mesa, m.nom_mesa, a.nom_area FROM mesa m
-                                  INNER JOIN area a ON a.id_area = m.id_area");
-      $resu = $punto->result();
-      return $resu;
-    }
-    public function usu_precios($id_usu){
-      $sql = $this->db->query(" SELECT p.id_precios, p.desc_precios, IFNULL(u.estatus, 0) AS estatus
-                                FROM (SELECT * FROM precios UNION SELECT 0, 'Precio de Venta', 'A' ) p
-                                LEFT JOIN usuprecio u ON u.idpre = p.id_precios AND u.idusu = $id_usu
-                                WHERE p.esta_precios = 'A' ");
-      $resu = $sql->result();
-      return $resu;
-    }
 
   /* ACTUALIZAR FECHA Y HORA DE ULTIMO ACCESO DE USUARIO */
     public function usu_upd_acceso() {
@@ -212,62 +156,5 @@ class Usuario_model extends CI_Model {
         $query = $this->db->query("CALL usuario_upd_acceso($id);");
     }
 
-    public function lst_sucursal($id_usu){
-      $sql = $this->db->query("SELECT s.id_sucursal, s.nom_sucursal, 
-                                (SELECT COUNT(*) FROM permiso_sucursal WHERE id_usuario = $id_usu AND id_sucursal = s.id_sucursal) AS estatus
-                                FROM sucursal s");
-      $res = $sql->result();
-      return $res;
-    }
 
-    public function lst_almacen($id_usu){
-      $sql = $this->db->query("SELECT a.almacen_id, a.almacen_nombre, 
-                                (SELECT COUNT(*) FROM permiso_almacen WHERE id_usuario = $id_usu AND id_almacen = a.almacen_id) AS estatus
-                                FROM almacen a");
-      $res = $sql->result();
-      return $res;
-    }
-
-    public function lst_caja_efectivo($id_usu){
-      $sql = $this->db->query(" SELECT c.id_caja, c.nom_caja, 
-                                (SELECT COUNT(*) FROM permiso_cajaefectivo WHERE id_usuario = $id_usu AND id_caja = c.id_caja) AS estatus
-                              FROM caja_efectivo c");
-      $res = $sql->result();
-      return $res;
-    }
-
-    public function sucursal_usu($idusu, $sucarr){
-      $this->db->query("DELETE FROM permiso_sucursal WHERE id_usuario = $idusu");
-      foreach ($sucarr as $ar) {
-        list($campo,$valor)=explode("-",$ar);
-        if($valor != 0){
-          $this->db->query("INSERT INTO permiso_sucursal (id_usuario, id_sucursal) VALUES ($idusu, $campo)");
-        }
-      }
-    } 
-
-    public function almacen_usu($idusu, $almarr){
-      $this->db->query("DELETE FROM permiso_almacen WHERE id_usuario = $idusu");
-      foreach ($almarr as $ar) {
-        list($campo,$valor)=explode("-",$ar);
-        if($valor != 0){
-          $this->db->query("INSERT INTO permiso_almacen (id_usuario, id_almacen) VALUES ($idusu, $campo)");
-        }
-      }
-    } 
-
-    public function caja_usu($idusu, $cajarr){
-      $this->db->query("DELETE FROM permiso_cajaefectivo WHERE id_usuario = $idusu");
-      foreach ($cajarr as $ar) {
-        list($campo,$valor)=explode("-",$ar);
-        if($valor != 0){
-          $this->db->query("INSERT INTO permiso_cajaefectivo (id_usuario, id_caja) VALUES ($idusu, $campo)");
-        }
-      }
-    } 
-
-/*
-
-select *, TIME_TO_SEC(TIMEDIFF(now(),ultimoacceso)) as difseg from usu_sistemas
-*/
 }

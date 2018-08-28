@@ -39,7 +39,7 @@ class Auth extends CI_Controller {
         $usua = $this->usuario_model->usua_get_id($logi, $pass);
         if ($usua){
             $this->session->set_userdata('sess_id', $usua->id_usu);
-            $this->session->set_userdata('sess_na', $usua->nom_usu . " " . $usua->ape_usu);
+            $this->session->set_userdata('sess_na', $usua->nom_usu);
             $this->session->set_userdata('sess_log', $usua->log_usu);
             $resu = 1;                
         } 
