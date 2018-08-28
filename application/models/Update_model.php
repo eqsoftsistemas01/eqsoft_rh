@@ -202,7 +202,8 @@ class Update_model extends CI_Model {
         $this->crea_tabla_usu_sistemas();
       }  
 
-
+      $res = $this->existe_columna_tabla('paises','codigo_pais');
+      if ($res != true) $this->add_columna_tabla('paises','codigo_pais', 'varchar(20)', "");
 
       return 1;
     }

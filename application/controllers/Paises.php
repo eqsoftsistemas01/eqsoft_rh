@@ -56,12 +56,13 @@ class Paises extends CI_Controller {
 */
         $id = $this->input->post('id'); 
         $nombre = $this->input->post('nombre'); 
+        $codigo = $this->input->post('codigo'); 
         $activo = $this->input->post('activo');
 
         if($id != 0){
-            $resu = $this->Paises_model->upd_paises($id, $nombre, $activo);
+            $resu = $this->Paises_model->upd_paises($id, $nombre, $activo, $codigo);
         } else {
-            $resu = $this->Paises_model->add_paises($nombre, $activo);
+            $resu = $this->Paises_model->add_paises($nombre, $activo, $codigo);
         }
         $arr['mens'] = $id;
         print json_encode($arr); 
@@ -94,6 +95,7 @@ class Paises extends CI_Controller {
         foreach ($registro as $row) {
             $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar País\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad pais_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad pais_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
             $tabla.='{  "id":"' .$row->id. '",
+                        "codigo":"' .$row->codigo_pais. '",
                         "nombre":"' .$row->nombre_pais. '",
                         "ver":"'.$ver.'"
                     },';

@@ -22,10 +22,14 @@
                     <?php } ?>  
 
                     <div class="form-group col-md-12">
+                        <label for="lb_cat">Codigo del País</label>
+                        <input type="text" class="form-control validate[required]" name="txt_codigo" id="txt_codigo" placeholder="Codigo del País" value="<?php if(@$obj != NULL){ print @$obj->codigo_pais; }?>" >
+                    </div>
+
+                    <div class="form-group col-md-12">
                         <label for="lb_cat">Nombre del País</label>
                         <input type="text" class="form-control validate[required]" name="txt_nombre" id="txt_nombre" placeholder="Nombre del País" value="<?php if(@$obj != NULL){ print @$obj->nombre_pais; }?>" >
                     </div>
-
                     
                     <div class="form-group col-md-6">
                         <input id="chkactivo" name="chkactivo" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->activo == 1){ print " checked";} } else {print " checked";} ?> style="margin-top:31px; margin-right:0px; margin-left:0px;" > <strong>Activo</strong>

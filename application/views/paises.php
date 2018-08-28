@@ -34,6 +34,7 @@
                     },
         'ajax': "Paises/listadoPaises",
         'columns': [
+            {"data": "codigo"},
             {"data": "nombre"},
             {"data": "ver"}                            
         ]
@@ -42,6 +43,7 @@
     $(document).on('click', '.btnguardarpais', function(){
       id = $("#txt_id").val();
       if (id == '') { id = 0; }
+      codigo = $("#txt_codigo").val();
       nombre = $("#txt_nombre").val();
       if (nombre == '') {
         alert("Ingrese el nombre");
@@ -55,7 +57,7 @@
         type: "POST",
         dataType: "json",
         url: "<?php echo base_url('Paises/agregar');?>",
-        data: {id: id, nombre: nombre, activo: activo},
+        data: {id: id, nombre: nombre, activo: activo, codigo: codigo},
         success: function(json) {
           $.fancybox.close();
           $('#TableObj').DataTable().ajax.reload();
@@ -170,7 +172,8 @@
                               <table id="TableObj" class="table table-bordered table-striped table-responsive">
                                 <thead>
                                   <tr >
-                                    <th>Nombre de país</th>
+                                    <th>Codigo</th>
+                                    <th>Nombre</th>
                                     <th>Accion</th>
                                   </tr>
                                 </thead>

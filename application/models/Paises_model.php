@@ -13,32 +13,31 @@ class Paises_model extends CI_Model {
     }
 
     public function sel_paises(){
-      $query = $this->db->query(" SELECT p.id, p.nombre_pais, p.activo
-                                         
-                                  FROM paises p
-                                  
+      $query = $this->db->query(" SELECT p.id, p.nombre_pais, p.activo, codigo_pais                                        
+                                  FROM paises p                                  
                                   ORDER BY p.nombre_pais");
       $result = $query->result();
       return $result;
     }
 
     public function sel_pais_id($pais){
-      $query = $this->db->query("SELECT id, nombre_pais, activo
+      $query = $this->db->query("SELECT id, nombre_pais, activo, codigo_pais
                                    FROM paises WHERE id = $pais");
       $result = $query->result();
       return $result[0];
     }
 
-    public function upd_paises($pais, $nombre, $activo){
+    public function upd_paises($pais, $nombre, $activo, $codigo){
       $query = $this->db->query(" UPDATE paises SET 
                                     nombre_pais = '$nombre', 
+                                    codigo_pais = '$codigo',
                                     activo = $activo
                                    WHERE id = $pais");
     }
 
-    public function add_paises($nombre,  $activo){
-      $query = $this->db->query("INSERT INTO paises (nombre_pais, activo)
-                                   VALUES('$nombre', $activo);");
+    public function add_paises($nombre,  $activo, $codigo){
+      $query = $this->db->query("INSERT INTO paises (nombre_pais, activo, codigo_pais)
+                                   VALUES('$nombre', $activo, '$codigo');");
     }
 
     public function candel_pais($pais){
