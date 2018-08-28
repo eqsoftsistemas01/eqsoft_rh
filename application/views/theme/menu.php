@@ -60,7 +60,7 @@
           <a href="<?php   print $base_url ?>inicio"><i class="fa fa-home"></i> <span>Inicio</span></a>
         </li> 
 
-        <?php if($perfil != 2) { ?>
+        <?php if($perfil == 1) { ?>
         <li class="treeview">
           <a href="#">
             <i class="fa fa-address-book"></i> <span>EMPLEADOS</span>
@@ -84,29 +84,28 @@
              
             <?php if($perfil == 1) { ?>
             <li><a href="<?php print $base_url ?>empresa"><i class="fa fa-building"></i> Empresas</a></li>
-            <?php } ?> 
-            
-            
+            <?php } ?>                       
 
           </ul>
         </li> 
         <?php } ?> 
 
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-handshake-o"></i> <span>NOMINA</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <?php if($perfil == 1) { ?>
-            <li><a href="<?php print $base_url ?>rubro"><i class="fa fa-money"></i> Rubros</a></li>
-            <?php } ?> 
-            <li><a href="<?php print $base_url ?>rol"><i class="fa fa-usd"></i> Rol de Pagos</a></li>
+        <?php if($perfil == 1) { ?>
+          <li class="treeview">
+            <a href="#">
+              <i class="fa fa-handshake-o"></i> <span>NOMINA</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+              <li><a href="<?php print $base_url ?>rubro"><i class="fa fa-money"></i> Rubros</a></li>
+              <li><a href="<?php print $base_url ?>rol"><i class="fa fa-usd"></i> Rol de Pagos</a></li>
 
-          </ul>
-        </li> 
+            </ul>
+          </li> 
+        <?php } ?> 
+
         <li class="treeview">
           <a href="#">
             <i class="fa fa-hand-paper-o"></i> <span>ASISTENCIA</span>
@@ -129,45 +128,30 @@
             
           </ul>
         </li> 
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-gears"></i> <span>CONFIGURACION</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
+
+        <?php if($perfil == 1) { ?>
+          <li class="treeview">
+            <a href="#">
+              <i class="fa fa-gears"></i> <span>CONFIGURACION</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            
+            <ul class="treeview-menu">
+            <li><a href="<?php print $base_url ?>paises"><i class="fa fa-globe"></i> Paises</a></li>
+            <li><a href="<?php print $base_url ?>provincia"><i class="fa fa-location-arrow"></i> Provincias</a></li>
+            <li><a href="<?php print $base_url ?>ciudad"><i class="fa fa-map-marker"></i> Ciudades</a></li>
+            <li><a href="<?php print $base_url ?>usuarios"><i class="fa fa-user-circle-o"></i> Usuarios</a></li>
+            <li><a href="<?php print $base_url ?>correo"><i class="fa fa-envelope-o" aria-hidden="true"></i> Correo</a></li>
+            <li><a href="<?php print $base_url ?>banco"><i class="fa fa-university" aria-hidden="true"></i> Bancos</a></li>
+            <li><a href="<?php print $base_url ?>parametros"><i class="fa fa-gears" aria-hidden="true"></i> Parametros</a></li>
           
-          <ul class="treeview-menu">
-          <?php if($perfil == 1) { ?>
-          <li><a href="<?php print $base_url ?>paises"><i class="fa fa-globe"></i> Paises</a></li>
-          <?php } ?> 
-          <?php if($perfil == 1) { ?>
-          <li><a href="<?php print $base_url ?>provincia"><i class="fa fa-location-arrow"></i> Provincias</a></li>
-          <?php } ?>
-          <?php if($perfil == 1) { ?>
-          <li><a href="<?php print $base_url ?>ciudad"><i class="fa fa-map-marker"></i> Ciudades</a></li>
-          <?php } ?> 
-                    
-          <?php if($perfil == 1) { ?>
-          <li><a href="<?php print $base_url ?>usuarios"><i class="fa fa-user-circle-o"></i> Usuarios</a></li>
-          <?php } ?>          
-          <?php if($perfil == 1) { ?>          
-          <li><a href="<?php print $base_url ?>correo"><i class="fa fa-envelope-o" aria-hidden="true"></i> Correo</a></li>
-          <?php } ?>
-          <?php if($perfil == 1) { ?>          
-          <li><a href="<?php print $base_url ?>banco"><i class="fa fa-university" aria-hidden="true"></i> Bancos</a></li>
-          <?php } ?>
-          <?php if($perfil == 1) { ?>          
-          <li><a href="<?php print $base_url ?>parametros"><i class="fa fa-gears" aria-hidden="true"></i> Parametros</a></li>
-          <?php } ?>
-          
-
-          </ul>
-        </li> 
+            </ul>
+          </li> 
+        <?php } ?> 
 
 
-
-  
         <?php if($perfil == 1) { ?>
         <li class="treeview">
             <a href="#">

@@ -15,13 +15,25 @@ class Permisoausencia_model extends CI_Model {
 
     /* lista de empleados */
     public function lst_permisoausencia($desde, $hasta) {
+        $cond = "";
+        $usua = $this->session->userdata('usua');
+        if ($usua->perfil != 1) { 
+          $idemp = 0;
+          if ($usua->id_empleado != NULL) { $idemp = $usua->id_empleado; }
+          if ($usua->perfil == 2) { 
+            $cond = " AND e.id_departamento IN (SELECT id FROM departamento WHERE id_jefedepartamento = $idemp)"; 
+          }
+          if ($usua->perfil == 3) { 
+            $cond = " AND e.id_empleado = $idemp"; 
+          }
+        }
         $query = $this->db->query("SELECT a.id, a.fecha_desde, a.hora_desde, a.fecha_hasta, a.hora_hasta,
                                           a.motivo, a.aprobado,
                                           a.id_empleado, e.nombres, e.apellidos, e.nro_ident
                                      FROM permisoausencia a
                                      INNER JOIN empleado e on e.id_empleado = a.id_empleado
-                                     Where (date(fecha_desde) between '$desde' and '$hasta') OR
-                                           (date(fecha_hasta) between '$desde' and '$hasta')
+                                     Where ((date(fecha_desde) between '$desde' and '$hasta') OR
+                                            (date(fecha_hasta) between '$desde' and '$hasta')) $cond
                                      ORDER BY e.apellidos, e.nombres;");
         $result = $query->result();
         return $result;
@@ -93,13 +105,27 @@ class Permisoausencia_model extends CI_Model {
 
     /* lista de empleados */
     public function lst_empleado($desde, $hasta, $idempleado = 0) {
+        $cond = "";
+        $usua = $this->session->userdata('usua');
+        if ($usua->perfil != 1) { 
+          $idemp = 0;
+          if ($usua->id_empleado != NULL) { $idemp = $usua->id_empleado; }
+          if ($usua->perfil == 2) { 
+            $cond = " AND e.id_departamento IN (SELECT id FROM departamento WHERE id_jefedepartamento = $idemp)"; 
+          }
+          if ($usua->perfil == 3) { 
+            $cond = " AND e.id_empleado = $idemp"; 
+          }
+        }
         $query = $this->db->query("SELECT e.id_empleado, e.nombres, e.apellidos, e.nro_ident
                                      FROM empleado e
-                                     WHERE e.activo = 1 AND 
-                                           (e.id_empleado = $idempleado OR 
+                                     WHERE e.activo = 1 /*AND 
+                                           e.id_empleado = $idempleado
+                                           ( OR 
                                             NOT e.id_empleado IN (SELECT id_empleado FROM permisoausencia 
                                                                     WHERE (date(fecha_desde) between '$desde' and '$hasta') OR
-                                                                          (date(fecha_hasta) between '$desde' and '$hasta')))
+                                                                          (date(fecha_hasta) between '$desde' and '$hasta')))*/
+                                           $cond                                                              
                                      ORDER BY e.apellidos, e.nombres;");
         $result = $query->result();
         return $result;

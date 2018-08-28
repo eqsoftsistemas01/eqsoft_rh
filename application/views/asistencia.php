@@ -8,6 +8,10 @@
   print "<script>document.title = 'ProdegelRRHH - Registro de Asistencia'</script>";
   date_default_timezone_set("America/Guayaquil");
 
+  $usua = $this->session->userdata('usua');
+  $id = $usua->id_usu;
+  $perfil = $usua->perfil;
+
 ?>
 
 <style type="text/css">
@@ -132,6 +136,11 @@
 
     function conf_del() {
         return  confirm("¿Confirma que desea eliminar este asistencia?");
+    }
+
+    var perfil = "<?php print @$perfil ?>";
+    if (perfil == "3"){
+      $(".asistencia_add").remove();
     }
 
   }); 

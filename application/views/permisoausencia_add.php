@@ -1,3 +1,11 @@
+<?php
+
+  $usua = $this->session->userdata('usua');
+  $id = $usua->id_usu;
+  $perfil = $usua->perfil;
+
+?>
+
 <style>
     #contenido_ret{
         width: 500px;       
@@ -37,7 +45,10 @@
         $(this).datepicker('hide');
     });  
 
-
+    var perfil = "<?php print @$perfil ?>";
+    if (perfil == "2"){
+      $("#chkaprobado").attr("disabled", false);
+    }
   });     
 
 </script>
@@ -97,7 +108,7 @@
                     <div class="form-group col-md-6">
                       <label >Hora Salida</label>
                       <div class="input-group">
-                        <input style="width:100px;" type="text" class="form-control text-center validate[required] hora" id="entrada_trabajo" name="entrada_trabajo" value="<?php if(@$obj != NULL){ print @$obj->hora_desde; } else {print '00:00:00';} ?>">
+                        <input style="width:100px;" type="text" class="form-control text-center validate[required] hora" id="hora_desde" name="hora_desde" value="<?php if(@$obj != NULL){ print @$obj->hora_desde; } else {print '00:00:00';} ?>">
                       </div>
                     </div>                       
 
@@ -109,7 +120,7 @@
                     <div class="form-group col-md-6">
                       <label >Hora Entrada</label>
                       <div class="input-group">
-                        <input style="width:100px;" type="text" class="form-control text-center validate[required] hora" id="salida_trabajo" name="salida_trabajo" value="<?php if(@$obj != NULL){ print @$obj->hora_hasta; } else {print '23:59:59';} ?>">
+                        <input style="width:100px;" type="text" class="form-control text-center validate[required] hora" id="hora_hasta" name="hora_hasta" value="<?php if(@$obj != NULL){ print @$obj->hora_hasta; } else {print '23:59:59';} ?>">
                       </div>
                     </div>                       
 

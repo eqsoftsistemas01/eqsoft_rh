@@ -21,11 +21,17 @@ class Permisoausencia extends CI_Controller {
     /* MÉTODO PREDETERMINADO DEL CONTROLADOR */
     public function index() {
         $desde = $this->session->userdata("tmp_permiso_desde");
-        if ($desde != NULL) { 
+       if ($desde != NULL) { 
+            $desde = str_replace('/', '-', $desde); 
+            $desde = date("Y-m-d", strtotime($desde));
+
             $data["desde"] = $desde;
         }    
         $hasta = $this->session->userdata("tmp_permiso_hasta");
         if ($hasta != NULL)  { 
+            $hasta = str_replace('/', '-', $hasta); 
+            $hasta = date("Y-m-d", strtotime($hasta));
+
             $data["hasta"] = $hasta;
         }    
         $data["base_url"] = base_url();
@@ -89,7 +95,13 @@ class Permisoausencia extends CI_Controller {
         $registro = $this->Permisoausencia_model->lst_permisoausencia($desde, $hasta);
         $tabla = "";
         foreach ($registro as $row) {
-            $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad permisoausencia_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad permisoausencia_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
+            if ($row->aprobado == 0){
+                $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad permisoausencia_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad permisoausencia_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
+            } 
+            else {
+                $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad permisoausencia_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> </div>';
+            }
+            $aprobado = $row->aprobado==1?"SI":"NO";
             $tabla.='{  "id":"' .$row->id. '",
                         "empleado":"' .$row->apellidos . ' ' . $row->nombres . '",
                         "fecha_desde":"' .$row->fecha_desde. '",
@@ -97,7 +109,7 @@ class Permisoausencia extends CI_Controller {
                         "fecha_hasta":"' .$row->fecha_hasta. '",
                         "hora_hasta":"' .$row->hora_hasta. '",
                         "motivo":"' .$row->motivo. '",
-                        "aprobado":"' .$row->aprobado. '",
+                        "aprobado":"' .$aprobado. '",
                         "ver":"'.$ver.'"
                     },';
         }

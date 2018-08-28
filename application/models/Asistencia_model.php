@@ -15,12 +15,25 @@ class Asistencia_model extends CI_Model {
 
     /* lista de empleados */
     public function lst_asistencia($fecha) {
+        $cond = "";
+        $usua = $this->session->userdata('usua');
+        if ($usua->perfil != 1) { 
+          $idemp = 0;
+          if ($usua->id_empleado != NULL) { $idemp = $usua->id_empleado; }
+          if ($usua->perfil == 2) { 
+            $cond = " AND e.id_departamento IN (SELECT id FROM departamento WHERE id_jefedepartamento = $idemp)"; 
+          }
+          if ($usua->perfil == 3) { 
+            $cond = " AND e.id_empleado = $idemp"; 
+          }
+        }
+
         $query = $this->db->query("SELECT a.id, a.fecha, a.entrada_trabajo, a.salida_trabajo, 
                                           a.salida_almuerzo, a.entrada_almuerzo, a.codigoreloj,
                                           a.id_empleado, e.nombres, e.apellidos, e.nro_ident
                                      FROM asistencia a
                                      INNER JOIN empleado e on e.id_empleado = a.id_empleado
-                                     Where fecha = '$fecha'
+                                     Where fecha = '$fecha' $cond
                                      ORDER BY e.apellidos, e.nombres;");
         $result = $query->result();
         return $result;
@@ -123,9 +136,17 @@ class Asistencia_model extends CI_Model {
 
     /* lista de empleados */
     public function lst_empleado($fecha, $idempleado = 0) {
+        $cond = "";
+        $usua = $this->session->userdata('usua');
+        if ($usua->perfil == 2) { 
+          $idemp = 0;
+          if ($usua->id_empleado != NULL) { $idemp = $usua->id_empleado; }
+          $cond = " e.id_departamento IN (SELECT id FROM departamento WHERE id_jefedepartamento = $idemp) AND "; 
+        }
+
         $query = $this->db->query("SELECT e.id_empleado, e.nombres, e.apellidos, e.nro_ident
                                      FROM empleado e
-                                     WHERE e.activo = 1 AND 
+                                     WHERE e.activo = 1 AND $cond
                                            (e.id_empleado = $idempleado OR 
                                             NOT e.id_empleado IN (SELECT id_empleado FROM asistencia WHERE fecha = '$fecha'))
                                      ORDER BY e.apellidos, e.nombres;");

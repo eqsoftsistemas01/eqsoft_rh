@@ -200,7 +200,7 @@
                       <div class="pull-right"> 
 
                           <button type="button" class="btn btn-info btn-grad permisoausencia_add" >
-                            <i class="fa fa-plus-square"></i> Solicitar permiso
+                            <i class="fa fa-plus-square"></i> Solicitar permiso 
                           </button>   
                       
                       </div>

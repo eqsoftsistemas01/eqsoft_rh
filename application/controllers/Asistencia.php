@@ -68,8 +68,16 @@ class Asistencia extends CI_Controller {
         }
         $registro = $this->Asistencia_model->lst_asistencia($fecha);
         $tabla = "";
+
+        $usua = $this->session->userdata('usua');
+        $perfil = $usua->perfil;
+
         foreach ($registro as $row) {
-            $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad asistencia_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad asistencia_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
+            if ($perfil != 3){
+                $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad asistencia_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad asistencia_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
+            } else {
+                $ver = '';
+            }    
             $tabla.='{  "id":"' .$row->id. '",
                         "empleado":"' .$row->apellidos . ' ' . $row->nombres . '",
                         "entrada_trabajo":"' .$row->entrada_trabajo. '",
