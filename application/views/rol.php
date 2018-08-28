@@ -112,7 +112,7 @@
                       <div class="pull-right"> 
 
                           <button type="button" class="btn btn-info btn-grad rol_add" >
-                            <i class="fa fa-plus-square"></i> Añadir
+                            <i class="fa fa-plus-square"></i> Añadir rol
                           </button>   
 
                        

@@ -78,14 +78,14 @@
             <?php if($perfil == 1) { ?>
             <li><a href="<?php print $base_url ?>cargo"><i class="fa fa-briefcase"></i> Cargos</a></li>
             <?php } ?>
-                       
+              <?php if($perfil == 1) { ?>
+            <li><a href="<?php print $base_url ?>empleado"><i class="fa fa-users"></i> Empleados</a></li>
+            <?php } ?>         
              
             <?php if($perfil == 1) { ?>
             <li><a href="<?php print $base_url ?>empresa"><i class="fa fa-building"></i> Empresas</a></li>
             <?php } ?> 
-            <?php if($perfil == 1) { ?>
-            <li><a href="<?php print $base_url ?>empleado"><i class="fa fa-users"></i> Empleados</a></li>
-            <?php } ?>
+            
             
 
           </ul>
@@ -118,9 +118,15 @@
             <?php if($perfil == 1) { ?>
             <li><a href="<?php print $base_url ?>jornada"><i class="fa fa-hourglass"></i> Jornadas</a></li>
             <?php } ?> 
+           
+            <li><a href="<?php print $base_url ?>permisoausencia"><i class="fa fa-thumbs-up"></i> Permisos de Ausencia</a></li>
+             
+            
             <li><a href="<?php print $base_url ?>asistencia"><i class="fa fa-calendar"></i> Asistencia por fecha</a></li>
+             
+
             <li><a href="<?php print $base_url ?>asistenciat"><i class="fa fa-calendar"></i> Asistencia por trabajador</a></li>
-            <li><a href="<?php print $base_url ?>permisoausencia"><i class="fa fa-calendar"></i> Permisos de Ausencia</a></li>
+            
           </ul>
         </li> 
         <li class="treeview">

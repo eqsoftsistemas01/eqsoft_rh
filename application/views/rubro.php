@@ -178,7 +178,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <i class="fa fa-registered"></i> Lista de Rubros 
+        <i class="fa fa-money"></i> Lista de Rubros 
       </h1>
       <ol class="breadcrumb">
         <li><a href="<?php print $base_url ?>inicio"><i class="fa fa-dashboard"></i> Inicio</a></li>
@@ -198,7 +198,7 @@
                       <div class="pull-right"> 
 
                           <button type="button" class="btn btn-info btn-grad rubro_add" >
-                            <i class="fa fa-plus-square"></i> Añadir
+                            <i class="fa fa-plus-square"></i> Añadir Rubro
                           </button>   
 
                        

@@ -156,7 +156,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <i class="fa fa-registered"></i> Registro de Permisod de Ausencia 
+        <i class="fa fa-thumbs-up"></i> Registro de Permiso de Ausencia 
       </h1>
       <ol class="breadcrumb">
         <li><a href="<?php print $base_url ?>inicio"><i class="fa fa-dashboard"></i> Inicio</a></li>
@@ -200,7 +200,7 @@
                       <div class="pull-right"> 
 
                           <button type="button" class="btn btn-info btn-grad permisoausencia_add" >
-                            <i class="fa fa-plus-square"></i> Añadir
+                            <i class="fa fa-plus-square"></i> Solicitar permiso
                           </button>   
                       
                       </div>

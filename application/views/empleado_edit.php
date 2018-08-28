@@ -667,7 +667,7 @@ date_default_timezone_set("America/Guayaquil");
 
                             <div class="form-actions pull-right">
                                 <button type="button" class="btn btn-info btn-grad btn-xs no-margin-bottom btnaddcontrato" title="Añadir Contrato">
-                                    <i class="fa fa-plus-square "></i> Añadir
+                                    <i class="fa fa-plus-square "></i> Añadir Contrato
                                 </button>
                             </div>
 
@@ -1060,7 +1060,7 @@ date_default_timezone_set("America/Guayaquil");
 
                           <div class="pull-right">
                               <button type="button" class="btn btn-info btn-grad add_carga">
-                                  <i class="fa fa-plus-square"></i> Añadir
+                                  <i class="fa fa-plus-square"></i> Añadir carga familiar
                               </button>
                           </div>
 
@@ -1099,7 +1099,7 @@ date_default_timezone_set("America/Guayaquil");
               <div  align="center" class="box-footer">
                   <div class="form-actions ">
                       <button type="submit" class="btn btn-success btn-grad no-margin-bottom">
-                          <i class="fa fa-save "></i> Guardar
+                          <i class="fa fa-save "></i> Guardar trabajador
                       </button>
                   </div>
               </div>
