@@ -28,7 +28,7 @@ class Permisoausencia_model extends CI_Model {
           }
         }
         $query = $this->db->query("SELECT a.id, a.fecha_desde, a.hora_desde, a.fecha_hasta, a.hora_hasta,
-                                          a.motivo, a.aprobado,
+                                          a.motivo, a.aprobado, a.id_tipopermiso,
                                           a.id_empleado, e.nombres, e.apellidos, e.nro_ident
                                      FROM permisoausencia a
                                      INNER JOIN empleado e on e.id_empleado = a.id_empleado
@@ -38,7 +38,7 @@ class Permisoausencia_model extends CI_Model {
         $result = $query->result();
         return $result;
     }
-    public function add_permisoausencia($empleado, $fecha_desde, $hora_desde, $fecha_hasta, $hora_hasta, $motivo, $aprobado) {
+    public function add_permisoausencia($empleado, $fecha_desde, $hora_desde, $fecha_hasta, $hora_hasta, $motivo, $aprobado, $tipopermiso) {
         if ((!$fecha_desde) || (trim($fecha_desde) == '')) { $fecha_desde = 'NULL'; }
         else { $fecha_desde = "to_date('" . $fecha_desde . "', 'YYYY-MM-DD')";  }
         if ((!$hora_desde) || (trim($hora_desde) == '')) { $hora_desde = 'NULL'; }
@@ -48,11 +48,12 @@ class Permisoausencia_model extends CI_Model {
         else { $fecha_hasta = "to_date('" . $fecha_hasta . "', 'YYYY-MM-DD')";  }
         if ((!$hora_hasta) || (trim($hora_hasta) == '')) { $hora_hasta = 'NULL'; }
         else { $hora_hasta = "'" . $hora_hasta . "'"; }
+        if ((!$tipopermiso) || (trim($tipopermiso) == '')) { $tipopermiso = 'NULL'; }
 
-        $this->db->query("INSERT INTO permisoausencia (id_empleado, fecha_desde, hora_desde, fecha_hasta, hora_hasta, motivo, aprobado)
-                            VALUES ($empleado, $fecha_desde, $hora_desde, $fecha_hasta, $hora_hasta, '$motivo', $aprobado)");        
+        $this->db->query("INSERT INTO permisoausencia (id_empleado, fecha_desde, hora_desde, fecha_hasta, hora_hasta, motivo, aprobado, id_tipopermiso)
+                            VALUES ($empleado, $fecha_desde, $hora_desde, $fecha_hasta, $hora_hasta, '$motivo', $aprobado, $tipopermiso)");        
     }
-    public function upd_permisoausencia($id, $empleado, $fecha_desde, $hora_desde, $fecha_hasta, $hora_hasta, $motivo, $aprobado) {
+    public function upd_permisoausencia($id, $empleado, $fecha_desde, $hora_desde, $fecha_hasta, $hora_hasta, $motivo, $aprobado, $tipopermiso) {
         if ((!$fecha_desde) || (trim($fecha_desde) == '')) { $fecha_desde = 'NULL'; }
         else { $fecha_desde = "to_date('" . $fecha_desde . "', 'YYYY-MM-DD')";  }
         if ((!$hora_desde) || (trim($hora_desde) == '')) { $hora_desde = 'NULL'; }
@@ -62,6 +63,7 @@ class Permisoausencia_model extends CI_Model {
         else { $fecha_hasta = "to_date('" . $fecha_hasta . "', 'YYYY-MM-DD')";  }
         if ((!$hora_hasta) || (trim($hora_hasta) == '')) { $hora_hasta = 'NULL'; }
         else { $hora_hasta = "'" . $hora_hasta . "'"; }
+        if ((!$tipopermiso) || (trim($tipopermiso) == '')) { $tipopermiso = 'NULL'; }
 
         $this->db->query("UPDATE permisoausencia SET 
                              id_empleado = $empleado,
@@ -70,7 +72,8 @@ class Permisoausencia_model extends CI_Model {
                              fecha_hasta = $fecha_hasta, 
                              hora_hasta = $hora_hasta, 
                              motivo = '$motivo',
-                             aprobado = $aprobado
+                             aprobado = $aprobado,
+                             id_tipopermiso = $tipopermiso
                             WHERE id = $id");        
     }
 
@@ -96,7 +99,7 @@ class Permisoausencia_model extends CI_Model {
 
     public function sel_permisoausencia_id($id){
       $query = $this->db->query("SELECT id, fecha_desde, hora_desde, fecha_hasta, hora_hasta,
-                                        motivo, aprobado, id_empleado
+                                        motivo, aprobado, id_empleado, id_tipopermiso
                                   FROM permisoausencia 
                                   Where id = $id");
       $result = $query->result();

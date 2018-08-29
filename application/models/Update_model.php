@@ -211,6 +211,12 @@ class Update_model extends CI_Model {
       $res = $this->existe_columna_tabla('empleado','id_tipotrabajador');
       if ($res != true) $this->add_columna_tabla('empleado','id_tipotrabajador', 'int', "");
 
+      $res = $this->existe_tabla('tipopermiso');
+      if ($res != true) $this->crea_tabla_tipopermiso();
+
+      $res = $this->existe_columna_tabla('permisoausencia','id_tipopermiso');
+      if ($res != true) $this->add_columna_tabla('permisoausencia','id_tipopermiso', 'int', "");
+
       return 1;
     }
 
@@ -843,6 +849,15 @@ class Update_model extends CI_Model {
 
       $this->db->query("INSERT INTO configuracion (id, razonsocial, identificacion) 
                           VALUES(1, 'EMPRESA', '9999999999999')");
+    }
+
+    public function crea_tabla_tipopermiso(){
+      $this->db->query("CREATE TABLE tipopermiso (
+                          id SERIAL,
+                          tipopermiso varchar(255),
+                          activo int,
+                          PRIMARY KEY (id) 
+                          )");
     }
 
 }

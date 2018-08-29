@@ -16,6 +16,7 @@ class Permisoausencia extends CI_Controller {
         $this->auth_library->sess_validate(true);
         $this->auth_library->mssg_get();
         $this->load->Model("Permisoausencia_model");
+        $this->load->Model("Tipopermiso_model");
     }
 
     /* MÉTODO PREDETERMINADO DEL CONTROLADOR */
@@ -129,6 +130,8 @@ class Permisoausencia extends CI_Controller {
         $hasta = date("Y-m-d", strtotime($fecha));
         $empleado = $this->Permisoausencia_model->lst_empleado($desde, $hasta, $obj->id_empleado);
         $data["empleado"] = $empleado;
+        $tipopermiso = $this->Tipopermiso_model->lst_tipopermiso();
+        $data["tipopermiso"] = $tipopermiso;
 
         $data["base_url"] = base_url();
         $this->load->view("permisoausencia_add", $data);
@@ -160,11 +163,12 @@ class Permisoausencia extends CI_Controller {
         $motivo=$this->input->post('txt_motivo');
         $aprobado=$this->input->post('chkaprobado');
         if($aprobado == 'on'){ $aprobado = 1; } else { $aprobado = 0; }
+        $tipopermiso=$this->input->post('cmb_tipopermiso');
 
         if($id != 0){
-            $resu = $this->Permisoausencia_model->upd_permisoausencia($id, $empleado, $fecha_desde, $hora_desde, $fecha_hasta, $hora_hasta, $motivo, $aprobado);
+            $resu = $this->Permisoausencia_model->upd_permisoausencia($id, $empleado, $fecha_desde, $hora_desde, $fecha_hasta, $hora_hasta, $motivo, $aprobado, $tipopermiso);
         } else {
-            $resu = $this->Permisoausencia_model->add_permisoausencia($empleado, $fecha_desde, $hora_desde, $fecha_hasta, $hora_hasta, $motivo, $aprobado);
+            $resu = $this->Permisoausencia_model->add_permisoausencia($empleado, $fecha_desde, $hora_desde, $fecha_hasta, $hora_hasta, $motivo, $aprobado, $tipopermiso);
         }
         print "<script> window.location.href = '" . base_url() . "permisoausencia'; </script>";
     }
@@ -178,6 +182,8 @@ class Permisoausencia extends CI_Controller {
         $hasta = date("Y-m-d", strtotime($fecha));
         $empleado = $this->Permisoausencia_model->lst_empleado($desde, $hasta, 0);
         $data["empleado"] = $empleado;
+        $tipopermiso = $this->Tipopermiso_model->lst_tipopermiso();
+        $data["tipopermiso"] = $tipopermiso;
         $data["base_url"] = base_url();
         $this->load->view("permisoausencia_add", $data);
     } 

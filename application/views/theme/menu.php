@@ -118,12 +118,13 @@
             <li><a href="<?php print $base_url ?>jornada"><i class="fa fa-hourglass"></i> Jornadas</a></li>
             <?php } ?> 
            
-            <li><a href="<?php print $base_url ?>permisoausencia"><i class="fa fa-thumbs-up"></i> Permisos de Ausencia</a></li>
-             
+            <li><a href="<?php print $base_url ?>permisoausencia"><i class="fa fa-thumbs-up"></i> Permisos de Ausencia</a></li>            
+            <?php if($perfil == 1) { ?>
+              <li><a href="<?php print $base_url ?>tipopermiso"><i class="fa fa-thumbs-up"></i> Tipos de Permisos</a></li>
+            <?php } ?> 
             
             <li><a href="<?php print $base_url ?>asistencia"><i class="fa fa-calendar"></i> Asistencia por fecha</a></li>
              
-
             <li><a href="<?php print $base_url ?>asistenciat"><i class="fa fa-calendar"></i> Asistencia por trabajador</a></li>
             
           </ul>

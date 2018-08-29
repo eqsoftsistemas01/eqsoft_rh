@@ -100,6 +100,36 @@
                         <input id="chkaprobado" name="chkaprobado" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->aprobado == 1){ print " checked";} } ?> style="margin-top:31px; margin-right:0px; margin-left:0px;" disabled> <strong>Aprobado</strong>
                     </div>
 
+                    <div class="form-group col-md-9">
+                      <label for="lb_res">Tipo de Permiso</label>
+                      <select id="cmb_tipopermiso" name="cmb_tipopermiso" class="form-control validate[required]">
+                      <?php 
+                        if(@$tipopermiso != NULL){ ?>
+                        <?php } else { ?>
+                        <option  value="" selected="TRUE">Seleccione ...</option>
+                        <?php } 
+                          if (count($tipopermiso) > 0) {
+                            foreach ($tipopermiso as $tipo):
+                                if(@$obj->id_tipopermiso != NULL){
+                                    if($obj->id_tipopermiso == $tipo->id){ ?>
+                                         <option value="<?php  print $tipo->id; ?>" selected="TRUE"> <?php  print $tipo->tipopermiso; ?> </option>
+                                        <?php
+                                    }else{ ?>
+                                        <option value="<?php  print $tipo->id; ?>" > <?php  print $tipo->tipopermiso; ?> </option>
+                                        <?php
+                                    }
+                                }else{ ?>
+                                    <option value="<?php  print $tipo->id; ?>" > <?php  print $tipo->tipopermiso; ?> </option>
+                                    <?php
+                                    }   ?>
+                                <?php
+                            endforeach;
+                          }
+                        ?>
+                      </select>                                  
+                    </div>
+
+
                     <div class="form-group col-md-6">
                         <label for="lb_cat">Fecha Salida</label>
                         <input type="text" class="form-control " name="fecha_desde" id="fecha_desde" placeholder="Fecha Salida" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->fecha_desde); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
