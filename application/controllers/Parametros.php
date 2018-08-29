@@ -38,6 +38,9 @@ class Parametros extends CI_Controller {
         $netocobrar = $this->Parametros_model->rubro_netocobrar_get();
         $data["rubro_netocobrar"] = $netocobrar;
 
+        $cfg = $this->Parametros_model->configuraciongeneral_get();        
+        $data["cfg"] = $cfg;
+
         $data["content"] = "parametros";
         $this->load->view("layout", $data);
     }
@@ -57,6 +60,34 @@ class Parametros extends CI_Controller {
         $resu = $this->Parametros_model->rubro_sueldo_upd($sueldo);
         $resu = $this->Parametros_model->rubro_diastrab_upd($diastrab);
         $resu = $this->Parametros_model->rubro_netocobrar_upd($netocobrar);
+
+        /* Configuracion General */
+        $razonsocial = $this->input->post('txt_razonsocial');
+        $nombrecomercial = $this->input->post('txt_nombrecomercial');
+        $identificacion = $this->input->post('txt_identificacion');
+
+        $foto = $this->input->post('foto');
+        $foto_name= $_FILES["foto"]["name"];
+        /* ESTE CONDICIONAL NOS PERMITE GUARDAR O MODIFICAR USUARIOS SIN QUE LE ASIGNEN FOTO */
+        if ($foto_name == NULL || $foto_name == ""){
+            $fot = NULL;
+        } else { 
+            $foto_name= $_FILES["foto"]["name"];
+            $foto_size= $_FILES["foto"]["size"];
+            $foto_type= $_FILES["foto"]["type"];
+            $foto_temporal= $_FILES["foto"]["tmp_name"];
+
+            # Limitamos los formatos de imagen admitidos a: png, jpg y gif
+            if ($foto_type=="image/x-png" OR $foto_type=="image/png") { $extension="image/png"; }
+            if ($foto_type=="image/pjpeg" OR $foto_type=="image/jpeg"){ $extension="image/jpeg";}
+            if ($foto_type=="image/gif" OR $foto_type=="image/gif")   { $extension="image/gif"; }
+
+            $fot=time().$foto_name;
+            $ndir = FCPATH."doc\\".$fot;
+
+            move_uploaded_file($_FILES['foto']['tmp_name'], $ndir);
+        }
+        $this->Parametros_model->configuraciongeneral_upd($razonsocial, $nombrecomercial, $identificacion, $fot);
 
 
         $data["base_url"] = base_url();

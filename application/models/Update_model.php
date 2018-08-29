@@ -205,6 +205,9 @@ class Update_model extends CI_Model {
       $res = $this->existe_columna_tabla('paises','codigo_pais');
       if ($res != true) $this->add_columna_tabla('paises','codigo_pais', 'varchar(20)', "");
 
+      $res = $this->existe_tabla('configuracion');
+      if ($res != true) $this->crea_tabla_configuracion();
+
       return 1;
     }
 
@@ -822,6 +825,20 @@ class Update_model extends CI_Model {
 
       $this->db->query("INSERT INTO usu_sistemas (nom_usu, log_usu, pwd_usu, est_usu, perfil, ultimoacceso) 
                           VALUES('admin', 'admin', MD5('admin'), 'A', 1, now())");
+    }
+
+    public function crea_tabla_configuracion(){
+      $query = $this->db->query("CREATE TABLE configuracion (
+                                    id int,
+                                    razonsocial varchar(255),
+                                    nombrecomercial varchar(255),
+                                    identificacion varchar(50),
+                                    logo_empresa varchar(255),
+                                    PRIMARY KEY (id) 
+                                    )");
+
+      $this->db->query("INSERT INTO configuracion (id, razonsocial, identificacion) 
+                          VALUES(1, 'EMPRESA', '9999999999999')");
     }
 
 }

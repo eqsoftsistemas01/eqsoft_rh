@@ -61,4 +61,22 @@ class Parametros_model extends CI_Model {
         $query = $this->db->query("UPDATE parametros SET valor='$valor' WHERE id=4;");
     }
 
+    /* OBTENER Configuracion General */
+    public function configuraciongeneral_get() {
+        $query = $this->db->query("SELECT razonsocial, nombrecomercial, identificacion, logo_empresa
+                                     FROM configuracion WHERE id=1;");
+        $result = $query->result();
+        return $result[0];
+    }
+
+    /* ACTUALIZAR Rubro Neto a Cobrar */
+    public function configuraciongeneral_upd($razonsocial, $nombrecomercial, $identificacion, $logo_empresa){
+        $query = $this->db->query("UPDATE configuracion SET 
+                                       razonsocial= '$razonsocial', 
+                                       nombrecomercial = '$nombrecomercial', 
+                                       identificacion = '$identificacion', 
+                                       logo_empresa = '$logo_empresa' 
+                                     WHERE id=1;");
+    }
+
 }
