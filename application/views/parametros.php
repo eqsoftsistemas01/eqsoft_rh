@@ -82,8 +82,8 @@ date_default_timezone_set("America/Guayaquil");
                                       <div class="fileupload-preview thumbnail"  id="fotomostrar">
 <!--                                            <img src="<?php print base_url() . "doc/". $cfg->logo_empresa; ?>" />
  -->                                           <img <?php 
-                                              if ($cfg->logo_empresa != "pp") {
-                                                  if ($cfg->logo_empresa != "pp") {
+                                              if ($cfg->logo_empresa != NULL) {
+                                                  if ($cfg->logo_empresa != "") {
                                                       
                                                       print "width='150' height='150' src='" . base_url() ."doc/$cfg->logo_empresa'";
                                                       

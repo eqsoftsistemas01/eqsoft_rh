@@ -18,6 +18,7 @@ class Rol extends CI_Controller {
         $this->auth_library->mssg_get();
         $this->load->Model("Rol_model");
         $this->load->Model("Rubro_model");
+        $this->load->Model("Parametros_model");
 
         $this->load->library('Evalmath');       
     }
@@ -284,26 +285,36 @@ class Rol extends CI_Controller {
 
         $neto = $this->Rol_model->sel_rubroneto_tmp($idusu, $idemp);
 
+        $cfg = $this->Parametros_model->configuraciongeneral_get();
+
         $fechahoy = date('Y-m-d');
 
         $pdf = new FPDF();
         $pdf->AddPage();
         $pdf->SetFont('Arial','B',12);
 
+        $pdf->SetXY(170,1);
+
+        if($cfg->logo_empresa != null){
+          $pdf->Cell(20,20, $pdf->Image(base_url().'doc/'.$cfg->logo_empresa, $pdf->GetX(), $pdf->GetY(), 20, 20, 'jpg'),1);
+        }         
+
         $pdf->SetXY(1,1);
-        $pdf->Cell(20,10,'EMPRESA ');
+        $pdf->Cell(20,10,$cfg->nombrecomercial);
+        $pdf->SetXY(1,6);
+        $pdf->Cell(20,10,'RUC: '.$cfg->identificacion);
 
         $pdf->SetXY(70,1);
         $pdf->Cell(20,10,'PLANILLA INDIVIDUAL AL ' . $emp->fechafin_rol);
 
-        $pdf->SetXY(170,1);
+        $pdf->SetXY(170,20);
         $pdf->Cell(20,10,'Fecha: ' . $fechahoy);
 
         $pdf->SetXY(70,6);
         $pdf->Cell(20,10,$emp->apellidos . ' ' . $emp->nombres );
 
         $pdf->SetXY(70,11);
-        $pdf->Cell(20,10,$emp->nombre_cargo);
+        $pdf->Cell(20,10,'CARGO: '.$emp->nombre_cargo);
 
         $pdf->SetXY(1,16);
         $pdf->Cell(20,10,'DIAS TRABAJADOS: ' . number_format($emp->diastrab,0));
@@ -321,7 +332,7 @@ class Rol extends CI_Controller {
             $pdf->Cell(20,10,$rubro->nombre_rubro);
 
             $pdf->SetXY(70,$tmp_ying);
-            $pdf->Cell(20,10,$rubro->valor_neto);
+            $pdf->Cell(20,10,$rubro->valor_neto, 0, 0, 'R');
           }
         }
 
@@ -338,7 +349,7 @@ class Rol extends CI_Controller {
             $pdf->Cell(20,10,$rubro->nombre_rubro);
 
             $pdf->SetXY(170,$tmp_yegre);
-            $pdf->Cell(20,10,$rubro->valor_neto);
+            $pdf->Cell(20,10,$rubro->valor_neto, 0, 0, 'R');
           }
         }
 
@@ -350,12 +361,12 @@ class Rol extends CI_Controller {
         $pdf->SetXY(1,$tmp_y);
         $pdf->Cell(20,10,'TOTAL INGRESOS: ');
         $pdf->SetXY(70,$tmp_y);
-        $pdf->Cell(20,10,number_format($total_ing,2));
+        $pdf->Cell(20,10,number_format($total_ing,2), 0, 0, 'R');
 
         $pdf->SetXY(100,$tmp_y);
         $pdf->Cell(20,10,'TOTAL DESCUENTOS: ');
         $pdf->SetXY(170,$tmp_y);
-        $pdf->Cell(20,10,number_format($total_egre,2));
+        $pdf->Cell(20,10,number_format($total_egre,2), 0, 0, 'R');
 
         $tmp_y += 15;
         $pdf->SetXY(70,$tmp_y);
