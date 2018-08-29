@@ -128,6 +128,8 @@ class Empleado extends CI_Controller {
         $data["tipocontrato"] = $tipocontrato;
         $jornadas = $this->Jornada_model->lst_jornada();
         $data["jornadas"] = $jornadas;
+        $tipotrabajador = $this->Empleado_model->lst_tipotrabajador();
+        $data["tipotrabajador"] = $tipotrabajador;
 
         $data["content"] = "empleado_edit";
         $this->load->view("layout", $data);
@@ -209,6 +211,7 @@ class Empleado extends CI_Controller {
 
         $causasalida = $this->input->post('txt_causasalida');
         $idjornada = $this->input->post('cmb_jornada'); 
+        $tipotrabajador = $this->input->post('cmb_tipotrabajador'); 
 
 
         if($id != 0){
@@ -219,7 +222,7 @@ class Empleado extends CI_Controller {
                                  $vivefamiliares, $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
                                  $parentescocontacto, $telefonocontacto, $empresa, $tiposangre, $tipodiscapacidad, 
                                  $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo,
-                                 $idjornada, $causasalida);
+                                 $idjornada, $causasalida, $tipotrabajador);
         } else {
             $resu = $this->Empleado_model->add_empleado($nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, 
                                  $celular, $correo, $activo, $departamento, $lugarexpedicion, $cedulamilitar,$profesion, $pasaporte, 
@@ -228,7 +231,7 @@ class Empleado extends CI_Controller {
                                  $vivefamiliares, $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
                                  $parentescocontacto, $telefonocontacto, $empresa, $tiposangre, $tipodiscapacidad, 
                                  $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo,
-                                 $idjornada, $causasalida);
+                                 $idjornada, $causasalida, $tipotrabajador);
         }
         print "<script> window.location.href = '" . base_url() . "empleado'; </script>";
     }
@@ -267,6 +270,8 @@ class Empleado extends CI_Controller {
         $data["tipocontrato"] = $tipocontrato;
         $jornadas = $this->Jornada_model->lst_jornada();
         $data["jornadas"] = $jornadas;
+        $tipotrabajador = $this->Empleado_model->lst_tipotrabajador();
+        $data["tipotrabajador"] = $tipotrabajador;
 
         $data["base_url"] = base_url();
         $data["content"] = "empleado_edit";

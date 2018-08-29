@@ -891,7 +891,36 @@ date_default_timezone_set("America/Guayaquil");
                             </spam>
                             <hr class="linea">
 
-                            <div style="" class="form-group col-md-3">
+                            <div style="" class="form-group col-md-2">
+                              <label for="lb_res">Tipo de Trabajador</label>
+                              <select class="form-control validate[required]" id="cmb_tipotrabajador" name="cmb_tipotrabajador">
+                                  <?php 
+                                    if(@$tipotrabajador != NULL){ ?>
+                                      <option  value="0" selected="TRUE">Seleccione...</option>
+                                  <?php }  
+                                            if (count($tipotrabajador) > 0) {
+                                              foreach ($tipotrabajador as $pe):
+                                                  if(@$obj->id_tipotrabajador != NULL){
+                                                      if($pe->id == $obj->id_tipotrabajador){ ?>
+                                                          <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->tipo_trabajador ?></option> 
+                                                          <?php
+                                                      }else{ ?>
+                                                          <option value="<?php  print $pe->id; ?>"> <?php  print $pe->tipo_trabajador ?> </option>
+                                                          <?php
+                                                      }
+                                                  }else{ ?>
+                                                      <option value="<?php  print $pe->id; ?>"> <?php  print $pe->tipo_trabajador ?> </option>
+                                                      <?php
+                                                      }   ?>
+                                                  <?php
+
+                                              endforeach;
+                                            }
+                                            ?>
+                              </select>
+                            </div>
+
+                            <div style="" class="form-group col-md-2">
                               <label for="lb_res">Perfil de Usuario</label>
                               <select class="form-control validate[required]" id="cmb_perfil" name="cmb_perfil">
                                   <?php 
@@ -949,7 +978,7 @@ date_default_timezone_set("America/Guayaquil");
                               </select>
                             </div>
 
-                            <div style="" class="form-group col-md-3">
+                            <div style="" class="form-group col-md-2">
                               <label for="lb_res">Empresa</label>
                               <select class="form-control" id="cmb_empresa" name="cmb_empresa">
                                   <?php 

@@ -208,6 +208,9 @@ class Update_model extends CI_Model {
       $res = $this->existe_tabla('configuracion');
       if ($res != true) $this->crea_tabla_configuracion();
 
+      $res = $this->existe_columna_tabla('empleado','id_tipotrabajador');
+      if ($res != true) $this->add_columna_tabla('empleado','id_tipotrabajador', 'int', "");
+
       return 1;
     }
 
