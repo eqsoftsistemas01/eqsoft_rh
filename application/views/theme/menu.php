@@ -142,6 +142,7 @@
             <li><a href="<?php print $base_url ?>paises"><i class="fa fa-globe"></i> Paises</a></li>
             <li><a href="<?php print $base_url ?>provincia"><i class="fa fa-location-arrow"></i> Provincias</a></li>
             <li><a href="<?php print $base_url ?>ciudad"><i class="fa fa-map-marker"></i> Ciudades</a></li>
+            <li><a href="<?php print $base_url ?>tiposangre"><i class="fa fa-map-marker"></i> Tipos de Sangre</a></li>
             <li><a href="<?php print $base_url ?>usuarios"><i class="fa fa-user-circle-o"></i> Usuarios</a></li>
             <li><a href="<?php print $base_url ?>correo"><i class="fa fa-envelope-o" aria-hidden="true"></i> Correo</a></li>
             <li><a href="<?php print $base_url ?>banco"><i class="fa fa-university" aria-hidden="true"></i> Bancos</a></li>

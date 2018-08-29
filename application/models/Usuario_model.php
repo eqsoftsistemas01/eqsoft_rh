@@ -125,7 +125,10 @@ class Usuario_model extends CI_Model {
 
     /* LISTADO DE USUARIOS */
     public function lst_usu(){
-      $sql = $this->db->query("SELECT id_usu, nom_usu, log_usu, est_usu FROM usu_sistemas");
+      $sql = $this->db->query("SELECT id_usu, nom_usu, log_usu, est_usu, 
+                                 concat(COALESCE(e.apellidos,''),' ', COALESCE(e.nombres,'')) as empleado
+                                 FROM usu_sistemas u 
+                                 LEFT JOIN empleado e on e.id_empleado = u.id_empleado");
       $resu = $sql->result();
       return $resu;
     }

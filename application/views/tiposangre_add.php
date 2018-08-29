@@ -23,13 +23,8 @@
 
                     <div class="form-group col-md-12">
                         <label for="lb_cat">Tipo de Sangre</label>
-                        <input type="text" class="form-control validate[required]" name="txt_tiposangre" id="txt_tiposangre" placeholder="Tipo de Sangre" value="<?php if(@$obj != NULL){ print @$obj->tipo_trabajador; }?>" >
+                        <input type="text" class="form-control validate[required]" name="txt_tiposangre" id="txt_tiposangre" placeholder="Tipo de Sangre" value="<?php if(@$obj != NULL){ print @$obj->tiposangre; }?>" >
                     </div>
-
-                    <div class="form-group col-md-12">
-                        <label for="lb_cat">Descripcion</label>
-                        <input type="text" class="form-control validate[required]" name="txt_descripcion" id="txt_descripcion" placeholder="Descripcion" value="<?php if(@$obj != NULL){ print @$obj->descripcion; }?>" >
-                    </div>                
 
                     <div class="form-group col-md-6">
                         <input id="chkactivo" name="chkactivo" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->activo == 1){ print " checked";} } else {print " checked";} ?> style="margin-top:31px; margin-right:0px; margin-left:0px;" > <strong>Activo</strong>

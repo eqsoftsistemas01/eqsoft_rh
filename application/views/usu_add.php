@@ -116,13 +116,24 @@ $( document ).ready(function() {
                                     <input type="hidden" id="txt_id" name="txt_id" value="0">    
                             <?php } ?>  
                             <!-- Nombre del Usuario -->
-                            <div class="form-group col-md-7">
+<!--                             <div class="form-group col-md-7">
                                 <label for="txt_nombre">Nombres y Apellidos</label>
                                 <input type="text" class="form-control validate[required]" name="txt_nombre" id="txt_nombre" placeholder="Nombre del Usuario" value="<?php if(@$fic_usu != NULL){ print @$fic_usu->nom_usu; }?>">
+                            </div> -->
+
+                            <!-- Nombre del Usuario para el Inicio de Sesion -->
+                            <div class="form-group  col-md-4">
+                                <label for="txt_usuario">Usuario</label>
+                                <input type="text" class="form-control validate[required]" id="txt_usuario" name="txt_usuario" placeholder="Usuario" value="<?php if(@$fic_usu != NULL){ print @$fic_usu->log_usu; }?>">
+                            </div>
+                            <!-- Contraseña del Usuario -->
+                            <div class="form-group  col-md-4">
+                                <label for="txt_clave">Contraseña</label>
+                                <input type="password" class="form-control validate[required]" id="txt_clave" name="txt_clave" placeholder="Password" >
                             </div>
 
                             <!-- Estatus del Usuario -->
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-2">
                                 <label>Estatus</label>
                                 <select class="form-control validate[required]" id="cmb_estatus" name="cmb_estatus">
                                     <!-- <option value="0">Seleccione...</option>  -->
@@ -143,7 +154,7 @@ $( document ).ready(function() {
                                 </select>
                             </div>
 
-                            <div class="form-group col-md-5">
+                            <div class="form-group col-md-4">
                                 <label>Perfil</label>
                                 <select class="form-control validate[required]" id="cmb_perfil" name="cmb_perfil">
                                     <?php 
@@ -172,7 +183,7 @@ $( document ).ready(function() {
                                 </select>
                             </div>    
 
-                            <div class="form-group col-md-5">
+                            <div class="form-group col-md-4">
                               <label>Empleado</label>
                               <div id="empleado_perfil">  
                                 <select class="form-control" id="cmb_empleado" name="cmb_empleado">
@@ -204,16 +215,6 @@ $( document ).ready(function() {
                             </div>    
 
 
-                            <!-- Nombre del Usuario para el Inicio de Sesion -->
-                            <div class="form-group  col-md-5">
-                                <label for="txt_usuario">Usuario</label>
-                                <input type="text" class="form-control validate[required]" id="txt_usuario" name="txt_usuario" placeholder="Usuario" value="<?php if(@$fic_usu != NULL){ print @$fic_usu->log_usu; }?>">
-                            </div>
-                            <!-- Contraseña del Usuario -->
-                            <div class="form-group  col-md-4">
-                                <label for="txt_clave">Contraseña</label>
-                                <input type="password" class="form-control validate[required]" id="txt_clave" name="txt_clave" placeholder="Password" >
-                            </div>
                         </div>
 
                       </div>

@@ -553,18 +553,19 @@ class Update_model extends CI_Model {
             $this->db->query("DROP TABLE IF EXISTS tiposangre;");
 
             $this->db->query("CREATE TABLE tiposangre (
-                                id int,
+                                id SERIAL,
                                 tiposangre varchar(255),
+                                activo int,
                                 PRIMARY KEY (id) 
                                 )");
-            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(1, 'A negativo')");
-            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(2, 'A positivo')");
-            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(3, 'B negativo')");
-            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(4, 'B positivo')");
-            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(5, 'AB negativo')");
-            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(6, 'AB positivo')");
-            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(7, 'O negativo')");
-            $this->db->query("INSERT INTO tiposangre (id, tiposangre) VALUES(8, 'O positivo')");
+            $this->db->query("INSERT INTO tiposangre (tiposangre, activo) VALUES('A negativo', 1)");
+            $this->db->query("INSERT INTO tiposangre (tiposangre, activo) VALUES('A positivo', 1)");
+            $this->db->query("INSERT INTO tiposangre (tiposangre, activo) VALUES('B negativo', 1)");
+            $this->db->query("INSERT INTO tiposangre (tiposangre, activo) VALUES('B positivo', 1)");
+            $this->db->query("INSERT INTO tiposangre (tiposangre, activo) VALUES('AB negativo', 1)");
+            $this->db->query("INSERT INTO tiposangre (tiposangre, activo) VALUES('AB positivo', 1)");
+            $this->db->query("INSERT INTO tiposangre (tiposangre, activo) VALUES('O negativo', 1)");
+            $this->db->query("INSERT INTO tiposangre (tiposangre, activo) VALUES('O positivo', 1)");
       }      
     }
 

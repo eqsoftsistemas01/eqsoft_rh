@@ -125,7 +125,7 @@ class Usuarios extends CI_Controller {
         foreach ($registro as $row) {
             $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Ver\" id=\"'.$row->id_usu.'\" class=\"btn btn-success btn-xs btn-grad usu_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id_usu.'\" class=\"btn btn-danger btn-xs btn-grad usu_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
             $tabla.='{"id":"' . $row->id_usu . '",
-                      "nombres":"' . $row->nom_usu . '",
+                      "empleado":"' . $row->empleado . '",
                       "usuario":"' . $row->log_usu . '",
                       "estatus":"' . $row->est_usu . '",
                       "ver":"'.$ver.'"},';

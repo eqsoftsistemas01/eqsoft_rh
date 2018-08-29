@@ -22,8 +22,8 @@
         'ajax': "Usuarios/listadoDataUsu",
         'columns': [
             {"data": "id"},
-            {"data": "nombres"},
             {"data": "usuario"},
+            {"data": "empleado"},
             {"data": "estatus"},
             {"data": "ver"}
         ]
@@ -135,8 +135,8 @@
                 <thead>
                   <tr >
                       <th>Id</th>
-                      <th>Nombres y Apellidos</th>
                       <th>Usuario</th>
+                      <th>Empleado</th>
                       <th>Estatus</th>
                       <th>Ver</th> 
                   </tr>
