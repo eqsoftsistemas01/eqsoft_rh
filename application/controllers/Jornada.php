@@ -54,6 +54,8 @@ class Jornada extends CI_Controller {
                         "salida_almuerzo":"' .$row->salida_almuerzo. '",
                         "entrada_almuerzo":"' .$row->entrada_almuerzo. '",
                         "salida_trabajo":"' .$row->salida_trabajo. '",
+                        "entrada_empresa":"' .$row->entrada_empresa. '",
+                        "salida_empresa":"' .$row->salida_empresa. '",
                         "ver":"'.$ver.'"
                     },';
         }
@@ -82,6 +84,10 @@ class Jornada extends CI_Controller {
         if ((!$salida_almuerzo) || (trim($salida_almuerzo) == '')) { $salida_almuerzo = ''; }
         $entrada_almuerzo=$this->input->post('entrada_almuerzo');
         if ((!$entrada_almuerzo) || (trim($entrada_almuerzo) == '')) { $entrada_almuerzo = ''; }
+        $entrada_empresa=$this->input->post('entrada_empresa');
+        if ((!$entrada_empresa) || (trim($entrada_empresa) == '')) { $entrada_empresa = ''; }
+        $salida_empresa=$this->input->post('salida_empresa');
+        if ((!$salida_empresa) || (trim($salida_empresa) == '')) { $salida_empresa = ''; }
         $jornada_activo =$this->input->post('chkactivo');
         if ($jornada_activo == 'on') {
             $activo = '1';
@@ -91,9 +97,9 @@ class Jornada extends CI_Controller {
         }
 
         if($id != 0){
-            $resu = $this->Jornada_model->upd_jornada($id, $descripcion, $entrada_trabajo, $salida_almuerzo, $entrada_almuerzo, $salida_trabajo, $activo);
+            $resu = $this->Jornada_model->upd_jornada($id, $descripcion, $entrada_trabajo, $salida_almuerzo, $entrada_almuerzo, $salida_trabajo, $activo, $entrada_empresa, $salida_empresa);
         } else {
-            $resu = $this->Jornada_model->add_jornada($descripcion, $entrada_trabajo, $salida_almuerzo, $entrada_almuerzo, $salida_trabajo, $activo);
+            $resu = $this->Jornada_model->add_jornada($descripcion, $entrada_trabajo, $salida_almuerzo, $entrada_almuerzo, $salida_trabajo, $activo, $entrada_empresa, $salida_empresa);
         }
         print "<script> window.location.href = '" . base_url() . "jornada'; </script>";
     }

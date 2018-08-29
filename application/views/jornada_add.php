@@ -15,7 +15,7 @@
 
     $("#formjornada").validationEngine();
 
-    $(".hora").mask("99:99:99");
+    $(".hora").mask("99:99");
 
   });     
 
@@ -43,6 +43,20 @@
                     <div class="form-group col-md-3">
                         <input id="chkactivo" name="chkactivo" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->activo == 1){ print " checked";} } ?> style="margin-top:31px; margin-right:0px; margin-left:0px;" > <strong>Activo</strong>
                     </div>
+
+                    <div class="form-group col-md-6">
+                      <label >Entrada Empresa</label>
+                      <div class="input-group">
+                        <input style="width:100px;" type="text" class="form-control text-center validate[required] hora" id="entrada_empresa" name="entrada_empresa" value="<?php if(@$obj != NULL){ print @$obj->entrada_empresa; } else {print '00:00:00';} ?>">
+                      </div>
+                    </div>                       
+
+                    <div class="form-group col-md-6">
+                      <label >Salida Empresa</label>
+                      <div class="input-group">
+                        <input style="width:100px;" type="text" class="form-control text-center validate[required] hora" id="salida_empresa" name="salida_empresa" value="<?php if(@$obj != NULL){ print @$obj->salida_empresa; } else {print '23:59:59';} ?>">
+                      </div>
+                    </div>                       
 
                     <div class="form-group col-md-6">
                       <label >Entrada Trabajo</label>

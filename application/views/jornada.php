@@ -33,10 +33,12 @@
         'ajax': "Jornada/listadoJornadas",
         'columns': [
             {"data": "descripcion"},
+            {"data": "entrada_empresa"},
             {"data": "entrada_trabajo"},
             {"data": "salida_almuerzo"},   
             {"data": "entrada_almuerzo"},   
             {"data": "salida_trabajo"},   
+            {"data": "salida_empresa"},
             {"data": "ver"}                            
         ]
     });
@@ -154,10 +156,12 @@
                                 <thead>
                                   <tr >
                                     <th>Descripcion</th>
-                                    <th>Entrada</th>
+                                    <th>Ent.Empresa</th>
+                                    <th>Ent.Trabajo</th>
                                     <th>Sal.Almuerzo</th>
                                     <th>Ent.Almuerzo</th>
-                                    <th>Salida</th>
+                                    <th>Sal.Trabajo</th>
+                                    <th>Sal.Empresa</th>
                                     <th>Accion</th>
                                   </tr>
                                 </thead>

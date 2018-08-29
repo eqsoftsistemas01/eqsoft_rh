@@ -15,14 +15,15 @@ class Jornada_model extends CI_Model {
 
     /* lista de empleados */
     public function lst_jornada() {
-        $query = $this->db->query("SELECT id, descripcion, entrada_trabajo, salida_almuerzo, entrada_almuerzo, salida_trabajo, activo
+        $query = $this->db->query("SELECT id, descripcion, entrada_trabajo, salida_almuerzo, entrada_almuerzo, salida_trabajo, 
+                                          activo, entrada_empresa, salida_empresa
                                      FROM jornada 
                                      Where activo = 1
                                      ORDER BY descripcion;");
         $result = $query->result();
         return $result;
     }
-    public function add_jornada($descripcion, $entrada_trabajo, $salida_almuerzo, $entrada_almuerzo, $salida_trabajo, $activo) {
+    public function add_jornada($descripcion, $entrada_trabajo, $salida_almuerzo, $entrada_almuerzo, $salida_trabajo, $activo, $entrada_empresa, $salida_empresa) {
         if ((!$entrada_trabajo) || (trim($entrada_trabajo) == '')) 
           { $entrada_trabajo = 'NULL'; }
         else 
@@ -43,10 +44,22 @@ class Jornada_model extends CI_Model {
         else 
           { $salida_trabajo = "'" . $salida_trabajo . "'"; }
 
-        $this->db->query("INSERT INTO jornada (descripcion, entrada_trabajo, salida_almuerzo, entrada_almuerzo, salida_trabajo, activo)
-                            VALUES ('$descripcion', $entrada_trabajo, $salida_almuerzo, $entrada_almuerzo, $salida_trabajo, $activo)");        
+        if ((!$entrada_empresa) || (trim($entrada_empresa) == '')) 
+          { $entrada_empresa = 'NULL'; }
+        else 
+          { $entrada_empresa = "'" . $entrada_empresa . "'"; }
+
+        if ((!$salida_empresa) || (trim($salida_empresa) == '')) 
+          { $salida_empresa = 'NULL'; }
+        else 
+          { $salida_empresa = "'" . $salida_empresa . "'"; }
+
+        $this->db->query("INSERT INTO jornada (descripcion, entrada_trabajo, salida_almuerzo, entrada_almuerzo, salida_trabajo, activo, 
+                                               entrada_empresa, salida_empresa)
+                            VALUES ('$descripcion', $entrada_trabajo, $salida_almuerzo, $entrada_almuerzo, $salida_trabajo, 
+                                    $activo, $entrada_empresa, $salida_empresa)");        
     }
-    public function upd_jornada($id, $descripcion, $entrada_trabajo, $salida_almuerzo, $entrada_almuerzo, $salida_trabajo, $activo) {
+    public function upd_jornada($id, $descripcion, $entrada_trabajo, $salida_almuerzo, $entrada_almuerzo, $salida_trabajo, $activo, $entrada_empresa, $salida_empresa) {
         if ((!$entrada_trabajo) || (trim($entrada_trabajo) == '')) 
           { $entrada_trabajo = 'NULL'; }
         else 
@@ -66,12 +79,25 @@ class Jornada_model extends CI_Model {
           { $salida_trabajo = 'NULL'; }
         else 
           { $salida_trabajo = "'" . $salida_trabajo . "'"; }
+
+        if ((!$entrada_empresa) || (trim($entrada_empresa) == '')) 
+          { $entrada_empresa = 'NULL'; }
+        else 
+          { $entrada_empresa = "'" . $entrada_empresa . "'"; }
+
+        if ((!$salida_empresa) || (trim($salida_empresa) == '')) 
+          { $salida_empresa = 'NULL'; }
+        else 
+          { $salida_empresa = "'" . $salida_empresa . "'"; }
+
         $this->db->query("UPDATE jornada SET 
                              descripcion = '$descripcion', 
                              entrada_trabajo = $entrada_trabajo,
                              salida_almuerzo = $salida_almuerzo, 
                              entrada_almuerzo = $entrada_almuerzo,
                              salida_trabajo = $salida_trabajo, 
+                             entrada_empresa = $entrada_empresa,
+                             salida_empresa = $salida_empresa,
                              activo = $activo
                             WHERE id = $id");        
     }
@@ -95,7 +121,8 @@ class Jornada_model extends CI_Model {
     }
 
     public function sel_jornada_id($id){
-      $query = $this->db->query("SELECT id, descripcion, entrada_trabajo, salida_almuerzo, entrada_almuerzo, salida_trabajo, activo
+      $query = $this->db->query("SELECT id, descripcion, entrada_trabajo, salida_almuerzo, entrada_almuerzo, salida_trabajo, 
+                                        activo, entrada_empresa, salida_empresa
                                   FROM jornada 
                                   Where id = $id");
       $result = $query->result();

@@ -217,6 +217,12 @@ class Update_model extends CI_Model {
       $res = $this->existe_columna_tabla('permisoausencia','id_tipopermiso');
       if ($res != true) $this->add_columna_tabla('permisoausencia','id_tipopermiso', 'int', "");
 
+      $res = $this->existe_columna_tabla('jornada','entrada_empresa');
+      if ($res != true) $this->add_columna_tabla('jornada','entrada_empresa', 'time', "");
+
+      $res = $this->existe_columna_tabla('jornada','salida_empresa');
+      if ($res != true) $this->add_columna_tabla('jornada','salida_empresa', 'time', "");
+
       return 1;
     }
 
