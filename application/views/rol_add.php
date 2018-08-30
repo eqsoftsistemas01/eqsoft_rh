@@ -104,7 +104,8 @@ date_default_timezone_set("America/Guayaquil");
         'columns': [
             {"data": "codigo"},                            
             {"data": "nombre"},
-            {"data": "valor"}   
+            {"data": "valor"},   
+            {"data": "neto"}   
         ]
     });
 
@@ -114,8 +115,14 @@ date_default_timezone_set("America/Guayaquil");
         $(this).removeAttr('bgcolor');
       })
       $(this).attr('bgcolor',"gray");
+      $('.printrol').each(function(){
+        $(this).attr('disabled', true);
+      })
 
       var id = $(this).attr('name');
+
+      $('.printrol[id='+id+']').attr("disabled",false);
+
       $.ajax({
         url: base_url + "Rol/tmp_empleado",
         data: { id: id },
@@ -131,6 +138,7 @@ date_default_timezone_set("America/Guayaquil");
     $(document).on('blur', '.valor_rubro', function(){
       var id = this.id;
       var valor = $(this).val();
+      if (valor == '') { valor = 0; }
 
       $.ajax({
         url: base_url + "Rol/upd_valor_rubro",
@@ -314,7 +322,7 @@ date_default_timezone_set("America/Guayaquil");
 
                                     <td class="text-center">
                                       <div class="text-center">
-                                        <a href="#" title="Imprimir Rol" id="<?php print $det->id_empleado; ?>" class="btn btn-success btn-xs btn-grad printrol"><i class="fa fa-print"></i></a>  
+                                        <a href="#" title="Imprimir Rol" id="<?php print $det->id_empleado; ?>" class="btn btn-success btn-xs btn-grad printrol" disabled><i class="fa fa-print"></i></a>  
                                       </div>
                                     </td>
 
@@ -349,6 +357,7 @@ date_default_timezone_set("America/Guayaquil");
                                   <th>Codigo</th>
                                   <th>Nombre</th>
                                   <th>Valor</th>
+                                  <th>Monto</th>
                                 </tr>
                               </thead>
                               <tbody>

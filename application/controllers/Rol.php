@@ -102,15 +102,24 @@ class Rol extends CI_Controller {
           $registro = $this->Rol_model->lst_rubros($idusu, $idemp);
           foreach ($registro as $row) {
               if ($row->modificable == 1) { 
-                $valor = '<div ><input type=\"text\" class=\"valor_rubro\" name=\"'.$row->id_rubro.'\" id=\"'.$row->id_rubro.'\" value=\"'.$row->valor_neto.'\" ></div>';
+                $valor = '<div ><input type=\"text\" class=\"valor_rubro\" name=\"'.$row->id_rubro.'\" id=\"'.$row->id_rubro.'\" value=\"'.$row->valor_ingreso.'\" ></div>';
               } 
               else {
-                $valor = $row->valor_neto;
+                $valor = $row->valor_ingreso;
               }    
+              if ($row->idparametro == 3) /*dias trabajados*/{
+                $neto = '';
+                $valor = $row->valor_neto;
+              }
+              else {
+                $neto = $row->valor_neto;
+              }
+
               $tabla.='{  "id":"' .$row->id_rubro. '",
                           "codigo":"' .$row->codigo_rubro. '",
                           "nombre":"' .$row->nombre_rubro. '",
-                          "valor":"' .$valor. '"
+                          "valor":"' .$valor. '",
+                          "neto":"' .$neto. '"
                       },';
           }
           $tabla = substr($tabla, 0, strlen($tabla) - 1);
@@ -211,10 +220,12 @@ class Rol extends CI_Controller {
         foreach ($listarubros as $rubro) {
           $objrubro = new Rubro;
           $objrubro->id = $rubro->id_rubro;
+          $objrubro->ingreso = $rubro->valor_ingreso; 
           $objrubro->valor = $rubro->valor_neto;
-          $objrubro->escalculado = ($rubro->editable == 0);
+          $objrubro->eseditable = $rubro->editable;
+          $objrubro->escalculado = $rubro->calculado;
           $objrubro->expresion = $this->get_expresion_por_id($rubro->expresioncalculo);
-          $objrubro->calculadorealizado = ($rubro->editable == 1);
+          $objrubro->calculadorealizado = ($rubro->calculado == 0);
           $calculador->arreglo[$rubro->id_rubro] = $objrubro;
         }
        /* var_dump($calculador->arreglo);die();*/
@@ -231,7 +242,7 @@ class Rol extends CI_Controller {
         if (($idemp == '') || ($idemp == '')) { $idemp =0; }
         $id = $this->input->post("id");
         $valor = $this->input->post("valor");
-        $this->Rol_model->actualiza_valorrubro($idusu, $idemp, $id, $valor);
+        $this->Rol_model->actualiza_ingresorubro($idusu, $idemp, $id, $valor);
         $arr['resu'] = 1;
         print json_encode($arr);
     } 
@@ -278,7 +289,7 @@ class Rol extends CI_Controller {
     public function print_tmprol(){
         $idemp = $this->session->userdata("tmp_emprol_id");
         $idusu = $this->session->userdata("sess_id");
-        if (($idemp == '') || ($idemp == '')) { $idemp =0; }
+        if (($idemp == '') || ($idemp == '')) { return false; }
 
         $emp = $this->Rol_model->lst_tmprolemp_encab($idusu, $idemp);
         $lstrubros = $this->Rol_model->lst_tmprolemp_rubros($idusu, $idemp);
@@ -320,7 +331,11 @@ class Rol extends CI_Controller {
         $pdf->Cell(20,10,'DIAS TRABAJADOS: ' . number_format($emp->diastrab,0));
 
         $pdf->SetXY(1,26);
-        $pdf->Cell(20,10,'INGRESOS: ');
+        $pdf->Cell(20,10,'NUMERO');
+        $pdf->SetXY(25,26);
+        $pdf->Cell(20,10,'INGRESOS');
+        $pdf->SetXY(70,26);
+        $pdf->Cell(20,10,'VALOR');
         $tmp_ying = 26;
         $total_ing = 0;
         foreach ($lstrubros as $rubro) {
@@ -328,7 +343,12 @@ class Rol extends CI_Controller {
             $tmp_ying += 5;
             $total_ing += $rubro->valor_neto;
 
-            $pdf->SetXY(1,$tmp_ying);
+            if ($rubro->editable == 1){
+                $pdf->SetXY(1,$tmp_ying);
+                $pdf->Cell(20,10,$rubro->valor_ingreso);
+            }
+
+            $pdf->SetXY(25,$tmp_ying);
             $pdf->Cell(20,10,$rubro->nombre_rubro);
 
             $pdf->SetXY(70,$tmp_ying);
@@ -337,7 +357,11 @@ class Rol extends CI_Controller {
         }
 
         $pdf->SetXY(100,26);
+        $pdf->Cell(20,10,'NUMERO');
+        $pdf->SetXY(125,26);
         $pdf->Cell(20,10,'DESCUENTOS: ');
+        $pdf->SetXY(170,26);
+        $pdf->Cell(20,10,'VALOR');
         $tmp_yegre = 26;
         $total_egre = 0;
         foreach ($lstrubros as $rubro) {
@@ -345,7 +369,12 @@ class Rol extends CI_Controller {
             $tmp_yegre += 5;
             $total_egre += $rubro->valor_neto;
 
-            $pdf->SetXY(100,$tmp_yegre);
+            if ($rubro->editable == 1){
+                $pdf->SetXY(100,$tmp_yegre);
+                $pdf->Cell(20,10,$rubro->valor_ingreso);
+            }
+
+            $pdf->SetXY(125,$tmp_yegre);
             $pdf->Cell(20,10,$rubro->nombre_rubro);
 
             $pdf->SetXY(170,$tmp_yegre);
@@ -380,7 +409,9 @@ class Rol extends CI_Controller {
 
 class Rubro {
   public $id;
+  public $ingreso;
   public $valor;
+  public $eseditable;
   public $escalculado;
   public $expresion;
   public $calculadorealizado;
@@ -408,7 +439,12 @@ class Rubro_Calculador {
     $obj = $this->arreglo[$id];
     if ($obj){
       if (($obj->escalculado == false) || ($obj->calculadorealizado == true)){
-        return $obj->valor;
+        if ($obj->eseditable == 1) {
+            return $obj->ingreso;
+        }
+        else {           
+            return $obj->valor;
+        }
       }
       else {
         $exp = $obj->expresion;
@@ -426,7 +462,12 @@ class Rubro_Calculador {
               $idx++;
             }  
             $idx++;
-            $newval = $this->calcula_rubro($newid, $m);
+            if ( ($obj->eseditable == 1) && ($newid == $obj->id) ){
+                $newval = $obj->ingreso;
+            }
+            else {
+                $newval = $this->calcula_rubro($newid, $m);
+            }
             $newexp.= $newval;
           }
         }

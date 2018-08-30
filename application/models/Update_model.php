@@ -223,6 +223,15 @@ class Update_model extends CI_Model {
       $res = $this->existe_columna_tabla('jornada','salida_empresa');
       if ($res != true) $this->add_columna_tabla('jornada','salida_empresa', 'time', "");
 
+      $res = $this->existe_columna_tabla('roldepagos_det','valor_ingreso');
+      if ($res != true) $this->add_columna_tabla('roldepagos_det','valor_ingreso', 'numeric(10,2)', "");
+
+      $res = $this->existe_columna_tabla('roldepagos_tmpdet','valor_ingreso');
+      if ($res != true) $this->add_columna_tabla('roldepagos_tmpdet','valor_ingreso', 'numeric(10,2)', "");
+
+      $res = $this->existe_columna_tabla('rubro','calculado');
+      if ($res != true) $this->add_columna_tabla('rubro','calculado', 'int', "update rubro set calculado = 1 - editable");
+
       return 1;
     }
 

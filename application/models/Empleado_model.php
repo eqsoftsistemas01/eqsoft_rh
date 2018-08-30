@@ -396,7 +396,7 @@ class Empleado_model extends CI_Model {
       $result = $query->result();
       return $result;
     }
-    public function sel_robrosempleado_tmpid($idempleado){
+    public function sel_rubrosempleado_tmpid($idempleado){
         $query = $this->db->query("SELECT r.id, r.codigo_rubro, r.nombre_rubro, t.valor_neto, t.existe, r.editable
                                     FROM rubro r 
                                     INNER JOIN rubro_empleado_tmp t on t.id_rubro = r.id

@@ -332,7 +332,7 @@ class Empleado extends CI_Controller {
     }
     public function listadoRubroEmpleado() {
         $id = $this->session->userdata("tmp_empleado_idtmp");
-        $registro = $this->Empleado_model->sel_robrosempleado_tmpid($id);
+        $registro = $this->Empleado_model->sel_rubrosempleado_tmpid($id);
         $tabla = "";
         foreach ($registro as $row) {
            

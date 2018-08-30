@@ -174,17 +174,22 @@
                         <input id="chkdias" name="chkdias" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->afectadopordias == 1){ print " checked";} }  ?> style="margin-top:31px; margin-right:0px; margin-left:0px;" > <strong>Vinculado a Dias Trabajados</strong>
                     </div>
  -->
-                    <div class="form-group col-md-4">
+
+                    <div class="form-group col-md-6">
                         <label for="lb_cat">Dias de gracia</label>
                         <input type="text" class="form-control " name="txt_diasgracia" id="txt_diasgracia" placeholder="Dias de gracia" value="<?php if(@$obj != NULL){ print @$obj->diasgracia; }?>" >
                     </div>
 
-                    <div class="form-group col-md-12">
-                        <input id="chkcalculo" name="chkcalculo" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->editable == 0){ print " checked";} }  ?> style="margin-top:10px; margin-right:0px; margin-left:0px;" > <strong>Calculado</strong>
+                    <div class="form-group col-md-6">
+                        <input id="chkeditable" name="chkeditable" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->editable == 1){ print " checked";} }  ?> style="margin-top:31px; margin-right:0px; margin-left:0px;" > <strong>Editable</strong>
                     </div>
 
                     <div class="form-group col-md-12">
-                        <input type="text" class="form-control " name="txt_expresion" id="txt_expresion" placeholder="Expresion de Calculo" value="<?php if(@$obj != NULL){ print @$obj->expresioncalculo; }?>" <?php if(@$obj != NULL){ if(@$obj->editable == 1){ print " disabled";} } else { print " disabled";}  ?>>
+                        <input id="chkcalculo" name="chkcalculo" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->calculado == 1){ print " checked";} }  ?> style="margin-top:10px; margin-right:0px; margin-left:0px;" > <strong>Calculado</strong>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <input type="text" class="form-control " name="txt_expresion" id="txt_expresion" placeholder="Expresion de Calculo" value="<?php if(@$obj != NULL){ print @$obj->expresioncalculo; }?>" <?php if(@$obj != NULL){ if(@$obj->calculado == 0){ print " disabled";} } else { print " disabled";}  ?>>
                     </div>
 
 

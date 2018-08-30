@@ -50,7 +50,7 @@ class Rubro_model extends CI_Model {
     public function lst_rubro() {
         $query = $this->db->query("SELECT r.id, r.codigo_rubro, r.nombre_rubro, r.tipo_rubro, r.afectadopordias, r.periodicidadmensual, 
                                           r.mesactivo, r.diasgracia, r.editable, r.expresioncalculo, r.activo,
-                                          t.tiporubro
+                                          r.calculado, t.tiporubro
                                      FROM rubro r
                                      INNER JOIN tiporubro t on t.id = r.tipo_rubro
                                      Where r.activo = 1
@@ -58,12 +58,12 @@ class Rubro_model extends CI_Model {
         $result = $query->result();
         return $result;
     }
-    public function add_rubro($codigo_rubro, $nombre_rubro, $rubro_activo, $tipo_rubro, $periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, $expresion) {
-        $this->db->query("INSERT INTO rubro (codigo_rubro, nombre_rubro, tipo_rubro, activo, periodicidadmensual, mesactivo, afectadopordias, diasgracia, editable, expresioncalculo)
-                            VALUES ('$codigo_rubro', '$nombre_rubro', $tipo_rubro, $rubro_activo, $periodo, $mesactivo, $diastrabajados, $diasgracia, 1 - $calculado, '$expresion')");
+    public function add_rubro($codigo_rubro, $nombre_rubro, $rubro_activo, $tipo_rubro, $periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, $expresion, $editable) {
+        $this->db->query("INSERT INTO rubro (codigo_rubro, nombre_rubro, tipo_rubro, activo, periodicidadmensual, mesactivo, afectadopordias, diasgracia, editable, expresioncalculo, calculado)
+                            VALUES ('$codigo_rubro', '$nombre_rubro', $tipo_rubro, $rubro_activo, $periodo, $mesactivo, $diastrabajados, $diasgracia, $editable, '$expresion', $calculado)");
         
     }
-    public function upd_rubro($id, $codigo_rubro, $nombre_rubro, $rubro_activo,$tipo_rubro, $periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, $expresion) {
+    public function upd_rubro($id, $codigo_rubro, $nombre_rubro, $rubro_activo,$tipo_rubro, $periodo, $mesactivo, $diastrabajados, $diasgracia, $calculado, $expresion, $editable) {
         $this->db->query("UPDATE rubro SET 
                              codigo_rubro = '$codigo_rubro', 
                              nombre_rubro = '$nombre_rubro',
@@ -73,8 +73,9 @@ class Rubro_model extends CI_Model {
                              periodicidadmensual = $periodo, 
                              mesactivo = $mesactivo, 
                              diasgracia = $diasgracia, 
-                             editable = 1 - $calculado, 
-                             expresioncalculo = '$expresion'
+                             editable = $editable, 
+                             expresioncalculo = '$expresion',
+                             calculado = $calculado
                             WHERE id = $id");        
     }
 
@@ -101,7 +102,7 @@ class Rubro_model extends CI_Model {
     }
 
     public function sel_rubro_id($id){
-      $query = $this->db->query("SELECT id, codigo_rubro, nombre_rubro, tipo_rubro, afectadopordias, 
+      $query = $this->db->query("SELECT id, codigo_rubro, nombre_rubro, tipo_rubro, afectadopordias, calculado,
                                         periodicidadmensual, mesactivo, diasgracia, editable, expresioncalculo, activo
                                      FROM rubro 
                                      Where id = $id");
@@ -110,7 +111,7 @@ class Rubro_model extends CI_Model {
     }
 
     public function sel_rubro_codigo($codigo){
-      $query = $this->db->query("SELECT id, codigo_rubro, nombre_rubro, tipo_rubro, afectadopordias, 
+      $query = $this->db->query("SELECT id, codigo_rubro, nombre_rubro, tipo_rubro, afectadopordias, calculado,
                                         periodicidadmensual, mesactivo, diasgracia, editable, expresioncalculo, activo
                                      FROM rubro 
                                      Where codigo_rubro = '$codigo'");

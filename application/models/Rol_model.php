@@ -34,8 +34,8 @@ class Rol_model extends CI_Model {
                                 FROM roldepagos 
                                 WHERE id = $idrol;");
 
-          $this->db->query("INSERT INTO roldepagos_tmpdet (id_usuario, id_empleado, id_rubro, valor_neto)
-                              SELECT $idusuario, id_empleado, id_rubro, valor_neto 
+          $this->db->query("INSERT INTO roldepagos_tmpdet (id_usuario, id_empleado, id_rubro, valor_neto, valor_ingreso)
+                              SELECT $idusuario, id_empleado, id_rubro, valor_neto, valor_ingreso 
                                 FROM roldepagos_det 
                                 WHERE id_rol = $idrol;");
         }
@@ -63,10 +63,13 @@ class Rol_model extends CI_Model {
                               VALUES ($idusuario, '', 1, to_date('$inirol', 'YYYY-MM-DD'), to_date('$finrol', 'YYYY-MM-DD'),
                                                          to_date('$inirol', 'YYYY-MM-DD'), to_date('$finrol', 'YYYY-MM-DD'))");
         } 
-        $this->db->query("INSERT INTO roldepagos_tmpdet (id_usuario, id_empleado, id_rubro, valor_neto)
-                            SELECT $idusuario, r.id_empleado, r.id_rubro, r.valor_neto 
+        $this->db->query("INSERT INTO roldepagos_tmpdet (id_usuario, id_empleado, id_rubro, valor_neto, valor_ingreso)
+                            SELECT $idusuario, r.id_empleado, r.id_rubro, 
+                                   case u.editable WHEN 1 then 0 else r.valor_neto end as valor_neto,
+                                   case u.editable WHEN 1 then r.valor_neto else 0 end as valor_ingreso
                               FROM empleado e 
                               INNER JOIN rubro_empleado r on r.id_empleado = e.id_empleado
+                              INNER JOIN rubro u on u.id = r.id_rubro
                               WHERE NOT EXISTS (SELECT * FROM roldepagos_tmpdet t
                                                   WHERE t.id_usuario = $idusuario and 
                                                         t.id_empleado = r.id_empleado and
@@ -74,7 +77,8 @@ class Rol_model extends CI_Model {
 
         /* actualizando sueldo */
         $this->db->query("UPDATE roldepagos_tmpdet 
-                            SET valor_neto = empleado.sueldo
+                            SET valor_neto = empleado.sueldo,
+                                valor_ingreso = 0
                             FROM empleado 
                             WHERE roldepagos_tmpdet.id_empleado = empleado.id_empleado AND
                                   roldepagos_tmpdet.id_usuario = $idusuario AND
@@ -90,7 +94,8 @@ class Rol_model extends CI_Model {
 
         /* actualizando dias trabajados */
         $this->db->query("UPDATE roldepagos_tmpdet 
-                            SET valor_neto = (SELECT count(*) FROM asistencia a
+                            SET valor_ingreso = 0,
+                                valor_neto = (SELECT count(*) FROM asistencia a
                                                 LEFT JOIN empleado e on e.id_empleado = a.id_empleado
                                                 LEFT JOIN jornada j on j.id = e.id_jornada
                                                 WHERE a.id_empleado = roldepagos_tmpdet.id_empleado AND 
@@ -122,8 +127,10 @@ class Rol_model extends CI_Model {
 
     /* lista de empleados */
     public function lst_rubros($idusuario, $idempleado) {
-        $query = $this->db->query("SELECT t.id_rubro, r.codigo_rubro, r.nombre_rubro, r.expresioncalculo, t.valor_neto, r.editable,
-                                          CASE WHEN p.id IS NOT NULL then 0 else r.editable END as modificable                                                                                  
+        $query = $this->db->query("SELECT t.id_rubro, r.codigo_rubro, r.nombre_rubro, r.expresioncalculo, t.valor_neto, 
+                                          t.valor_ingreso, r.editable,
+                                          CASE WHEN p.id IS NOT NULL then 0 else r.editable END as modificable,
+                                          COALESCE(p.id,0) as idparametro                                                                                 
                                      FROM roldepagos_tmpdet t 
                                      INNER JOIN rubro r on r.id = t.id_rubro
                                      LEFT JOIN parametros p on p.valor = t.id_rubro::char
@@ -135,7 +142,9 @@ class Rol_model extends CI_Model {
 
     public function lst_rubros_calculo($idusuario, $idempleado) {
         $query = $this->db->query("SELECT r.id as id_rubro, r.codigo_rubro, r.nombre_rubro, r.expresioncalculo, 
-                                          COALESCE(t.valor_neto,0) as valor_neto, r.editable,
+                                          COALESCE(t.valor_ingreso,0) as valor_ingreso, 
+                                          COALESCE(t.valor_neto,0) as valor_neto, 
+                                          r.editable, r.calculado,
                                           CASE WHEN p.id IS NOT NULL then 0 else r.editable END as modificable                                                                                  
                                      FROM rubro r 
                                      LEFT JOIN roldepagos_tmpdet t on t.id_rubro = r.id AND t.id_usuario = $idusuario AND t.id_empleado = $idempleado
@@ -148,6 +157,14 @@ class Rol_model extends CI_Model {
     public function actualiza_valorrubro($idusuario, $idempleado, $idrubro, $valor) {
         if ($valor == '') { $valor = 0; }
         $this->db->query("UPDATE roldepagos_tmpdet SET valor_neto = $valor
+                            WHERE id_usuario = $idusuario AND 
+                                  id_empleado = $idempleado AND
+                                  id_rubro = $idrubro;");
+    }
+
+    public function actualiza_ingresorubro($idusuario, $idempleado, $idrubro, $valor) {
+        if ($valor == '') { $valor = 0; }
+        $this->db->query("UPDATE roldepagos_tmpdet SET valor_ingreso = $valor
                             WHERE id_usuario = $idusuario AND 
                                   id_empleado = $idempleado AND
                                   id_rubro = $idrubro;");
@@ -209,8 +226,8 @@ class Rol_model extends CI_Model {
         $resultado = $query->result();
         $newid = $resultado[0]->maxid;
 
-        $this->db->query("INSERT INTO roldepagos_det (id_rol, id_empleado, id_rubro, valor_neto)
-                            SELECT $newid, id_empleado, id_rubro, valor_neto 
+        $this->db->query("INSERT INTO roldepagos_det (id_rol, id_empleado, id_rubro, valor_neto, valor_ingreso)
+                            SELECT $newid, id_empleado, id_rubro, valor_neto, valor_ingreso 
                               FROM roldepagos_tmpdet 
                               WHERE id_usuario = $idusu");
     }
@@ -227,8 +244,8 @@ class Rol_model extends CI_Model {
                             WHERE roldepagos.id = $id");
         $this->db->query("DELETE FROM roldepagos_det WHERE id_rol = $id");
 
-        $this->db->query("INSERT INTO roldepagos_det (id_rol, id_empleado, id_rubro, valor_neto)
-                            SELECT $id, id_empleado, id_rubro, valor_neto 
+        $this->db->query("INSERT INTO roldepagos_det (id_rol, id_empleado, id_rubro, valor_neto, valor_ingreso)
+                            SELECT $id, id_empleado, id_rubro, valor_neto, valor_ingreso 
                               FROM roldepagos_tmpdet 
                               WHERE id_usuario = $idusu");
     }
@@ -255,7 +272,9 @@ class Rol_model extends CI_Model {
 
     public function lst_tmprolemp_rubros($idusuario, $idempleado) {
         $query = $this->db->query("SELECT r.id as id_rubro, r.codigo_rubro, r.nombre_rubro, 
-                                          COALESCE(t.valor_neto,0) as valor_neto, r.tipo_rubro
+                                          COALESCE(t.valor_neto,0) as valor_neto, 
+                                          COALESCE(t.valor_ingreso,0) as valor_ingreso, 
+                                          r.tipo_rubro, r.editable
                                      FROM rubro r 
                                      LEFT JOIN roldepagos_tmpdet t on t.id_rubro = r.id AND t.id_usuario = $idusuario AND t.id_empleado = $idempleado
                                      WHERE not r.id::char in (SELECT valor FROM parametros WHERE id in (3,4)) /*excepto dias trab y neto a cobrar*/
