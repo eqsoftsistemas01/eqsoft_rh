@@ -191,18 +191,20 @@ date_default_timezone_set("America/Guayaquil");
         },
         href: base_url + 'Rol/print_tmprol' 
       });
-/*
-      $.ajax({
-        url: base_url + "Rol/print_tmprol",
-        data: { id: id },
-        type: 'POST',
-        dataType: 'json',
-        success: function(json) {
-        }  
-      });  
-*/
     });  
 
+    $(document).on('click', '.printrolall', function(){
+      $.fancybox.open({
+        type:'iframe',
+        width: 800,
+        height: 550,
+        ajax: {
+           dataType: "html",
+           type: "POST",
+        },
+        href: base_url + 'Rol/print_tmprolall' 
+      });
+    });  
 
   });
 
@@ -283,6 +285,13 @@ date_default_timezone_set("America/Guayaquil");
                   <div class="box-header with-border">
 
                     <h3 class="box-title"><i class="fa fa-user"></i> Empleados </h3> 
+
+                    <div class="pull-right" >
+                        <button type="button" class="btn btn-success btn-grad no-margin-bottom printrolall" title="Rol de todos los empleados">
+                            <i class="fa fa-save "></i> Imprimir
+                        </button>
+                    </div>
+
                     <div class="row">
                       <div class="col-xs-12">
                           <div class="box-body table-responsive">

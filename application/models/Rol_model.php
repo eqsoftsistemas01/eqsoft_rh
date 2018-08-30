@@ -260,14 +260,15 @@ class Rol_model extends CI_Model {
                                           l. fechafin_rol,
                                           COALESCE(t.valor_neto,0) as diastrab                                          
                                      FROM rubro r 
-                                     INNER JOIN roldepagos_tmpdet t on t.id_rubro = r.id AND t.id_usuario = $idusuario AND t.id_empleado = $idempleado
+                                     INNER JOIN roldepagos_tmpdet t on t.id_rubro = r.id AND t.id_usuario = $idusuario AND 
+                                                                       ($idempleado=0 OR t.id_empleado = $idempleado)
                                      INNER JOIN roldepagos_tmp l on l.id_usuario = t.id_usuario 
                                      INNER JOIN parametros p on p.valor = t.id_rubro::char 
                                      INNER JOIN empleado e on e.id_empleado = t.id_empleado
                                      LEFT JOIN cargo c on c.id = e.id_cargo
                                      WHERE p.id = 3"); /*dias trabajados*/
         $result = $query->result();
-        return $result[0];
+        return $result;
     }
 
     public function lst_tmprolemp_rubros($idusuario, $idempleado) {
