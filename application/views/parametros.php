@@ -16,6 +16,12 @@ date_default_timezone_set("America/Guayaquil");
     $("#frm_emp").validationEngine();
 
 
+  $('#quitarimagen').click(function() {
+   
+    $("#rutaimagen").val("");
+
+  });
+
   });
 
 </script>
@@ -76,37 +82,35 @@ date_default_timezone_set("America/Guayaquil");
                               </div>
 
                               <div class="col-xs-3 text-center"  style="padding-top: 20px;">
-                                  <h3 class="profile-username text-center">Logo de Empresa</h3>
-<!--                                   <p class="text-muted text-center">Identificación</p>
- -->                                  <div class="fileupload fileupload-new" data-provides="fileupload">
-                                      <div class="fileupload-preview thumbnail"  id="fotomostrar">
-<!--                                            <img src="<?php print base_url() . "doc/". $cfg->logo_empresa; ?>" />
- -->                                           <img <?php 
-                                              if ($cfg->logo_empresa != NULL) {
-                                                  if ($cfg->logo_empresa != "") {
-                                                      
-                                                      print "width='150' height='150' src='" . base_url() ."doc/$cfg->logo_empresa'";
-                                                      
-                                                  } else {
-                                                      ?>
-                                                      src="<?php print base_url(); ?>public/img/perfil.jpg" <?php
-                                                  }
-                                              } else {
+                                <input type="hidden" id="rutaimagen" name="rutaimagen" value="<?php print $cfg->logo_empresa; ?>" >
+                                <h3 class="profile-username text-center">Logo de Empresa</h3>
+                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                  <div class="fileupload-preview thumbnail"  id="fotomostrar">
+                                   <img <?php 
+                                      if ($cfg->logo_empresa != NULL) {
+                                          if ($cfg->logo_empresa != "") {
+                                              
+                                              print "width='150' height='150' src='" . base_url() ."doc/$cfg->logo_empresa'";
+                                              
+                                          } else {
                                               ?>
-                                                  src="<?php print base_url(); ?>public/img/perfil.jpg" <?php }
-                                              ?> alt="" onerror="this.src='<?php print base_url() . "public/img/perfil.jpg"; ?>';" />
-
-                                       </div>
-                                      <div>
-                                      <br>
-                                          <span class="btn btn-file btn-success">
-                                              <span class="fileupload-new">Imagen</span>
-                                              <span class="fileupload-exists">Cambiar</span>
-                                              <input type="file"  id="foto" name="foto" accept="image/*" /> 
-                                          </span>
-                                          <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">Quitar</a>
-                                      </div>
+                                              src="<?php print base_url(); ?>public/img/perfil.jpg" <?php
+                                          }
+                                      } else {
+                                      ?>
+                                          src="<?php print base_url(); ?>public/img/perfil.jpg" <?php }
+                                      ?> alt="" onerror="this.src='<?php print base_url() . "public/img/perfil.jpg"; ?>';" />
+                                   </div>
+                                  <div>
+                                  <br>
+                                      <span class="btn btn-file btn-success">
+                                          <span class="fileupload-new">Imagen</span>
+                                          <span class="fileupload-exists">Cambiar</span>
+                                          <input type="file"  id="foto" name="foto" accept="image/*" /> 
+                                      </span>
+                                      <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload" id="quitarimagen">Quitar</a>
                                   </div>
+                                </div>
                               </div>
 
 

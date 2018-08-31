@@ -67,10 +67,15 @@ class Parametros extends CI_Controller {
         $identificacion = $this->input->post('txt_identificacion');
 
         $foto = $this->input->post('foto');
-        $foto_name= $_FILES["foto"]["name"];
+        if (isset($_FILES["foto"])) {
+            $foto_name= $_FILES["foto"]["name"];
+        }
+        else{
+            $foto_name = "";
+        }
         /* ESTE CONDICIONAL NOS PERMITE GUARDAR O MODIFICAR USUARIOS SIN QUE LE ASIGNEN FOTO */
         if ($foto_name == NULL || $foto_name == ""){
-            $fot = NULL;
+            $fot = $this->input->post('rutaimagen');
         } else { 
             $foto_name= $_FILES["foto"]["name"];
             $foto_size= $_FILES["foto"]["size"];

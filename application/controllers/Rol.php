@@ -313,18 +313,18 @@ class Rol extends CI_Controller {
             $pdf->SetXY(170,$coord_y);
 
             if($cfg->logo_empresa != null){
-              $pdf->Cell(20,20, $pdf->Image(base_url().'doc/'.$cfg->logo_empresa, $pdf->GetX(), $pdf->GetY(), 20, 20, 'jpg'),1);
+              $pdf->Cell(20,20, $pdf->Image(base_url().'doc/'.$cfg->logo_empresa, $pdf->GetX(), $pdf->GetY(), 20, 20, ''),1);
             }         
 
-            $pdf->SetXY(1,$coord_y);
+            $pdf->SetXY(5,$coord_y);
             $pdf->Cell(20,10,$cfg->nombrecomercial);
-            $pdf->SetXY(1,$coord_y + 5);
+            $pdf->SetXY(5,$coord_y + 5);
             $pdf->Cell(20,10,'RUC: '.$cfg->identificacion);
 
             $pdf->SetXY(70,$coord_y);
             $pdf->Cell(20,10,'PLANILLA INDIVIDUAL AL ' . $emp->fechafin_rol);
 
-            $pdf->SetXY(170,$coord_y + 20);
+            $pdf->SetXY(160,$coord_y + 20);
             $pdf->Cell(20,10,'Fecha: ' . $fechahoy);
 
             $pdf->SetXY(70,$coord_y + 5);
@@ -333,12 +333,12 @@ class Rol extends CI_Controller {
             $pdf->SetXY(70,$coord_y + 10);
             $pdf->Cell(20,10,'CARGO: '.$emp->nombre_cargo);
 
-            $pdf->SetXY(1,$coord_y + 20);
+            $pdf->SetXY(5,$coord_y + 20);
             $pdf->Cell(20,10,'DIAS TRABAJADOS: ' . number_format($emp->diastrab,0));
 
             $coord_y += 30;
             $tmp_ying = $coord_y;
-
+/*
             $pdf->SetXY(1,$tmp_ying);
             $pdf->Cell(20,10,'NUMERO');
             $pdf->SetXY(25,$tmp_ying);
@@ -410,7 +410,91 @@ class Rol extends CI_Controller {
             $pdf->Cell(20,10,'Neto a Recibir: ' . number_format($neto,2));
 
             $coord_y = $tmp_y;
-            $coord_y += 40;
+           $coord_y += 40;
+*/
+
+            /* test table*/
+            $pdf->SetXY(5,$coord_y);
+            $pdf->Cell(20,7,'NUMERO',1);
+            $pdf->Cell(55,7,'INGRESOS',1);
+            $pdf->Cell(22,7,'VALOR',1);
+            $pdf->Cell(2,7,'',1);
+            $pdf->Cell(20,7,'NUMERO',1);
+            $pdf->Cell(55,7,'DESCUENTOS',1);
+            $pdf->Cell(22,7,'VALOR',1);
+            $pdf->Ln();
+
+            $arr = [];
+            $arr[] = 0;
+            foreach ($lstrubros as $rubro) {
+              if ($rubro->tipo_rubro <= 2){
+                $arr[] = $rubro->id_rubro;
+              }  
+            }    
+
+            $total_ing = 0;
+            $total_egre = 0;
+            while (count($arr) > 1){
+                $pdf->SetX(5);
+
+                $enc = false;    
+                foreach ($lstrubros as $rubro) {
+                  if (($rubro->tipo_rubro == 1) && (array_search($rubro->id_rubro, $arr) != false)){  
+                    if ($rubro->editable == 1){ $pdf->Cell(20,7,$rubro->valor_ingreso,1); }
+                      else { $pdf->Cell(20,7,'',1); }
+
+                    $total_ing += $rubro->valor_neto;
+                    $pdf->Cell(55,7,$rubro->nombre_rubro,1);
+                    $pdf->Cell(22,7,$rubro->valor_neto, 1, 0, 'R');
+                    $pdf->Cell(2,7,'', 1);
+                    $enc = true;
+                    $idx = array_search($rubro->id_rubro, $arr);
+                    array_splice($arr, $idx, 1);
+                    break;
+                  }  
+                }
+                if (!$enc){
+                    $pdf->Cell(20,7,'', 1);
+                    $pdf->Cell(55,7,'', 1);
+                    $pdf->Cell(22,7,'', 1, 0, 'R');                   
+                    $pdf->Cell(2,7,'', 1);
+                }
+                $enc = false;    
+                foreach ($lstrubros as $rubro) {
+                  if (($rubro->tipo_rubro == 2) && (array_search($rubro->id_rubro, $arr) != false)){  
+                    if ($rubro->editable == 1){ $pdf->Cell(20,7,$rubro->valor_ingreso,1); }
+                      else { $pdf->Cell(20,7,'',1); }
+
+                    $total_egre += $rubro->valor_neto;
+                    $pdf->Cell(55,7,$rubro->nombre_rubro,1);
+                    $pdf->Cell(22,7,$rubro->valor_neto, 1, 1, 'R');
+                    $enc = true;
+                    $idx = array_search($rubro->id_rubro, $arr);
+                    array_splice($arr, $idx, 1);
+                    break;
+                  }  
+                }
+                if (!$enc){
+                    $pdf->Cell(20,7,'', 1);
+                    $pdf->Cell(55,7,'', 1);
+                    $pdf->Cell(22,7,'', 1, 1, 'R');                   
+                }
+            }
+
+            $pdf->SetX(5);
+            $pdf->Cell(75,7,'TOTAL INGRESOS', 1);
+            $pdf->Cell(22,7,number_format($total_ing,2), 1, 0, 'R');
+            $pdf->Cell(2,7,'',1);
+            $pdf->Cell(75,7,'TOTAL DESCUENTOS', 1);
+            $pdf->Cell(22,7,number_format($total_egre,2), 1, 0, 'R');
+            $pdf->Ln();
+
+            $pdf->SetFont('Arial','B',14);
+            $pdf->Cell(170,20,'Neto a Recibir: ' . number_format($neto,2), 0, 1, 'C');
+            $pdf->SetFont('Arial','B',12);
+
+            $coord_y = $pdf->GetY();
+            $coord_y +=10;
 
             if ($contemp == 2){
                 $contemp = 0;
