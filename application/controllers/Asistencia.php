@@ -16,6 +16,7 @@ class Asistencia extends CI_Controller {
         $this->auth_library->sess_validate(true);
         $this->auth_library->mssg_get();
         $this->load->Model("Asistencia_model");
+        $this->load->Model("Empleado_model");       
     }
 
     /* MÉTODO PREDETERMINADO DEL CONTROLADOR */
@@ -26,6 +27,22 @@ class Asistencia extends CI_Controller {
             $fecha = date("d/m/Y");
             $this->session->set_userdata("tmp_asist_fecha", $fecha);
         }    
+        $hasta = $this->session->userdata("tmp_asist_hasta");
+        if ($hasta == NULL) { 
+            $this->session->unset_userdata("tmp_asist_hasta"); 
+            $hasta = date("d/m/Y");
+            $this->session->set_userdata("tmp_asist_hasta", $hasta);
+        }    
+        $idemp = $this->session->userdata("tmp_asist_emp");
+        if ($idemp == NULL) { 
+            $this->session->unset_userdata("tmp_asist_emp"); 
+            $idemp = 0;
+            $this->session->set_userdata("tmp_asist_emp", $idemp);
+        }    
+        $empleado = $this->Asistencia_model->lst_empleado();
+        $data["fecha"] = $fecha;
+        $data["hasta"] = $hasta;
+        $data["empleado"] = $empleado;
         $data["base_url"] = base_url();
         $data["content"] = "asistencia";
         $this->load->view("layout", $data);
@@ -53,6 +70,25 @@ class Asistencia extends CI_Controller {
         } else {
             $this->session->set_userdata("tmp_asist_fecha", NULL);
         }
+
+        $this->session->unset_userdata("tmp_asist_hasta"); 
+        $id = $this->input->post("hasta");
+        $this->session->set_userdata("tmp_asist_hasta", NULL);
+        if ($id != NULL) {
+            $this->session->set_userdata("tmp_asist_hasta", $id);
+        } else {
+            $this->session->set_userdata("tmp_asist_hasta", NULL);
+        }
+
+        $this->session->unset_userdata("tmp_asist_emp"); 
+        $emp = $this->input->post("emp");
+        $this->session->set_userdata("tmp_asist_emp", NULL);
+        if ($emp != NULL) {
+            $this->session->set_userdata("tmp_asist_emp", $emp);
+        } else {
+            $this->session->set_userdata("tmp_asist_emp", NULL);
+        }
+
         $arr['resu'] = 1;
         print json_encode($arr);
     }
@@ -66,20 +102,34 @@ class Asistencia extends CI_Controller {
         else {
             $fecha = date("d/m/Y");
         }
-        $registro = $this->Asistencia_model->lst_asistencia($fecha);
+        $hasta = $this->session->userdata("tmp_asist_hasta");
+        if ($hasta != NULL) { 
+            $hasta = str_replace('/', '-', $hasta); 
+            $hasta = date("Y-m-d", strtotime($hasta));
+        } 
+        else {
+            $hasta = date("d/m/Y");
+        }
+        $emp = $this->session->userdata("tmp_asist_emp");
+        if (($emp == NULL) || ($emp == '')) { $emp = 0; } 
+        $registro = $this->Asistencia_model->lst_asistencia($fecha, $hasta, $emp);
         $tabla = "";
 
         $usua = $this->session->userdata('usua');
         $perfil = $usua->perfil;
 
         foreach ($registro as $row) {
+
+            $fecha = str_replace('-', '/', $row->fecha); $fecha = date("d/m/Y", strtotime($fecha));
+
             if ($perfil != 3){
                 $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad asistencia_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad asistencia_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
             } else {
                 $ver = '';
             }    
             $tabla.='{  "id":"' .$row->id. '",
-                        "empleado":"' .$row->apellidos . ' ' . $row->nombres . '",
+                        "fecha":"' .$fecha. '",
+                        "empleado":"' .addslashes($row->apellidos . ' ' . $row->nombres) . '",
                         "entrada_trabajo":"' .$row->entrada_trabajo. '",
                         "salida_almuerzo":"' .$row->salida_almuerzo. '",
                         "entrada_almuerzo":"' .$row->entrada_almuerzo. '",
@@ -95,10 +145,15 @@ class Asistencia extends CI_Controller {
         $id = $this->session->userdata("tmp_asistencia_id");
         $obj = $this->Asistencia_model->sel_asistencia_id($id);
         $data["obj"] = $obj;
-        $fecha = $this->session->userdata("tmp_asist_fecha");
-        $fecha = str_replace('/', '-', $fecha); 
+        $fec = $this->session->userdata("tmp_asist_fecha");
+        $data["fecha"] = $fec;
+        $fhasta = $this->session->userdata("tmp_asist_hasta");
+        $data["hasta"] = $fhasta;
+        $fecha = str_replace('/', '-', $fec); 
         $fecha = date("Y-m-d", strtotime($fecha));
-        $empleado = $this->Asistencia_model->lst_empleado($fecha, $obj->id_empleado);
+        $hasta = str_replace('/', '-', $fhasta); 
+        $hasta = date("Y-m-d", strtotime($hasta));
+        $empleado = $this->Asistencia_model->lst_empleadofecha($fecha, $hasta, $obj->id_empleado);
         $data["empleado"] = $empleado;
 
         $data["base_url"] = base_url();
@@ -107,7 +162,8 @@ class Asistencia extends CI_Controller {
     }
 
     public function guardar(){
-        $fecha = $this->session->userdata("tmp_asist_fecha");
+/*        $fecha = $this->session->userdata("tmp_asist_fecha");*/
+        $fecha = $this->input->post("fechaedit");
         $fecha = str_replace('/', '-', $fecha); 
         $fecha = date("Y-m-d", strtotime($fecha));
         $id = $this->input->post("txt_id");
@@ -130,10 +186,15 @@ class Asistencia extends CI_Controller {
     }
 
     public function add_asistencia(){
-        $fecha = $this->session->userdata("tmp_asist_fecha");
-        $fecha = str_replace('/', '-', $fecha); 
+        $fec = $this->session->userdata("tmp_asist_fecha");
+        $data["fecha"] = $fec;
+        $fhasta = $this->session->userdata("tmp_asist_hasta");
+        $data["hasta"] = $fhasta;
+        $fecha = str_replace('/', '-', $fec); 
         $fecha = date("Y-m-d", strtotime($fecha));
-        $empleado = $this->Asistencia_model->lst_empleado($fecha, 0);
+        $hasta = str_replace('/', '-', $fhasta); 
+        $hasta = date("Y-m-d", strtotime($hasta));
+        $empleado = $this->Asistencia_model->lst_empleadofecha($fecha, $hasta, 0);
         $data["empleado"] = $empleado;
         $data["base_url"] = base_url();
         $this->load->view("asistencia_add", $data);
@@ -146,7 +207,78 @@ class Asistencia extends CI_Controller {
         print json_encode($arr); 
     }
 
+    public function verifica_asistencia(){
+        $emp = $this->input->post('emp'); 
+        $fecha = $this->input->post('fecha'); 
+        $fecha = str_replace('/', '-', $fecha); 
+        $fecha = date("Y-m-d", strtotime($fecha));
+        $res = $this->Asistencia_model->sel_asistencia_fecha($emp, $fecha);
+        print json_encode($res); 
+    }
 
+    public function import_asistencia(){
+        $data["base_url"] = base_url();
+        $this->load->view("asistencia_import", $data);
+    } 
+
+    function multiexplode ($delimiters,$string) {
+       
+        $ready = str_replace($delimiters, $delimiters[0], $string);
+        $launch = explode($delimiters[0], $ready);
+        return  $launch;
+    }
+
+    public function import_archivo_asist(){
+        if ($_FILES['fichero_usuario']['tmp_name'] != ''){
+            $file_lines = file($_FILES['fichero_usuario']['tmp_name']);
+            $arremp = [];
+            $arrfecha = [];
+            $arrlines = [];
+            foreach ($file_lines as $key => $line) {
+                if ($key != 0){
+                    $arr = explode("\t", $line);
+                    $arrlines[] = $arr;
+                    if (in_array($arr[2], $arremp) != true){
+                        $arremp[] = $arr[2];
+                    }                       
+                    $arr2 = explode(" ", $arr[6]);
+                    if (in_array($arr2[0], $arrfecha) != true){
+                        $arrfecha[] = $arr2[0];
+                    }                       
+                }
+            }
+            foreach ($arrfecha as $fec) {
+                $fecha = str_replace('/', '-', $fec); 
+                foreach ($arremp as $codemp) {
+                    $emp = $this->Empleado_model->sel_empleado_codigoreloj($codemp);
+                    if ($emp){
+                        $asist = [];
+                        foreach ($arrlines as $line) {
+                            $arr2 = explode(" ", $line[6]);
+                            if (($arr2[0] == $fec) && ($line[2] == $codemp)){
+                                $asist[] = $line[6];
+                            }
+                        }    
+                        if (count($asist) > 0) { $entrada_trabajo = $asist[0]; } else { $entrada_trabajo = ''; }
+                        if (count($asist) > 1) { $salida_almuerzo = $asist[1]; } else { $salida_almuerzo = ''; }
+                        if (count($asist) > 2) { $entrada_almuerzo = $asist[2]; } else { $entrada_almuerzo = ''; }
+                        if (count($asist) > 3) { $salida_trabajo = $asist[3]; } else { $salida_trabajo = ''; }
+                        if (count($asist) > 0) {
+                            $res = $this->Asistencia_model->sel_asistencia_fecha($emp->id_empleado, $fecha);
+                            if ($res){
+                                $resu = $this->Asistencia_model->upd_asistencia($res->id, $fecha, $emp->id_empleado, $entrada_trabajo, $salida_almuerzo, $entrada_almuerzo, $salida_trabajo);
+                            } else {
+                                $resu = $this->Asistencia_model->add_asistencia($fecha, $emp->id_empleado, $entrada_trabajo, $salida_almuerzo, $entrada_almuerzo, $salida_trabajo);
+                            }
+                        }    
+
+                    }    
+                }
+            }    
+
+        }
+        print "<script> window.location.href = '" . base_url() . "asistencia'; </script>";       
+    } 
 
 }
 

@@ -17,6 +17,40 @@
 
     $(".hora").mask("99:99");
 
+    $('#fechaedit').css('z-index', 9999);
+
+    $.datepicker.setDefaults($.datepicker.regional["es"]);
+    $('#fechaedit').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd/mm/yy', 
+        firstDay: 1
+      });
+    $('#fechaedit').on('changeDate', function(ev){
+        $(this).datepicker('hide');
+    });  
+
+    $(document).on('change', '#fechaedit', function(){
+      var fecha = $(this).val();
+      var emp = $("#cmb_empleado").val();
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "<?php echo base_url('Asistencia/verifica_asistencia');?>",
+        data: {emp: emp, fecha: fecha},
+        success: function(json) {
+          if (json){
+            alert("entro");
+            $("#txt_id").val(json.id);
+            $("#entrada_trabajo").val(json.entrada_trabajo);
+            $("#salida_trabajo").val(json.salida_trabajo);
+            $("#salida_almuerzo").val(json.salida_almuerzo);
+            $("#entrada_almuerzo").val(json.entrada_almuerzo);
+          }
+        }
+      });
+    });  
+
   });     
 
 </script>
@@ -35,7 +69,7 @@
                             <input type="hidden" id="txt_id" name="txt_id" value="0">    
                     <?php } ?>  
 
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-7">
                       <label for="lb_res">Empleado</label>
                       <select id="cmb_empleado" name="cmb_empleado" class="form-control validate[required]">
                       <?php 
@@ -63,6 +97,14 @@
                         ?>
                       </select>                                  
                     </div>
+
+                    <div class="form-group col-md-5" >
+                      <label class="control-label">Fecha</label>
+                      <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                        <input type="text" class="form-control pull-right validate[required]" id="fechaedit" name="fechaedit" value="<?php if (@$fecha != NULL) { print @$fecha;} else { print date("d/m/Y"); } ?>">
+                      </div>
+                    </div> 
 
                     <div class="form-group col-md-6">
                       <label >Entrada Trabajo</label>

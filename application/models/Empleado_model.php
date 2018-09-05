@@ -489,4 +489,26 @@ class Empleado_model extends CI_Model {
         return $result;
     }
 
+    public function sel_empleado_codigoreloj($codigoreloj){
+      $query = $this->db->query(" SELECT e.id_empleado, e.nombres, e.apellidos, e.nro_ident, e.tipo_identificacion, 
+                                         e.perfil, e.telf_empleado, e.celular_empleado, e.correo_empleado, 
+                                         e.activo, e.id_departamento, e.lugarexpedicion, e.cedulamilitar, e.profesion,
+                                         e.pasaporte, e.fecha_nacimiento, e.sexo, e.id_estadocivil, e.peso, e.talla, 
+                                         e.codigoreloj, e.calleprincipal, e.numerovivienda, e.calletransversal, 
+                                         e.sector, e.referenciavivienda, e.id_ciudad, e.id_tipovivienda, e.vivefamiliares,
+                                         e.id_banco, e.id_tipocuenta, e.numerocuenta, e.nombrecontacto, e.direccioncontacto,
+                                         e.id_parentescocontacto, e.telefonocontacto, e.id_empresa, e.id_tiposangre,
+                                         e.id_tipodiscapacidad, e.p100discapacidad, e.id_contrato, e.id_cargo,
+                                         e.fecha_ingreso, e.fecha_salida, e.sueldo, e.id_jornada, e.causa_salida,
+                                         c.id_tipo as id_tipocontrato, id_tipotrabajador
+                                  FROM empleado e
+                                  LEFT JOIN contrato c on c.id = e.id_contrato
+                                  WHERE e.codigoreloj = '$codigoreloj'");
+      $result = $query->result();
+      if ($result)
+        return $result[0];
+      else
+        return NULL;
+    }
+
 }

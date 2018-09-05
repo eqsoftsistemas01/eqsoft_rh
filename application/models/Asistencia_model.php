@@ -14,7 +14,7 @@ class Asistencia_model extends CI_Model {
     }
 
     /* lista de empleados */
-    public function lst_asistencia($fecha) {
+    public function lst_asistencia($fecha, $hasta, $opcemp = 0) {
         $cond = "";
         $usua = $this->session->userdata('usua');
         if ($usua->perfil != 1) { 
@@ -33,7 +33,8 @@ class Asistencia_model extends CI_Model {
                                           a.id_empleado, e.nombres, e.apellidos, e.nro_ident
                                      FROM asistencia a
                                      INNER JOIN empleado e on e.id_empleado = a.id_empleado
-                                     Where fecha = '$fecha' $cond
+                                     Where a.fecha between '$fecha' AND '$hasta' AND
+                                           (($opcemp = 0) OR (e.id_empleado = $opcemp)) $cond
                                      ORDER BY e.apellidos, e.nombres;");
         $result = $query->result();
         return $result;
@@ -135,7 +136,7 @@ class Asistencia_model extends CI_Model {
     }
 
     /* lista de empleados */
-    public function lst_empleado($fecha, $idempleado = 0) {
+    public function lst_empleadofecha($fecha, $idempleado = 0) {
         $cond = "";
         $usua = $this->session->userdata('usua');
         if ($usua->perfil == 2) { 
@@ -152,6 +153,38 @@ class Asistencia_model extends CI_Model {
                                      ORDER BY e.apellidos, e.nombres;");
         $result = $query->result();
         return $result;
+    }
+
+    public function lst_empleado() {
+        $cond = "";
+        $usua = $this->session->userdata('usua');
+        if ($usua->perfil == 2) { 
+          $idemp = 0;
+          if ($usua->id_empleado != NULL) { $idemp = $usua->id_empleado; }
+          $cond = " AND e.id_departamento IN (SELECT id FROM departamento WHERE id_jefedepartamento = $idemp) "; 
+        }
+
+        $query = $this->db->query("SELECT 1 as tipo, e.id_empleado, e.nombres, e.apellidos, e.nro_ident
+                                     FROM empleado e
+                                     WHERE e.activo = 1 $cond
+                                   UNION SELECT 0 as tipo, 0 as id_empleado, '' as nombres, ' TODOS' as apellidos, '' as nro_ident         
+                                     ORDER BY tipo, apellidos, nombres;");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function sel_asistencia_fecha($emp, $fecha){
+      $query = $this->db->query("SELECT id, fecha, id_empleado, codigoreloj, entrada_trabajo, salida_almuerzo, 
+                                        entrada_almuerzo, salida_trabajo
+                                  FROM asistencia 
+                                  Where id_empleado = $emp AND fecha = '$fecha'");
+      $result = $query->result();
+      if ($result){
+        return $result[0];
+      }
+      else{
+        return NULL;
+      }
     }
 
 }

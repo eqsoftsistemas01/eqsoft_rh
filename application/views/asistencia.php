@@ -33,6 +33,17 @@
         $(this).datepicker('hide');
     });  
 
+    $.datepicker.setDefaults($.datepicker.regional["es"]);
+    $('#hasta').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd/mm/yy', 
+        firstDay: 1
+      });
+    $('#hasta').on('changeDate', function(ev){
+        $(this).datepicker('hide');
+    });  
+
     $('#TableObj').dataTable({
       "language":{  "lengthMenu":"Mostrar _MENU_ registros por página.",
                     "zeroRecords": "Lo sentimos. No se encontraron registros.",
@@ -47,6 +58,7 @@
                     },
         'ajax': "Asistencia/listadoAsistencia",
         'columns': [
+            {"data": "fecha"},
             {"data": "empleado"},
             {"data": "entrada_trabajo"},
             {"data": "salida_almuerzo"},   
@@ -56,14 +68,16 @@
         ]
     });
 
-    $('.actualiza').click(function(){
+    $('.actualiza').change(function(){
     var fecha = $("#fecha").val();
+    var hasta = $("#hasta").val();
+    var emp = $("#cmb_empleado").val();
 
       $.ajax({
         type: "POST",
         dataType: "json",
         url: "<?php echo base_url('Asistencia/tmp_fecha');?>",
-        data: { fecha: fecha }
+        data: { fecha: fecha, hasta: hasta, emp: emp }
       }).done(function (result) {
             $('#TableObj').DataTable().ajax.reload();
       }); 
@@ -133,9 +147,24 @@
       return false; 
     });
 
+    $(document).on('click', '.asistencia_import', function(){
+      $.fancybox.open({
+        type: "ajax",
+        width: 550,
+        height: 550,
+        ajax: {
+           dataType: "html",
+           type: "POST"
+        },
+        href: "<?php echo base_url('Asistencia/import_asistencia');?>",
+        afterClose: function(){
+          $('#TableObj').DataTable().ajax.reload();
+        } 
+      });
+    });
 
     function conf_del() {
-        return  confirm("¿Confirma que desea eliminar este asistencia?");
+        return  confirm("¿Confirma que desea eliminar la asistencia del empleado?");
     }
 
     var perfil = "<?php print @$perfil ?>";
@@ -171,25 +200,70 @@
                     <div class="box-header with-border">
 <!--                       <h3 class="box-title"></i> Datos de Asistencia</h3>
  -->
-                      <div class="form-group col-md-4" style="margin-bottom: 0px; margin-top: 8px;">
+                      <div class="form-group col-md-3" style="margin-bottom: 0px; margin-top: 8px;">
                         <label class="col-sm-3 control-label" style="padding-left: 0px;">Fecha</label>
                         <div class="input-group date col-sm-7">
                           <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                          <input type="text" class="form-control pull-right validate[required]" id="fecha" name="fecha" value="<?php if (@$fecha != NULL) {@$fec = str_replace('-', '/', @$fecha); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec;} else { print date("d/m/Y"); } ?>">
+                          <input type="text" class="form-control pull-right validate[required] actualiza" id="fecha" name="fecha" value="<?php if (@$fecha != NULL) { print @$fecha;} else { print date("d/m/Y"); } ?>">
 
-                          <span class="input-group-btn">
+<!--                           <span class="input-group-btn">
                             <button class="btn btn-success btn-flat actualiza" type="button"><i class="fa fa-retweet" aria-hidden="true"></i></button>
                           </span>
-
+ -->
                         </div>
                       </div> 
 
+                      <div class="form-group col-md-3" style="margin-bottom: 0px; margin-top: 8px;">
+                        <label class="col-sm-3 control-label" style="padding-left: 0px;">Hasta</label>
+                        <div class="input-group date col-sm-7">
+                          <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                          <input type="text" class="form-control pull-right validate[required] actualiza" id="hasta" name="hasta" value="<?php if (@$hasta != NULL) { print @$hasta;} else { print date("d/m/Y"); } ?>">
+                        </div>
+                      </div> 
+
+
+                      <div class="form-group col-md-4" style="margin-bottom: 0px; margin-top: 8px; padding-left: 0px; padding-right: 0px;">
+                        <label for="lb_res" class="col-sm-3 control-label" style="padding-left: 0px;">Empleado</label>
+                        <div class="col-sm-7" style="padding-left: 0px;">
+                          <select id="cmb_empleado" name="cmb_empleado" class="form-control validate[required] actualiza" >
+                          <?php 
+                            if(@$empleado != NULL){ ?>
+                            <?php } else { ?>
+                            <option  value="" selected="TRUE">Seleccione empleado...</option>
+                            <?php } 
+                              if (count($empleado) > 0) {
+                                foreach ($empleado as $tipo):
+                                    if(@$obj->id_empleado != NULL){
+                                        if($obj->id_empleado == $tipo->id_empleado){ ?>
+                                             <option value="<?php  print $tipo->id_empleado; ?>" selected="TRUE"> <?php  print $tipo->apellidos . ' ' . $tipo->nombres; ?> </option>
+                                            <?php
+                                        }else{ ?>
+                                            <option value="<?php  print $tipo->id_empleado; ?>" > <?php  print $tipo->apellidos . ' ' . $tipo->nombres; ?> </option>
+                                            <?php
+                                        }
+                                    }else{ ?>
+                                        <option value="<?php  print $tipo->id_empleado; ?>" > <?php  print $tipo->apellidos . ' ' . $tipo->nombres; ?> </option>
+                                        <?php
+                                        }   ?>
+                                    <?php
+                                endforeach;
+                              }
+                            ?>
+                          </select>                                                             
+                        </div>
+                    </div>
+
+
                       <div class="pull-right"> 
 
-                          <button type="button" class="btn btn-info btn-grad asistencia_add" >
+                          <button type="button" class="btn btn-success btn-sm btn-grad asistencia_import" >
+                            <i class="fa fa-upload"></i> Importar
+                          </button>   
+
+                          <button type="button" class="btn btn-info btn-sm btn-grad asistencia_add" >
                             <i class="fa fa-plus-square"></i> Añadir
                           </button>   
-                      
+                     
                       </div>
                     </div>
                     <div class="box-body">
@@ -200,6 +274,7 @@
                               <table id="TableObj" class="table table-bordered table-striped table-responsive">
                                 <thead>
                                   <tr >
+                                    <th>Fecha</th>
                                     <th>Empleado</th>
                                     <th>Entrada</th>
                                     <th>Sal.Almuerzo</th>
