@@ -9,7 +9,6 @@
 
     $(document).on('change', '#cmb_tipotrabajador', function(){
         var tipo = $('#cmb_tipotrabajador').val();
-        alert("tipo " + tipo);
         if(tipo != 0){ 
           $('.btnaplicarubro').attr('disabled',false); 
         } 
