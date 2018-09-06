@@ -107,6 +107,7 @@ class Rol_model extends CI_Model {
                                                         a.entrada_almuerzo <= j.entrada_almuerzo))
                                               )
                             WHERE roldepagos_tmpdet.id_usuario = $idusuario AND
+                                  roldepagos_tmpdet.id_empleado in (SELECT id_empleado FROM empleado WHERE editdiastrab = 0) AND 
                                   roldepagos_tmpdet.id_rubro = (SELECT valor FROM parametros WHERE id = 3)::integer;");
 
         return $result[0];
@@ -145,7 +146,8 @@ class Rol_model extends CI_Model {
                                           COALESCE(t.valor_ingreso,0) as valor_ingreso, 
                                           COALESCE(t.valor_neto,0) as valor_neto, 
                                           r.editable, r.calculado,
-                                          CASE WHEN p.id IS NOT NULL then 0 else r.editable END as modificable                                                                                  
+                                          CASE WHEN p.id IS NOT NULL then 0 else r.editable END as modificable,
+                                          COALESCE(p.id,0) as idparametro                                                                                  
                                      FROM rubro r 
                                      LEFT JOIN roldepagos_tmpdet t on t.id_rubro = r.id AND t.id_usuario = $idusuario AND t.id_empleado = $idempleado
                                      LEFT JOIN parametros p on p.valor = t.id_rubro::char
@@ -164,10 +166,22 @@ class Rol_model extends CI_Model {
 
     public function actualiza_ingresorubro($idusuario, $idempleado, $idrubro, $valor) {
         if ($valor == '') { $valor = 0; }
-        $this->db->query("UPDATE roldepagos_tmpdet SET valor_ingreso = $valor
-                            WHERE id_usuario = $idusuario AND 
-                                  id_empleado = $idempleado AND
-                                  id_rubro = $idrubro;");
+        $query = $this->db->query("SELECT valor FROM parametros WHERE id = 3");
+        $idrubrodias = 0;
+        $result = $query->result();
+        if ($result) { $idrubrodias = $result[0]->valor; }
+        if ($idrubro != $idrubrodias){
+          $this->db->query("UPDATE roldepagos_tmpdet SET valor_ingreso = $valor
+                              WHERE id_usuario = $idusuario AND 
+                                    id_empleado = $idempleado AND
+                                    id_rubro = $idrubro;");
+        }
+        else {
+          $this->db->query("UPDATE roldepagos_tmpdet SET valor_neto = $valor
+                              WHERE id_usuario = $idusuario AND 
+                                    id_empleado = $idempleado AND
+                                    id_rubro = $idrubro;");
+        }
     }
 
     public function sel_rubroneto_tmp($idusuario, $idempleado) {

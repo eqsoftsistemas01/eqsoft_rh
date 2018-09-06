@@ -232,6 +232,9 @@ class Update_model extends CI_Model {
       $res = $this->existe_columna_tabla('rubro','calculado');
       if ($res != true) $this->add_columna_tabla('rubro','calculado', 'int', "update rubro set calculado = 1 - editable");
 
+      $res = $this->existe_columna_tabla('empleado','editdiastrab');
+      if ($res != true) $this->add_columna_tabla('empleado','editdiastrab', 'int', "update empleado set editdiastrab = 0");
+
       return 1;
     }
 

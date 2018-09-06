@@ -1053,10 +1053,11 @@ date_default_timezone_set("America/Guayaquil");
                       
                             <div class="box-header with-border">
 
-                                <div class="form-group col-md-12">
-              
+                              <div class="form-group col-md-12">
 
-                                </div>
+                                    <input id="chkeditdias" name="chkeditdias" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->editdiastrab == 1){ print " checked";} } else {print " checked";} ?> style="margin-top:0px; margin-right:0px; margin-left:0px; margin-bottom: 0px;" > <strong>Habilitar Ingreso de Dias Trabajados</strong>
+              
+                              </div>
                             </div>
                          </div>
 

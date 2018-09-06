@@ -135,7 +135,7 @@ date_default_timezone_set("America/Guayaquil");
 
     });  
 
-    $(document).on('blur', '.valor_rubro', function(){
+    $(document).on('change', '.valor_rubro', function(){
       var id = this.id;
       var valor = $(this).val();
       if (valor == '') { valor = 0; }
@@ -152,6 +152,7 @@ date_default_timezone_set("America/Guayaquil");
               type: 'POST',
               dataType: 'json',
               success: function(json) {
+                  /*alert("json.valor " + json.valor);*/
                   $('.valor_neto[id='+ json.idemp +']').html(json.valor);
               }  
             });  

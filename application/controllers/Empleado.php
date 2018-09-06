@@ -213,6 +213,8 @@ class Empleado extends CI_Controller {
         $idjornada = $this->input->post('cmb_jornada'); 
         $tipotrabajador = $this->input->post('cmb_tipotrabajador'); 
 
+        $editdias = $this->input->post('chkeditdias');
+        if($editdias == 'on'){ $editdias = 1; } else { $editdias = 0; }
 
         if($id != 0){
             $resu = $this->Empleado_model->upd_empleado($id, $nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, 
@@ -222,7 +224,7 @@ class Empleado extends CI_Controller {
                                  $vivefamiliares, $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
                                  $parentescocontacto, $telefonocontacto, $empresa, $tiposangre, $tipodiscapacidad, 
                                  $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo,
-                                 $idjornada, $causasalida, $tipotrabajador);
+                                 $idjornada, $causasalida, $tipotrabajador, $editdias);
         } else {
             $resu = $this->Empleado_model->add_empleado($nombre, $apellido, $tipoident, $identificacion, $perfil, $telefono, 
                                  $celular, $correo, $activo, $departamento, $lugarexpedicion, $cedulamilitar,$profesion, $pasaporte, 
@@ -231,7 +233,7 @@ class Empleado extends CI_Controller {
                                  $vivefamiliares, $banco, $tipocuenta, $numerocuenta, $nombrecontacto, $direccioncontacto, 
                                  $parentescocontacto, $telefonocontacto, $empresa, $tiposangre, $tipodiscapacidad, 
                                  $p100discapacidad, $contrato, $cargo, $tipocontrato, $fechaingreso, $fechasalida, $sueldo,
-                                 $idjornada, $causasalida, $tipotrabajador);
+                                 $idjornada, $causasalida, $tipotrabajador, $editdias);
         }
         print "<script> window.location.href = '" . base_url() . "empleado'; </script>";
     }

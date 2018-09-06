@@ -19,6 +19,7 @@ class Rol extends CI_Controller {
         $this->load->Model("Rol_model");
         $this->load->Model("Rubro_model");
         $this->load->Model("Parametros_model");
+        $this->load->Model("Empleado_model");
 
         $this->load->library('Evalmath');       
     }
@@ -99,17 +100,19 @@ class Rol extends CI_Controller {
         else {
           $registro = $this->Rol_model->lst_rubros_calculo($idusu, $idemp);
           $this->calcula_valorrubros($idusu, $idemp, $registro);
+          $emp = $this->Empleado_model->sel_empleado_id($idemp);
           $registro = $this->Rol_model->lst_rubros($idusu, $idemp);
           foreach ($registro as $row) {
-              if ($row->modificable == 1) { 
-                $valor = '<div ><input type=\"text\" class=\"valor_rubro\" name=\"'.$row->id_rubro.'\" id=\"'.$row->id_rubro.'\" value=\"'.$row->valor_ingreso.'\" ></div>';
+              if (($row->modificable == 1) || ($row->idparametro == 3)) { 
+                $valoredit = ($row->idparametro != 3) ? $row->valor_ingreso : $row->valor_neto;
+                $valor = '<div ><input type=\"text\" class=\"valor_rubro\" name=\"'.$row->id_rubro.'\" id=\"'.$row->id_rubro.'\" value=\"'. $valoredit .'\" ></div>';
               } 
               else {
                 $valor = $row->valor_ingreso;
               }    
               if ($row->idparametro == 3) /*dias trabajados*/{
                 $neto = '';
-                $valor = $row->valor_neto;
+                if ($emp->editdiastrab == 0) { $valor = $row->valor_neto; }
               }
               else {
                 $neto = $row->valor_neto;
@@ -226,11 +229,11 @@ class Rol extends CI_Controller {
           $objrubro->escalculado = $rubro->calculado;
           $objrubro->expresion = $this->get_expresion_por_id($rubro->expresioncalculo);
           $objrubro->calculadorealizado = ($rubro->calculado == 0);
+          $objrubro->idparametro = $rubro->idparametro;
           $calculador->arreglo[$rubro->id_rubro] = $objrubro;
         }
-       /* var_dump($calculador->arreglo);die();*/
-
         $calculador->calcular();
+/*        var_dump($calculador->arreglo);die();*/
         foreach ($calculador->arreglo as $rubro) {
           $this->Rol_model->actualiza_valorrubro($idusuario, $idempleado, $rubro->id, $rubro->valor);
         }  
@@ -648,11 +651,13 @@ class Rubro {
   public $escalculado;
   public $expresion;
   public $calculadorealizado;
+  public $idparametro;
 }
 
 
 class Rubro_Calculador {
   public $arreglo = array();
+  public $idparamdias = 3;
 
   public function calcular(){
     $m = new EvalMath;
@@ -672,7 +677,7 @@ class Rubro_Calculador {
     $obj = $this->arreglo[$id];
     if ($obj){
       if (($obj->escalculado == false) || ($obj->calculadorealizado == true)){
-        if ($obj->eseditable == 1) {
+        if (($obj->eseditable == 1) && ($obj->idparametro != $this->idparamdias)) {
             return $obj->ingreso;
         }
         else {           
