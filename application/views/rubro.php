@@ -117,55 +117,54 @@
       return false; 
     });
 
+    $(document).on('click', '.rubro_aplica', function(){
+      id = $(this).attr('id');
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "<?php echo base_url('Rubro/tmp_rubro');?>",
+        data: {id: id},
+        success: function(json) {
+          $.fancybox.open({
+            type: "ajax",
+            width: 550,
+            height: 550,
+            ajax: {
+              dataType: "html",
+              type: "POST"
+            },
+            href: "<?php echo base_url('Rubro/aplica_rubro');?>",
+           /* afterClose: function(){
+              $('#TableObj').DataTable().ajax.reload();
+            }*/
+          });
+        }
+      });
+    });  
+
+
+
 
     function conf_del() {
         return  confirm("¿Confirma que desea eliminar este Rubro?");
     }
 
-    $(document).on('click', '.btnguardar', function(){ 
-      var ident = $("#txt_ident").val();    
-      var id = $("#txt_id").val();
-
-      $.ajax({
-          type: "POST",
-          dataType: "json",
-          url: base_url + "Rubro/existeIdentificacion",
-          data: { id: id, identificacion: ident },
-          success: function(json) {
-            if (json.resu == 0){
-
-              var tipoident = $('#cmb_tipoident option:selected').val();      
-              var perfil = $('#cmb_perfil option:selected').val();      
-              var departamento = $('#cmb_departamento option:selected').val();      
-              var nombre = $("#txt_nombre").val();
-              var activo = $("#chkactivo").val();
-              var direccion = $("#txt_direccion").val();
-              var telefono = $("#txt_telefono").val();
-              var correo = $("#txt_correo").val();
-
-              $.ajax({
-                  type: "POST",
-                  dataType: "json",
-                  url: base_url + "Rubro/guardar",
-                  data: { id: id, ident: ident, tipoident: tipoident,
-                          nombre: nombre, activo: activo, perfil: perfil,
-                          direccion: direccion, telefono: telefono, 
-                          correo: correo, departamento: departamento
-                        },
-                  success: function(json) {
-                    $.fancybox.close();
-                    location.replace("<?php print $base_url ?>Rubro");
-                  }
-              });
-
-            } else {
-                alert("El numero de identificación ya esta registrado para otro Rubro");
-                $('#txt_ident').focus();
-                return false;
-            } 
-          }
-      });
-    });  
+    $(document).on('click', '.btnaplicarubro', function(){
+      if (confirm("Desea aplicar el rubro a los empleados del tipo seleccionado?")){
+        var id = $("#txt_id").val();
+        var tipo = $("#cmb_tipotrabajador").val();
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: base_url + "Rubro/rubro_aplica_tipoempleado",
+            data: { id: id, tipo: tipo },
+            success: function(json) {
+              $.fancybox.close();
+              location.replace("<?php print $base_url ?>Rubro");
+            }
+        });
+      }  
+    });
 
 
   }); 

@@ -64,9 +64,13 @@
                         <input type="hidden" id="txt_id" name="txt_id" value="0">    
                 <?php } ?>  
 
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-9">
                     <label for="lb_cat">Nombre y Apellidos</label>
                     <input type="text" class="form-control validate[required]" name="txt_nombre" id="txt_nombre" placeholder="Nombre y Apellidos" value="<?php if(@$obj != NULL){ print @$obj->nombre_empleado; }?>" >
+                </div>
+
+                <div class="form-group col-md-3 text-center" style="padding-left:0px;">
+                    <input id="chkactivo" name="chkactivo" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->activo == 1){ print " checked";} } else {print " checked";} ?> style="margin-top:31px; margin-right:0px; margin-left:0px;" > <strong>Activo</strong>
                 </div>
 
                 <div class="form-group col-md-12">
@@ -121,7 +125,7 @@
                     <input type="text" class="form-control " name="txt_correo" id="txt_correo" placeholder="Correo" value="<?php if(@$obj != NULL){ print @$obj->correo_empleado; }?>" >
                 </div>
 
-                <div style="" class="form-group col-md-9">
+                <div style="" class="form-group col-md-6">
                   <label for="lb_res">Perfil de Usuario</label>
                   <select class="form-control validate[required]" id="cmb_perfil" name="cmb_perfil">
                       <?php 
@@ -150,15 +154,41 @@
                   </select>
                 </div>
 
-                <div class="form-group col-md-3 text-center" style="padding-left:0px;">
-                    <input id="chkactivo" name="chkactivo" type="checkbox" <?php if(@$obj != NULL){ if(@$obj->activo == 1){ print " checked";} } else {print " checked";} ?> style="margin-top:31px; margin-right:0px; margin-left:0px;" > <strong>Activo</strong>
+                <div style="" class="form-group col-md-6">
+                  <label for="lb_res">Departamento</label>
+                  <select class="form-control validate[required]" id="cmb_departamento" name="cmb_departamento">
+                      <?php 
+                        if(@$departamento != NULL){ ?>
+                          <option  value="0" selected="TRUE">Seleccione...</option>
+                      <?php }  
+                                if (count($departamento) > 0) {
+                                  foreach ($departamento as $pe):
+                                      if(@$obj->id_departamento != NULL){
+                                          if($pe->id == $obj->id_departamento){ ?>
+                                              <option  value="<?php  print $pe->id; ?>" selected="TRUE"><?php print $pe->nombre_departamento ?></option> 
+                                              <?php
+                                          }else{ ?>
+                                              <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_departamento ?> </option>
+                                              <?php
+                                          }
+                                      }else{ ?>
+                                          <option value="<?php  print $pe->id; ?>"> <?php  print $pe->nombre_departamento ?> </option>
+                                          <?php
+                                          }   ?>
+                                      <?php
+
+                                  endforeach;
+                                }
+                                ?>
+                  </select>
                 </div>
+
 
             </div>
         </div>
         <div  align="center" class="box-footer">
             <div class="form-actions ">
-                <button type="submit" class="btn btn-danger btn-grad no-margin-bottom btnguardar">
+                <button type="submit" class="btn btn-success btn-grad no-margin-bottom btnguardar">
                 <i class="fa fa-save "></i> Guardar
             </button>
             </div>

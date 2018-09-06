@@ -201,7 +201,7 @@
 <!--                       <h3 class="box-title"></i> Datos de Asistencia</h3>
  -->
                       <div class="form-group col-md-3" style="margin-bottom: 0px; margin-top: 8px;">
-                        <label class="col-sm-3 control-label" style="padding-left: 0px;">Fecha</label>
+                        <label class="col-sm-3 control-label" style="padding-left: 0px;">Desde</label>
                         <div class="input-group date col-sm-7">
                           <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
                           <input type="text" class="form-control pull-right validate[required] actualiza" id="fecha" name="fecha" value="<?php if (@$fecha != NULL) { print @$fecha;} else { print date("d/m/Y"); } ?>">

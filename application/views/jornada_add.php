@@ -90,7 +90,7 @@
             </div>
             <div  align="center" class="box-footer">
                 <div class="form-actions ">
-                    <button type="submit" class="btn btn-danger btn-grad no-margin-bottom ">
+                    <button type="submit" class="btn btn-success btn-grad no-margin-bottom ">
                     <i class="fa fa-save "></i> Guardar jornada
                 </button>
                 </div>

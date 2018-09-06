@@ -122,4 +122,12 @@ class Rubro_model extends CI_Model {
         return NULL;
     }
 
+    public function rubro_aplica_tipoempleado($id, $tipo){
+      $this->db->query("INSERT INTO rubro_empleado (id_empleado, id_rubro, valor_neto)
+                          SELECT e.id_empleado, $id, 0
+                            FROM empleado e 
+                            LEFT JOIN rubro_empleado r on r.id_empleado = e.id_empleado AND r.id_rubro = $id
+                            WHERE (e.id_tipotrabajador = $tipo) AND (r.id_rubro IS NULL)");
+    }  
+
 }

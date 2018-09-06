@@ -179,7 +179,7 @@
           </div>
           <div  align="center" class="box-footer">
               <div class="form-actions ">
-                  <button type="submit" class="btn btn-danger btn-grad no-margin-bottom btnguardarcarga">
+                  <button type="submit" class="btn btn-success btn-grad no-margin-bottom btnguardarcarga">
                   <i class="fa fa-save "></i> Guardar carga familiar
               </button>
               </div>

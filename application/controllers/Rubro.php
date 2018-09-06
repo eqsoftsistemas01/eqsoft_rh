@@ -16,7 +16,7 @@ class rubro extends CI_Controller {
         $this->auth_library->sess_validate(true);
         $this->auth_library->mssg_get();
         $this->load->Model("Rubro_model");
-        //$this->load->Model("usuario_model");
+        $this->load->Model("Empleado_model");
         //$this->load->Model("Departamento_model");
 
         $this->load->library('Evalmath');
@@ -61,7 +61,7 @@ class rubro extends CI_Controller {
         foreach ($registro as $row) {
             if ($row->periodicidadmensual == 1) { $periodicidad = 'Mensual'; } else { $periodicidad = 'Anual'; }
             if ($row->calculado == 1) { $calculado = 'SI'; } else { $calculado = 'NO'; }
-            $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad rubro_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad rubro_del\"><i class=\"fa fa-trash-o\"></i></a></div>';
+            $ver = '<div class=\"text-center\"><a href=\"#\" title=\"Editar\" id=\"'.$row->id.'\" class=\"btn btn-success btn-xs btn-grad rubro_ver\"><i class=\"fa fa-pencil-square-o\"></i></a> <a href=\"#\" title=\"Eliminar\" id=\"'.$row->id.'\" class=\"btn btn-danger btn-xs btn-grad rubro_del\"><i class=\"fa fa-trash-o\"></i></a> <a href=\"#\" title=\"Aplicar\" id=\"'.$row->id.'\" class=\"btn btn-info btn-xs btn-grad rubro_aplica\"><i class=\"fa fa-check-square-o\"></i></a></div>';
             $tabla.='{  "id":"' .$row->id. '",
                         "nombre":"' .$row->nombre_rubro. '",
                         "codigo":"' .$row->codigo_rubro. '",
@@ -177,6 +177,25 @@ class rubro extends CI_Controller {
         print json_encode($arr); 
     }
 
+    public function aplica_rubro(){
+        $tipotrabajador = $this->Empleado_model->lst_tipotrabajador();
+        $data["tipotrabajador"] = $tipotrabajador;
+        $id = $this->session->userdata("tmp_rubro_id");
+        $obj = $this->Rubro_model->sel_rubro_id($id);
+        $data["obj"] = $obj;
+
+        $data["base_url"] = base_url();
+        $this->load->view("rubro_aplica", $data);
+    } 
+
+    public function rubro_aplica_tipoempleado(){
+        $id = $this->input->post("id");
+        $tipo = $this->input->post("tipo");
+        $resu = $this->Rubro_model->rubro_aplica_tipoempleado($id, $tipo);
+
+        $arr['mens'] = 1;
+        print json_encode($arr); 
+    } 
 
 }
 
