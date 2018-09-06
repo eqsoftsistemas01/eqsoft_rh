@@ -437,6 +437,83 @@ class Empleado extends CI_Controller {
         print json_encode($arr); 
     }
 
+    public function reporte_datosgenerales(){
+        $registro = $this->Empleado_model->lst_empleado();
+        //activate worksheet number 1
+        $this->excel->setActiveSheetIndex(0);
+        //name the worksheet
+        $this->excel->getActiveSheet()->setTitle('ReporteDatosEmpleado');
+        //set cell A1 content with some text
+        $this->excel->getActiveSheet()->setCellValue('A1', 'Reporte Datos generales de Emppleados');
+        //change the font size
+        $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(16);
+        //make the font become bold
+        $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+        //merge cell A1 until D1
+        $this->excel->getActiveSheet()->mergeCells('A1:D1');
+        //set aligment to center for that merged cell (A1 to D1)
+        $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+        $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(12);
+        $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(17);
+        $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+        $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+        $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(25);
+        $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
+        $this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+        $this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(10);
+        $this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(10);
+        $this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(10);
+        $this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(10);
+        $this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(10);
+        $this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
+        $this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
+        $this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(10);
+        $this->excel->getActiveSheet()->getColumnDimension('P')->setWidth(10);
+        $this->excel->getActiveSheet()->getColumnDimension('Q')->setWidth(10);
+
+        $this->excel->getActiveSheet()->setCellValue('A3', 'APELLIDOS');
+        $this->excel->getActiveSheet()->setCellValue('B3', 'NOMBRES');
+        $this->excel->getActiveSheet()->setCellValue('C3', 'IDENTIFICACION');
+        $this->excel->getActiveSheet()->setCellValue('D3', 'TIPO-ID');
+        $this->excel->getActiveSheet()->setCellValue('E3', 'TELEFONO');
+        $this->excel->getActiveSheet()->setCellValue('F3', 'CORREO');
+        $this->excel->getActiveSheet()->setCellValue('G3', 'DEPARTAMENTO');
+
+        $this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
+        $this->excel->getActiveSheet()->getStyle('B3')->getFont()->setBold(true);
+        $this->excel->getActiveSheet()->getStyle('C3')->getFont()->setBold(true);
+        $this->excel->getActiveSheet()->getStyle('D3')->getFont()->setBold(true);
+        $this->excel->getActiveSheet()->getStyle('E3')->getFont()->setBold(true);
+        $this->excel->getActiveSheet()->getStyle('F3')->getFont()->setBold(true);
+        $this->excel->getActiveSheet()->getStyle('G3')->getFont()->setBold(true);
+
+        $fila = 4;
+        foreach ($registro as $reg) {
+
+            @$fec = str_replace('-', '/', $ven->fecharegistro); @$fec = date("d/m/Y  H:i:s", strtotime(@$fec)); 
+            $this->excel->getActiveSheet()->setCellValue('A'.$fila, $reg->apellidos);
+            $this->excel->getActiveSheet()->setCellValue('B'.$fila, $reg->nombres);
+            $this->excel->getActiveSheet()->setCellValue('C'.$fila, $reg->nro_ident);            
+            $this->excel->getActiveSheet()->setCellValue('D'.$fila, $reg->desc_identificacion);
+            $this->excel->getActiveSheet()->setCellValue('E'.$fila, $reg->telf_empleado);
+            $this->excel->getActiveSheet()->setCellValue('F'.$fila, $reg->correo_empleado);
+            $this->excel->getActiveSheet()->setCellValue('G'.$fila, $reg->nombre_departamento);
+
+            $fila++;          
+        }    
+        $fila++;          
+     
+        $filename='reporteempleado.xlsx'; //save our workbook as this file name
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+        header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+        header('Cache-Control: max-age=0'); //no cache
+                    
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+    ob_end_clean();
+        $objWriter->save('php://output');        
+    }  
+
 }
 
 ?>

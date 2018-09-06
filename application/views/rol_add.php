@@ -19,6 +19,10 @@ date_default_timezone_set("America/Guayaquil");
   border-color: currentcolor currentcolor;
 } 
 
+.tdvalor{
+  width: 70px;
+}
+
 </style>
 
 <script>

@@ -94,21 +94,6 @@
       location.replace("<?php print $base_url;?>Empleado/add_empleado");
     });  
 
-    $(document).on('click', '.ret_add00', function(){
-      $.fancybox.open({
-        type: "ajax",
-        width: 550,
-        height: 550,
-        ajax: {
-           dataType: "html",
-           type: "POST"
-        },
-        href: "<?php echo base_url('Empleado/add_empleado');?>",
-        afterClose: function(){
-          $('#TableObj').DataTable().ajax.reload();
-        } 
-      });
-    });
 
     $(document).on('click','.ret_del', function() {
         id = $(this).attr('id');
@@ -177,6 +162,7 @@
     });  
 
 
+
   }); 
 
 
@@ -206,10 +192,22 @@
                       <h3 class="box-title"></i> Datos de Empleados</h3>
                       <div class="pull-right"> 
 
-                          <button type="button" class="btn btn-info btn-grad ret_add" >
-                            <i class="fa fa-plus-square"></i> Añadir trabajador
-                          </button>   
+                        <div class="btn-group" style="color: white; margin-bottom: 0px; margin-right: 10px;">
+                          <button type="button" class="btn bg-green"><i class="fa fa-list" aria-hidden="true"></i> Reportes</button>
+                          <button type="button" class="btn bg-green dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu">
 
+                            <li><a id="" class="btn-success" target="_blank" href="<?php print $base_url;?>Empleado/reporte_datosgenerales"><i class="fa fa-bar-chart" aria-hidden="true" style="font-color: white; "></i> Datos Generales</a></li>
+
+                          </ul>
+                        </div>
+
+                        <button type="button" class="btn btn-info btn-grad ret_add" >
+                          <i class="fa fa-plus-square"></i> Añadir
+                        </button>   
                        
                     </div>
                     </div>

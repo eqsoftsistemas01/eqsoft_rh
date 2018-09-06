@@ -105,7 +105,7 @@ class Rol extends CI_Controller {
           foreach ($registro as $row) {
               if (($row->modificable == 1) || ($row->idparametro == 3)) { 
                 $valoredit = ($row->idparametro != 3) ? $row->valor_ingreso : $row->valor_neto;
-                $valor = '<div ><input type=\"text\" class=\"valor_rubro\" name=\"'.$row->id_rubro.'\" id=\"'.$row->id_rubro.'\" value=\"'. $valoredit .'\" ></div>';
+                $valor = '<div ><input type=\"text\" class=\"tdvalor valor_rubro\" name=\"'.$row->id_rubro.'\" id=\"'.$row->id_rubro.'\" value=\"'. $valoredit .'\" ></div>';
               } 
               else {
                 $valor = $row->valor_ingreso;
