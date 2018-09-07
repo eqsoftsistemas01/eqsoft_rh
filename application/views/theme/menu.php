@@ -117,6 +117,10 @@
             <?php if($perfil == 1) { ?>
             <li><a href="<?php print $base_url ?>jornada"><i class="fa fa-hourglass"></i> Jornadas</a></li>
             <?php } ?> 
+
+            <?php if($perfil == 1) { ?>
+            <li><a href="<?php print $base_url ?>dialaborable"><i class="fa fa-hourglass"></i> Dias Laborables</a></li>
+            <?php } ?> 
            
             <li><a href="<?php print $base_url ?>permisoausencia"><i class="fa fa-thumbs-up"></i> Permisos de Ausencia</a></li>            
             <?php if($perfil == 1) { ?>

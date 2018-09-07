@@ -227,7 +227,11 @@ class Rol extends CI_Controller {
           $objrubro->valor = $rubro->valor_neto;
           $objrubro->eseditable = $rubro->editable;
           $objrubro->escalculado = $rubro->calculado;
-          $objrubro->expresion = $this->get_expresion_por_id($rubro->expresioncalculo);
+          $tmpexp = $rubro->expresioncalculo;
+          $dl = '[' . $this->Parametros_model->variable_diaslaborables_get() . ']';
+          $cantdiaslab = $this->Rol_model->sel_diaslaborables_rol($idusuario);
+          $tmpexp = str_replace($dl,$cantdiaslab,$tmpexp);
+          $objrubro->expresion = $this->get_expresion_por_id($tmpexp);
           $objrubro->calculadorealizado = ($rubro->calculado == 0);
           $objrubro->idparametro = $rubro->idparametro;
           $calculador->arreglo[$rubro->id_rubro] = $objrubro;

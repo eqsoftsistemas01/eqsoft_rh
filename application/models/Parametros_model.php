@@ -79,4 +79,10 @@ class Parametros_model extends CI_Model {
                                      WHERE id=1;");
     }
 
+    public function variable_diaslaborables_get() {
+        $query = $this->db->query("SELECT valor FROM parametros WHERE id=5;");
+        $result = $query->result();
+        return $result[0]->valor;
+    }
+
 }

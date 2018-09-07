@@ -250,24 +250,29 @@ date_default_timezone_set("America/Guayaquil");
                 <?php } ?>  
 
 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                   <label >Inicio Rol</label>
                   <input type="text" class="form-control actualiza_rubro" name="fechainirol" id="fechainirol" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->fechaini_rol); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
                 </div>                       
 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                     <label >Fin Rol</label>
                     <input type="text" class="form-control actualiza_rubro" name="fechafinrol" id="fechafinrol" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->fechafin_rol); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
                 </div>                       
 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                     <label >Inicio Asistenc.</label>
                     <input type="text" class="form-control actualiza_rubro" name="feciniasist" id="feciniasist" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->asistencia_ini); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
                 </div>                       
 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                     <label >Fin Asistencia</label>
                     <input type="text" class="form-control actualiza_rubro" name="fecfinasist" id="fecfinasist" value="<?php if(@$obj != NULL){ @$fec = str_replace('-', '/', @$obj->asistencia_fin); @$fec = date("d/m/Y", strtotime(@$fec)); print @$fec; } ?>" >
+                </div>                       
+
+                <div class="form-group col-md-2">
+                    <label >Dias Laborables</label>
+                    <input type="text" class="form-control" name="diaslab" id="diaslab" value="<?php if(@$obj != NULL){ print $obj->diaslaborables; } ?>" readonly>
                 </div>                       
 
               </div>                       

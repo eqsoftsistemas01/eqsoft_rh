@@ -161,6 +161,7 @@ class rubro extends CI_Controller {
 
     public function eval_expresion(){
         $exp = $this->input->post('exp'); 
+        $exp = str_replace('[DL]', '1', $exp);
         $exp = str_replace('[', '', $exp);
         $expresion = str_replace(']', '', $exp);
         $m = new EvalMath;

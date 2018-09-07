@@ -235,6 +235,14 @@ class Update_model extends CI_Model {
       $res = $this->existe_columna_tabla('empleado','editdiastrab');
       if ($res != true) $this->add_columna_tabla('empleado','editdiastrab', 'int', "update empleado set editdiastrab = 0");
 
+      $res = $this->existe_tabla('dialaborable');
+      if ($res != true) $this->crea_tabla_dialaborable();
+
+      $res = $this->existe_vista('vista_meses');
+      if ($res != true) $this->crea_vista_meses();
+
+      $this->tabla_parametros_inserta(5, "Variable Dias Laborables", "DL");
+
       return 1;
     }
 
@@ -244,6 +252,20 @@ class Update_model extends CI_Model {
                                     FROM pg_tables
                                     WHERE schemaname = 'public'
                                     AND tablename = '$tabla'");
+      $r = $query->result();
+      if ($r != null){
+        $myresult = ($r[0]->cant > 0);
+      } else {
+        $myresult = false;      
+      } 
+      return $myresult;
+    }
+
+    public function existe_vista($vista){
+      $query = $this->db->query("SELECT count(*) as cant 
+                                    FROM pg_views
+                                    WHERE schemaname = 'public'
+                                    AND viewname = '$vista'");
       $r = $query->result();
       if ($r != null){
         $myresult = ($r[0]->cant > 0);
@@ -791,6 +813,17 @@ class Update_model extends CI_Model {
       $this->db->query("INSERT INTO parametros (id, descripcion, valor) VALUES(2, 'ID Rubro Sueldo Base', '')");
       $this->db->query("INSERT INTO parametros (id, descripcion, valor) VALUES(3, 'ID Rubro Dias Trabajados', '')");
       $this->db->query("INSERT INTO parametros (id, descripcion, valor) VALUES(4, 'ID Rubro Neto a Cobrar', '')");
+      $this->db->query("INSERT INTO parametros (id, descripcion, valor) VALUES(5, 'Variable Dias Laborables', 'DL')");
+    }
+
+    public function tabla_parametros_inserta($id, $descripcion, $valor){
+      $query = $this->db->query("SELECT count(*) as cant FROM parametros WHERE id = $id");
+      $r = $query->result();
+      if ($r[0]->cant == 0){
+        $this->db->query("INSERT INTO parametros (id, descripcion, valor) VALUES($id, '$descripcion', '$valor')");
+      } else {
+        $this->db->query("UPDATE parametros set descripcion = '$descripcion' WHERE id = $id;");
+      }
     }
 
     public function crea_tabla_jornada(){
@@ -876,6 +909,33 @@ class Update_model extends CI_Model {
                           activo int,
                           PRIMARY KEY (id) 
                           )");
+    }
+
+    public function crea_tabla_dialaborable(){
+      $query = $this->db->query("CREATE TABLE dialaborable (
+                                    anio int,
+                                    mes int,
+                                    dias int,
+                                    PRIMARY KEY (anio, mes) 
+                                    )");
+
+    }
+
+    public function crea_vista_meses(){
+      $this->db->query("CREATE VIEW vista_meses AS 
+                           SELECT 1 as id, 'Enero' as nombremes UNION 
+                           SELECT 2 as id, 'Febrero' as nombremes UNION
+                           SELECT 3 as id, 'Marzo' as nombremes UNION
+                           SELECT 4 as id, 'Abril' as nombremes UNION
+                           SELECT 5 as id, 'Mayo' as nombremes UNION
+                           SELECT 6 as id, 'Junio' as nombremes UNION
+                           SELECT 7 as id, 'Julio' as nombremes UNION
+                           SELECT 8 as id, 'Agosto' as nombremes UNION
+                           SELECT 9 as id, 'Septiembre' as nombremes UNION
+                           SELECT 10 as id, 'Octubre' as nombremes UNION
+                           SELECT 11 as id, 'Noviembre' as nombremes UNION
+                           SELECT 12 as id, 'Diciembre' as nombremes");
+
     }
 
 }

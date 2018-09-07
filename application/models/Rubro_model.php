@@ -130,4 +130,5 @@ class Rubro_model extends CI_Model {
                             WHERE (e.id_tipotrabajador = $tipo) AND (r.id_rubro IS NULL)");
     }  
 
+
 }

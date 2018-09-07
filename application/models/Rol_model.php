@@ -85,9 +85,12 @@ class Rol_model extends CI_Model {
                                   roldepagos_tmpdet.id_rubro = (SELECT valor FROM parametros WHERE id = 2)::integer;");
 
         $query = $this->db->query("SELECT id_usuario, descripcion_rol, fechaini_rol, fechafin_rol, 
-                                          estado_rol, asistencia_ini, asistencia_fin 
-                                    FROM roldepagos_tmp 
-                                    WHERE id_usuario = $idusuario;");
+                                          estado_rol, asistencia_ini, asistencia_fin,
+                                          COALESCE(d.dias,24) as diaslaborables                                                       
+                                    FROM roldepagos_tmp r
+                                    LEFT JOIN dialaborable d on d.anio = EXTRACT(YEAR FROM r.fechaini_rol) AND
+                                                                d.mes = EXTRACT(MONTH FROM r.fechaini_rol) 
+                                    WHERE r.id_usuario = $idusuario;");
         $result = $query->result();
         $ini_asis = $result[0]->asistencia_ini;
         $fin_asis = $result[0]->asistencia_fin;
@@ -296,6 +299,18 @@ class Rol_model extends CI_Model {
                                      ORDER BY r.codigo_rubro;");
         $result = $query->result();
         return $result;
+    }
+
+    public function sel_diaslaborables_rol($idusuario){
+      $dias = 24;
+      $query = $this->db->query("SELECT dias FROM dialaborable d
+                                  INNER JOIN roldepagos_tmp r on EXTRACT(YEAR FROM r.fechaini_rol) = d.anio AND
+                                                                 EXTRACT(MONTH FROM r.fechaini_rol) = d.mes
+                                  WHERE r.id_usuario = $idusuario");
+      $result = $query->result();
+      if ($result)
+        $dias =  $result[0]->dias;
+      return $dias;
     }
 
 }
