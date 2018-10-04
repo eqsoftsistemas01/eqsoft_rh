@@ -20,7 +20,7 @@ date_default_timezone_set("America/Guayaquil");
 } 
 
 .tdvalor{
-  width: 70px;
+  width: 40px;
 }
 
 </style>

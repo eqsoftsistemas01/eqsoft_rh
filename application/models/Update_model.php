@@ -243,6 +243,9 @@ class Update_model extends CI_Model {
 
       $this->tabla_parametros_inserta(5, "Variable Dias Laborables", "DL");
 
+      $res = $this->existe_tabla('utilidad');
+      if ($res != true) $this->crea_tabla_utilidad();
+
       return 1;
     }
 
@@ -935,6 +938,20 @@ class Update_model extends CI_Model {
                            SELECT 10 as id, 'Octubre' as nombremes UNION
                            SELECT 11 as id, 'Noviembre' as nombremes UNION
                            SELECT 12 as id, 'Diciembre' as nombremes");
+
+    }
+
+    public function crea_tabla_utilidad(){
+      $query = $this->db->query("CREATE TABLE utilidad (
+                                    anio int NOT NULL,
+                                    id_empleado int NOT NULL,
+                                    dias int DEFAULT 0,
+                                    monto_empleado numeric(10,2) DEFAULT 0,
+                                    cargas int DEFAULT 0,
+                                    monto_cargas numeric(10,2) DEFAULT 0,
+                                    descuento numeric(10,2) DEFAULT 0,
+                                    PRIMARY KEY (anio, id_empleado) 
+                                    )");
 
     }
 

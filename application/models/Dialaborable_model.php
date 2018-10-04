@@ -66,12 +66,12 @@ class Dialaborable_model extends CI_Model {
     }
 
     public function lst_anios() {
-        $query = $this->db->query("SELECT count(*) as cant FROM dialaborable");
+        $query = $this->db->query("SELECT count(*) as cant FROM utilidad");
         $result = $query->result();
         if ($result[0]->cant > 0){
-          $query = $this->db->query("SELECT distinct anio from dialaborable union
-                                     select max(anio) + 1 as anio from dialaborable union
-                                     select max(anio) - 1 as anio from dialaborable 
+          $query = $this->db->query("SELECT distinct anio from utilidad union
+                                     select max(anio) + 1 as anio from utilidad union
+                                     select max(anio) - 1 as anio from utilidad 
                                      order by anio");
         }
         else {

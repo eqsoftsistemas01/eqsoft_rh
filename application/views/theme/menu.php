@@ -101,6 +101,7 @@
             <ul class="treeview-menu">
               <li><a href="<?php print $base_url ?>rubro"><i class="fa fa-money"></i> Rubros</a></li>
               <li><a href="<?php print $base_url ?>rol"><i class="fa fa-usd"></i> Rol de Pagos</a></li>
+              <li><a href="<?php print $base_url ?>utilidad"><i class="fa fa-usd"></i> Utilidades</a></li>
 
             </ul>
           </li> 
