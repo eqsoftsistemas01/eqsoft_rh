@@ -294,6 +294,7 @@ class Rol_model extends CI_Model {
                                           COALESCE(t.valor_ingreso,0) as valor_ingreso, 
                                           r.tipo_rubro, r.editable
                                      FROM rubro r 
+                                     INNER JOIN rubro_empleado e on e.id_rubro = r.id AND e.id_empleado = $idempleado
                                      LEFT JOIN roldepagos_tmpdet t on t.id_rubro = r.id AND t.id_usuario = $idusuario AND t.id_empleado = $idempleado
                                      WHERE not r.id::char in (SELECT valor FROM parametros WHERE id in (3,4)) /*excepto dias trab y neto a cobrar*/
                                      ORDER BY r.codigo_rubro;");
