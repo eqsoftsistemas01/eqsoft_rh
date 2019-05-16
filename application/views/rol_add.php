@@ -150,16 +150,26 @@ date_default_timezone_set("America/Guayaquil");
         type: 'POST',
         dataType: 'json',
         success: function(json) {
-            $('#TableRubro').DataTable().ajax.reload();
-            $.ajax({
+            $('#TableRubro').DataTable().ajax.reload(function ( json ) {
+              $.ajax({
+                url: base_url + "Rol/sel_rubroneto_tmp",
+                type: 'POST',
+                dataType: 'json',
+                success: function(json) {
+                    $('.valor_neto[id='+ json.idemp +']').html(json.valor);
+                }  
+              });  
+
+            });
+/*            $.ajax({
               url: base_url + "Rol/sel_rubroneto_tmp",
               type: 'POST',
               dataType: 'json',
               success: function(json) {
-                  /*alert("json.valor " + json.valor);*/
+                  //alert("json.valor " + json.valor);
                   $('.valor_neto[id='+ json.idemp +']').html(json.valor);
               }  
-            });  
+            });  */
         }  
       });  
 

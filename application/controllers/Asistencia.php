@@ -277,6 +277,7 @@ class Asistencia extends CI_Controller {
             }    
 
         }
+        
         print "<script> window.location.href = '" . base_url() . "asistencia'; </script>";       
     } 
 
