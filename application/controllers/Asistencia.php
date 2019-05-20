@@ -247,6 +247,7 @@ class Asistencia extends CI_Controller {
                     }                       
                 }
             }
+
             foreach ($arrfecha as $fec) {
                 $fecha = str_replace('/', '-', $fec); 
                 foreach ($arremp as $codemp) {
